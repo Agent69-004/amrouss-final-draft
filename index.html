@@ -30,7 +30,7 @@
 
     <style>
         /* ============================================================ */
-        /*  ORIGINAL DESIGN — only the "Reserve" button style updated    */
+        /*  ORIGINAL DESIGN — only the nav & language menu upgraded     */
         /* ============================================================ */
 
         :root {
@@ -141,9 +141,9 @@
             margin-left: 12px;
         }
 
-        /* ===== STICKY NAV ===== */
+        /* ===== STICKY NAV (ARTISTIC UPGRADE) ===== */
         .nav {
-            height: 76px;
+            height: 84px;
             padding: 0 5.5vw;
             position: sticky;
             top: 0;
@@ -168,20 +168,26 @@
         .nav.scrolled .nav nav a {
             color: var(--ink);
         }
-        .nav.scrolled .language button {
+        .nav.scrolled .language-toggle {
             color: var(--ink);
         }
-        .nav.scrolled .language button.active {
-            border-color: var(--gold);
+        .nav.scrolled .language-toggle .lang-current {
+            color: var(--ink);
         }
         .nav.scrolled .nav-book {
             color: var(--ink);
+            border-color: var(--ink);
         }
         .nav.scrolled .nav-book::after {
             background: var(--ink);
         }
         .nav.scrolled .nav-book:hover {
             color: var(--ink);
+            border-color: var(--gold);
+        }
+        .nav.scrolled .nav-book:active {
+            background: var(--gold);
+            color: #fff;
         }
         .nav.scrolled .menu {
             color: var(--ink);
@@ -189,15 +195,19 @@
         .nav.scrolled .theme-toggle {
             color: var(--ink);
         }
+        .nav.scrolled .language-dropdown {
+            background: rgba(252, 248, 240, 0.98);
+            backdrop-filter: blur(12px);
+        }
 
         .brand {
             position: relative;
             color: inherit;
             text-decoration: none;
             letter-spacing: .22em;
-            font-size: 14px;
+            font-size: 15px;
             display: grid;
-            grid-template-columns: auto 20px auto;
+            grid-template-columns: auto 22px auto;
             align-items: center;
             gap: 6px;
             transition: color 0.3s;
@@ -216,7 +226,7 @@
         }
         .nav nav {
             display: flex;
-            gap: 29px;
+            gap: 32px;
             margin-left: 8vw;
             align-items: center;
         }
@@ -228,74 +238,192 @@
             letter-spacing: .13em;
             transition: color 0.3s;
             padding: 6px 0;
-        }
-        .nav-actions {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-        .language {
-            display: flex;
-            gap: 6px;
-        }
-        .language button {
-            font: 9px "DM Mono";
-            letter-spacing: .09em;
-            color: #fff;
-            background: transparent;
-            border: 0;
-            padding: 4px 0;
-            opacity: .58;
-            cursor: pointer;
-            transition: color 0.3s, opacity 0.3s;
-            font-size: 10px;
-        }
-        .language button.active {
-            opacity: 1;
-            border-bottom: 1px solid #d7bb86;
-        }
-
-        /* ===== REFINED "RESERVE" BUTTON (Six Senses style) ===== */
-        .nav-book {
-            background: none;
-            border: 0;
-            color: #fff;
-            padding: 8px 0;
-            font: 400 11px/1.4 "DM Sans", sans-serif;
-            text-transform: uppercase;
-            letter-spacing: 0.12em;
-            cursor: pointer;
-            transition: all 0.25s ease;
             position: relative;
-            white-space: nowrap;
         }
-        .nav-book::after {
+        .nav nav a::after {
             content: '';
             position: absolute;
             bottom: -2px;
             left: 0;
             width: 0;
-            height: 1px;
-            background: currentColor;
+            height: 1.5px;
+            background: var(--gold);
             transition: width 0.3s ease;
         }
-        .nav-book:hover {
-            color: #fff;
-            background: none;
-            transform: none;
-        }
-        .nav-book:hover::after {
+        .nav nav a:hover::after {
             width: 100%;
         }
-        .nav-book b {
-            font-size: 14px;
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        /* ===== LANGUAGE DROPDOWN (ARTISTIC) ===== */
+        .language-wrapper {
+            position: relative;
+        }
+        .language-toggle {
+            background: none;
+            border: 0;
+            color: #fff;
+            font: 9px "DM Mono";
+            letter-spacing: .09em;
+            cursor: pointer;
+            padding: 6px 10px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: color 0.3s;
+            border-radius: 4px;
+        }
+        .language-toggle .lang-current {
+            color: #fff;
+            transition: color 0.3s;
+            font-weight: 500;
+        }
+        .language-toggle .lang-arrow {
+            font-size: 10px;
+            transition: transform 0.3s;
+            opacity: 0.6;
+        }
+        .language-toggle:hover .lang-arrow {
+            transform: rotate(180deg);
+        }
+
+        .language-dropdown {
+            position: absolute;
+            top: calc(100% + 8px);
+            right: 0;
+            background: rgba(16, 44, 37, 0.96);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 8px;
+            padding: 8px 0;
+            min-width: 160px;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-8px);
+            transition: opacity 0.3s, transform 0.3s, visibility 0.3s;
+            z-index: 60;
+        }
+        .language-dropdown.open {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+        .language-dropdown button {
+            display: block;
+            width: 100%;
+            text-align: left;
+            padding: 8px 18px;
+            background: none;
+            border: 0;
+            color: rgba(255, 255, 255, 0.7);
+            font: 11px "DM Sans";
+            cursor: pointer;
+            transition: all 0.2s;
+            letter-spacing: 0.02em;
+        }
+        .language-dropdown button:hover {
+            background: rgba(255, 255, 255, 0.06);
+            color: #fff;
+        }
+        .language-dropdown button.active {
+            color: var(--gold);
+            background: rgba(177, 139, 82, 0.1);
+        }
+        .language-dropdown button .lang-native {
+            opacity: 0.5;
+            font-size: 10px;
             margin-left: 6px;
+        }
+        .nav.scrolled .language-dropdown {
+            background: rgba(252, 248, 240, 0.98);
+            border-color: rgba(0, 0, 0, 0.06);
+        }
+        .nav.scrolled .language-dropdown button {
+            color: rgba(0, 0, 0, 0.6);
+        }
+        .nav.scrolled .language-dropdown button:hover {
+            background: rgba(0, 0, 0, 0.04);
+            color: var(--ink);
+        }
+        .nav.scrolled .language-dropdown button.active {
+            color: var(--gold);
+            background: rgba(177, 139, 82, 0.08);
+        }
+
+        /* ===== ARTISTIC "RESERVE" BUTTON ===== */
+        .nav-book {
+            background: transparent;
+            border: 1.5px solid rgba(255, 255, 255, 0.4);
+            color: #fff;
+            padding: 10px 20px 10px 16px;
+            font: 500 11px/1 "DM Sans", sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            cursor: pointer;
+            transition: all 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            position: relative;
+            border-radius: 60px;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .nav-book .bell-icon {
+            font-size: 16px;
+            line-height: 1;
+            transition: transform 0.3s;
+        }
+        .nav-book:hover {
+            border-color: rgba(255, 255, 255, 0.8);
+            transform: translateY(-1px);
+            box-shadow: 0 6px 24px rgba(255, 255, 255, 0.06);
+        }
+        .nav-book:hover .bell-icon {
+            transform: scale(1.15) rotate(-8deg);
+        }
+        .nav-book:active {
+            background: var(--gold);
+            color: #fff;
+            border-color: var(--gold);
+            transform: scale(0.96);
+            box-shadow: 0 2px 12px rgba(177, 139, 82, 0.3);
+        }
+        .nav-book:active .bell-icon {
+            transform: scale(0.9);
+        }
+        .nav-book b {
+            font-size: 13px;
             font-weight: 400;
-            transition: transform 0.25s ease;
+            transition: transform 0.3s ease;
             display: inline-block;
         }
         .nav-book:hover b {
-            transform: translate(2px, -2px);
+            transform: translate(3px, -2px);
+        }
+        /* Scrolled state */
+        .nav.scrolled .nav-book {
+            border-color: rgba(21, 54, 45, 0.25);
+            color: var(--ink);
+        }
+        .nav.scrolled .nav-book:hover {
+            border-color: var(--gold);
+            box-shadow: 0 6px 24px rgba(177, 139, 82, 0.1);
+        }
+        .nav.scrolled .nav-book:active {
+            background: var(--gold);
+            color: #fff;
+            border-color: var(--gold);
+            box-shadow: 0 2px 12px rgba(177, 139, 82, 0.25);
+        }
+        .nav.scrolled .nav-book:active .bell-icon {
+            filter: brightness(10);
         }
 
         .menu {
@@ -329,7 +457,7 @@
             min-height: 580px;
             position: relative;
             color: #fff;
-            margin-top: -76px;
+            margin-top: -84px;
         }
         .hero-img {
             position: absolute;
@@ -2211,6 +2339,9 @@
                 border-bottom: 1px solid rgba(255, 255, 255, 0.06);
                 text-align: center;
             }
+            .nav nav a::after {
+                display: none;
+            }
             .nav.scrolled .nav nav {
                 background: rgba(252, 248, 240, 0.98);
             }
@@ -2225,10 +2356,26 @@
                 gap: 8px;
             }
             .nav-actions .nav-book {
-                display: none;
+                padding: 8px 14px 8px 12px;
+                font-size: 10px;
+                gap: 6px;
             }
-            .language button {
-                font-size: 9px;
+            .nav-actions .nav-book .bell-icon {
+                font-size: 14px;
+            }
+            .nav-actions .nav-book b {
+                font-size: 12px;
+            }
+            .language-toggle .lang-current {
+                font-size: 8px;
+            }
+            .language-dropdown {
+                min-width: 140px;
+                right: -10px;
+            }
+            .language-dropdown button {
+                font-size: 10px;
+                padding: 6px 14px;
             }
 
             .hero {
@@ -2875,15 +3022,34 @@
             .brand small {
                 font-size: 6px;
             }
-            .language button {
-                font-size: 8px;
-                padding: 2px 0;
+            .language-toggle .lang-current {
+                font-size: 7px;
+            }
+            .language-dropdown {
+                min-width: 120px;
+                right: -16px;
+            }
+            .language-dropdown button {
+                font-size: 9px;
+                padding: 5px 12px;
             }
             .theme-toggle {
                 font-size: 16px;
             }
             .menu {
                 font-size: 22px;
+            }
+            .nav-actions .nav-book {
+                padding: 6px 10px 6px 8px;
+                font-size: 8px;
+                gap: 4px;
+                border-width: 1px;
+            }
+            .nav-actions .nav-book .bell-icon {
+                font-size: 12px;
+            }
+            .nav-actions .nav-book b {
+                font-size: 10px;
             }
         }
     </style>
@@ -2903,7 +3069,7 @@
         <small>5 KM BEYOND AZROU · A WORLD APART</small>
     </div>
 
-    <!-- ===== STICKY NAV ===== -->
+    <!-- ===== STICKY NAV (ARTISTIC UPGRADE) ===== -->
     <header class="nav" id="mainNav">
         <a class="brand" href="#home" aria-label="Amrouss Dar home">
             <span>AMROUSS</span><i></i><span>DAR</span>
@@ -2917,14 +3083,33 @@
             <a href="#contact" class="mobile-book-link" style="display:none;" data-open-booking>Book Now</a>
         </nav>
         <div class="nav-actions">
-            <div class="language" aria-label="Choose language">
-                <button class="active" data-lang="en">EN</button>
-                <button data-lang="fr">FR</button>
-                <button data-lang="es">ES</button>
+            <!-- ===== LANGUAGE DROPDOWN ===== -->
+            <div class="language-wrapper">
+                <button class="language-toggle" id="langToggle" aria-label="Change language">
+                    <span class="lang-current" id="currentLang">EN</span>
+                    <span class="lang-arrow">▾</span>
+                </button>
+                <div class="language-dropdown" id="langDropdown">
+                    <button data-lang="en" class="active">English <span class="lang-native">(EN)</span></button>
+                    <button data-lang="fr">Français <span class="lang-native">(FR)</span></button>
+                    <button data-lang="es">Español <span class="lang-native">(ES)</span></button>
+                    <button data-lang="de">Deutsch <span class="lang-native">(DE)</span></button>
+                    <button data-lang="it">Italiano <span class="lang-native">(IT)</span></button>
+                    <button data-lang="pt">Português <span class="lang-native">(PT)</span></button>
+                    <button data-lang="nl">Nederlands <span class="lang-native">(NL)</span></button>
+                    <button data-lang="ar">العربية <span class="lang-native">(AR)</span></button>
+                    <button data-lang="zh">中文 <span class="lang-native">(ZH)</span></button>
+                    <button data-lang="ja">日本語 <span class="lang-native">(JA)</span></button>
+                    <button data-lang="ru">Русский <span class="lang-native">(RU)</span></button>
+                    <button data-lang="tr">Türkçe <span class="lang-native">(TR)</span></button>
+                </div>
             </div>
+
             <button class="theme-toggle" aria-label="Toggle dark mode" title="Toggle dark mode">◐</button>
-            <!-- ===== REFINED "RESERVE" BUTTON ===== -->
+
+            <!-- ===== ARTISTIC "RESERVE" BUTTON ===== -->
             <button class="nav-book" data-open-booking>
+                <span class="bell-icon">🛎️</span>
                 <span data-i18n="reserve">Reserve</span> <b>↗</b>
             </button>
         </div>
@@ -3567,9 +3752,229 @@
                 availability: 'Ver disponibilidad',
                 ritualSteam: 'Una pausa cálida y mineral, perfumada por el bosque.',
                 ritualSunrise: 'Té al amanecer, ante un valle que despierta.'
+            },
+            de: {
+                navStay: 'Aufenthalt',
+                navStory: 'Das Dar',
+                navDining: 'Gastronomie',
+                navExperiences: 'Erlebnisse',
+                reserve: 'Reservieren',
+                heroOverline: '5 KM VON AZROU · MITTELATLAS',
+                heroKicker: 'VERLASSE DEN LÄRM. ANKOMMEN IN DER STILLE.',
+                heroTitle: 'Der Atlas,<br><em>in seiner ruhigsten Form.</em>',
+                heroCopy: 'Fünf Minuten außerhalb der Stadt beginnt eine seltene Stille: Zedernluft, Berglicht und nichts, das um Ihre Aufmerksamkeit buhlt.',
+                discover: 'Treten Sie ein in die Stille',
+                arrival: 'Anreise',
+                departure: 'Abreise',
+                guests: 'Gäste',
+                twoGuests: '2 Gäste',
+                oneGuest: '1 Gast',
+                family: 'Familie von 4',
+                availability: 'Verfügbarkeit prüfen',
+                ritualSteam: 'Eine warme, mineralische Pause, durchzogen vom Wald.',
+                ritualSunrise: 'Tee bei der ersten Morgensonne über dem erwachenden Tal.'
+            },
+            it: {
+                navStay: 'Soggiorno',
+                navStory: 'Il Dar',
+                navDining: 'Cucina',
+                navExperiences: 'Esperienze',
+                reserve: 'Prenota',
+                heroOverline: '5 KM DA AZROU · MEDIO ATLANTE',
+                heroKicker: 'LASCIATE IL RUMORE. ARRIVATE IN SILENZIO.',
+                heroTitle: 'L\'Atlante,<br><em>nel suo massimo silenzio.</em>',
+                heroCopy: 'A cinque minuti dalla città inizia un silenzio raro: aria di cedro, luce di montagna e niente che cerca la vostra attenzione.',
+                discover: 'Entrate nel silenzio',
+                arrival: 'Arrivo',
+                departure: 'Partenza',
+                guests: 'Ospiti',
+                twoGuests: '2 ospiti',
+                oneGuest: '1 ospite',
+                family: 'Famiglia di 4',
+                availability: 'Verifica disponibilità',
+                ritualSteam: 'Una pausa calda e minerale, pervasa dal bosco.',
+                ritualSunrise: 'Tè alle prime luci dell\'alba, sulla valle che si risveglia.'
+            },
+            pt: {
+                navStay: 'Estadia',
+                navStory: 'O Dar',
+                navDining: 'Gastronomia',
+                navExperiences: 'Experiências',
+                reserve: 'Reservar',
+                heroOverline: '5 KM DE AZROU · MÉDIO ATLAS',
+                heroKicker: 'DEIXE O BARULHO. CHEGUE EM SILÊNCIO.',
+                heroTitle: 'O Atlas,<br><em>no seu estado mais calmo.</em>',
+                heroCopy: 'Cinco minutos além da cidade, começa um raro silêncio: ar de cedro, luz da montanha e nada que dispute a sua atenção.',
+                discover: 'Entre no silêncio',
+                arrival: 'Chegada',
+                departure: 'Partida',
+                guests: 'Hóspedes',
+                twoGuests: '2 hóspedes',
+                oneGuest: '1 hóspede',
+                family: 'Família de 4',
+                availability: 'Verificar disponibilidade',
+                ritualSteam: 'Uma pausa quente e mineral, infundida pela floresta.',
+                ritualSunrise: 'Chá ao amanhecer, sobre o vale que desperta.'
+            },
+            nl: {
+                navStay: 'Verblijf',
+                navStory: 'Het Dar',
+                navDining: 'Gastronomie',
+                navExperiences: 'Ervaringen',
+                reserve: 'Reserveren',
+                heroOverline: '5 KM VAN AZROU · MIDDEN-ATLAS',
+                heroKicker: 'LAAT HET LAWAAI. ARRIVEER IN STILTE.',
+                heroTitle: 'De Atlas,<br><em>op zijn kalmst.</em>',
+                heroCopy: 'Vijf minuten buiten de stad begint een zeldzame stilte: cederlucht, berglicht en niets dat uw aandacht opeist.',
+                discover: 'Treed de stilte binnen',
+                arrival: 'Aankomst',
+                departure: 'Vertrek',
+                guests: 'Gasten',
+                twoGuests: '2 gasten',
+                oneGuest: '1 gast',
+                family: 'Gezin van 4',
+                availability: 'Beschikbaarheid controleren',
+                ritualSteam: 'Een warme, minerale pauze, doordrenkt van het bos.',
+                ritualSunrise: 'Thee bij het eerste licht, over een ontwakend dal.'
+            },
+            ar: {
+                navStay: 'الإقامة',
+                navStory: 'الدار',
+                navDining: 'المطبخ',
+                navExperiences: 'التجارب',
+                reserve: 'احجز',
+                heroOverline: '5 كم من أزرو · الأطلس المتوسط',
+                heroKicker: 'اترك الضوضاء. وصل في هدوء.',
+                heroTitle: 'الأطلس،<br><em>في أهدأ حالاته.</em>',
+                heroCopy: 'على بعد خمس دقائق من المدينة، يبدأ هدوء نادر: هواء الأرز، ضوء الجبال ولا شيء ينافس انتباهك.',
+                discover: 'ادخل إلى الهدوء',
+                arrival: 'الوصول',
+                departure: 'المغادرة',
+                guests: 'الضيوف',
+                twoGuests: 'ضيفان',
+                oneGuest: 'ضيف واحد',
+                family: 'عائلة من 4',
+                availability: 'تحقق من التوفر',
+                ritualSteam: 'توقف دافئ ومعدني، منقوع برائحة الغابة.',
+                ritualSunrise: 'شاي عند أول ضوء، فوق وادٍ يستيقظ.'
+            },
+            zh: {
+                navStay: '住宿',
+                navStory: '达尔酒店',
+                navDining: '餐饮',
+                navExperiences: '体验',
+                reserve: '预订',
+                heroOverline: '距阿兹鲁5公里 · 中阿特拉斯',
+                heroKicker: '远离喧嚣，抵达宁静。',
+                heroTitle: '阿特拉斯，<br><em>最宁静的时刻。</em>',
+                heroCopy: '距离城市仅五分钟，一种罕见的宁静开始：雪松空气、山间光线，没有任何事物争夺您的注意力。',
+                discover: '进入宁静',
+                arrival: '抵达',
+                departure: '离开',
+                guests: '客人',
+                twoGuests: '2位客人',
+                oneGuest: '1位客人',
+                family: '4人家庭',
+                availability: '查询空房',
+                ritualSteam: '一次温暖、矿物质的停顿，浸染着森林的气息。',
+                ritualSunrise: '在第一缕晨光中品茶，俯瞰苏醒的山谷。'
+            },
+            ja: {
+                navStay: '滞在',
+                navStory: 'ダール',
+                navDining: 'ダイニング',
+                navExperiences: '体験',
+                reserve: '予約',
+                heroOverline: 'アズルーより5km · 中部アトラス',
+                heroKicker: '騒音を離れ、静けさに到着。',
+                heroTitle: 'アトラス山脈、<br><em>最も静かな時。</em>',
+                heroCopy: '街からわずか5分、希少な静けさが始まります：杉の香り、山の光、そしてあなたの注意を奪うものは何もありません。',
+                discover: '静けさの中へ',
+                arrival: '到着',
+                departure: '出発',
+                guests: 'ゲスト',
+                twoGuests: '2名様',
+                oneGuest: '1名様',
+                family: '4人家族',
+                availability: '空室確認',
+                ritualSteam: '森の香りに包まれた、温かいミネラルのひととき。',
+                ritualSunrise: '目覚める谷を見下ろす、夜明けのお茶。'
+            },
+            ru: {
+                navStay: 'Проживание',
+                navStory: 'Дар',
+                navDining: 'Кухня',
+                navExperiences: 'Впечатления',
+                reserve: 'Забронировать',
+                heroOverline: '5 КМ ОТ АЗРУ · СРЕДНИЙ АТЛАС',
+                heroKicker: 'ОСТАВЬТЕ ШУМ. ПРИБУДЬТЕ В ТИШИНУ.',
+                heroTitle: 'Атлас,<br><em>в своем спокойствии.</em>',
+                heroCopy: 'В пяти минутах от города начинается редкая тишина: воздух кедров, горный свет и ничто не борется за ваше внимание.',
+                discover: 'Войдите в тишину',
+                arrival: 'Прибытие',
+                departure: 'Отъезд',
+                guests: 'Гости',
+                twoGuests: '2 гостя',
+                oneGuest: '1 гость',
+                family: 'Семья из 4',
+                availability: 'Проверить наличие',
+                ritualSteam: 'Тёплая минеральная пауза, наполненная лесом.',
+                ritualSunrise: 'Чай на рассвете над пробуждающейся долиной.'
+            },
+            tr: {
+                navStay: 'Konaklama',
+                navStory: 'Dar',
+                navDining: 'Yemek',
+                navExperiences: 'Deneyimler',
+                reserve: 'Rezervasyon',
+                heroOverline: 'AZROU\'YA 5 KM · ORTA ATLAS',
+                heroKicker: 'GÜRÜLTÜYÜ BIRAKIN. SESSİZLİĞE VARIN.',
+                heroTitle: 'Atlas Dağları,<br><em>en sakin halinde.</em>',
+                heroCopy: 'Şehrin beş dakika ötesinde, nadir bir sessizlik başlar: sedir kokusu, dağ ışığı ve dikkatinizi dağıtacak hiçbir şey.',
+                discover: 'Sessizliğe adım atın',
+                arrival: 'Geliş',
+                departure: 'Ayrılış',
+                guests: 'Misafirler',
+                twoGuests: '2 misafir',
+                oneGuest: '1 misafir',
+                family: '4 kişilik aile',
+                availability: 'Müsaitlik kontrol et',
+                ritualSteam: 'Ormanın özüyle dolu, sıcak ve mineral bir mola.',
+                ritualSunrise: 'Uyanan vadiye karşı, ilk ışıkta çay.'
             }
         };
 
+        // ===== LANGUAGE DROPDOWN =====
+        const langToggle = document.getElementById('langToggle');
+        const langDropdown = document.getElementById('langDropdown');
+        const currentLangSpan = document.getElementById('currentLang');
+
+        langToggle.addEventListener('click', function(e) {
+            e.stopPropagation();
+            langDropdown.classList.toggle('open');
+        });
+
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.language-wrapper')) {
+                langDropdown.classList.remove('open');
+            }
+        });
+
+        // Language selection
+        document.querySelectorAll('.language-dropdown button').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const lang = this.dataset.lang;
+                setLanguage(lang);
+                langDropdown.classList.remove('open');
+                // Update current language display
+                currentLangSpan.textContent = lang.toUpperCase();
+                // Update active state
+                document.querySelectorAll('.language-dropdown button').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        // ===== SET LANGUAGE FUNCTION =====
         function setLanguage(lang) {
             const copy = translations[lang];
             if (!copy) return;
@@ -3580,18 +3985,20 @@
             document.querySelectorAll('[data-i18n-html]').forEach(el => {
                 el.innerHTML = copy[el.dataset.i18nHtml] || el.innerHTML;
             });
-            document.querySelectorAll('[data-lang]').forEach(button => {
-                button.classList.toggle('active', button.dataset.lang === lang);
-            });
             try { localStorage.setItem('amrouss-language', lang); } catch (_) {}
+            // Update reserve button text
+            const reserveBtn = document.querySelector('.nav-book span:not(.bell-icon)');
+            if (reserveBtn) reserveBtn.textContent = copy.reserve || 'Reserve';
         }
 
-        document.querySelectorAll('[data-lang]').forEach(button => {
-            button.addEventListener('click', () => setLanguage(button.dataset.lang));
-        });
-
+        // ===== LOAD SAVED LANGUAGE =====
         let savedLanguage = 'en';
         try { savedLanguage = localStorage.getItem('amrouss-language') || 'en'; } catch (_) {}
+        currentLangSpan.textContent = savedLanguage.toUpperCase();
+        // Highlight active language in dropdown
+        document.querySelectorAll('.language-dropdown button').forEach(b => {
+            b.classList.toggle('active', b.dataset.lang === savedLanguage);
+        });
         setLanguage(savedLanguage);
 
         // ===== MOBILE MENU =====
@@ -3806,7 +4213,7 @@
             });
         });
 
-        console.log('🌲 Amrouss Dar — Refined Reserve button added');
+        console.log('🛎️ Amrouss Dar — Artistic nav with language dropdown & dynamic Reserve button');
     </script>
 </body>
 </html>
