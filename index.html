@@ -30,7 +30,7 @@
 
     <style>
         /* ============================================================ */
-        /*  ORIGINAL DESIGN — unchanged except the booking components    */
+        /*  ORIGINAL DESIGN — only the "Reserve" button style updated    */
         /* ============================================================ */
 
         :root {
@@ -141,7 +141,7 @@
             margin-left: 12px;
         }
 
-        /* ===== STICKY NAV (BOOKING UPGRADE) ===== */
+        /* ===== STICKY NAV ===== */
         .nav {
             height: 76px;
             padding: 0 5.5vw;
@@ -175,12 +175,13 @@
             border-color: var(--gold);
         }
         .nav.scrolled .nav-book {
-            border-color: var(--ink);
             color: var(--ink);
         }
-        .nav.scrolled .nav-book:hover {
+        .nav.scrolled .nav-book::after {
             background: var(--ink);
-            color: #fff;
+        }
+        .nav.scrolled .nav-book:hover {
+            color: var(--ink);
         }
         .nav.scrolled .menu {
             color: var(--ink);
@@ -253,27 +254,50 @@
             opacity: 1;
             border-bottom: 1px solid #d7bb86;
         }
+
+        /* ===== REFINED "RESERVE" BUTTON (Six Senses style) ===== */
         .nav-book {
             background: none;
-            border: 1px solid rgba(255, 255, 255, .55);
+            border: 0;
             color: #fff;
-            padding: 11px 16px;
-            font: 500 9px "DM Sans";
+            padding: 8px 0;
+            font: 400 11px/1.4 "DM Sans", sans-serif;
             text-transform: uppercase;
-            letter-spacing: .14em;
+            letter-spacing: 0.12em;
             cursor: pointer;
-            transition: .25s;
-            border-radius: 4px;
+            transition: all 0.25s ease;
+            position: relative;
             white-space: nowrap;
         }
+        .nav-book::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: currentColor;
+            transition: width 0.3s ease;
+        }
         .nav-book:hover {
-            background: #fff;
-            color: var(--ink);
+            color: #fff;
+            background: none;
+            transform: none;
+        }
+        .nav-book:hover::after {
+            width: 100%;
         }
         .nav-book b {
             font-size: 14px;
-            margin-left: 8px;
+            margin-left: 6px;
+            font-weight: 400;
+            transition: transform 0.25s ease;
+            display: inline-block;
         }
+        .nav-book:hover b {
+            transform: translate(2px, -2px);
+        }
+
         .menu {
             display: none;
             background: none;
@@ -299,7 +323,7 @@
             opacity: 1;
         }
 
-        /* ===== HERO (unchanged) ===== */
+        /* ===== HERO ===== */
         .hero {
             height: min(840px, 100vh);
             min-height: 580px;
@@ -414,7 +438,7 @@
             }
         }
 
-        /* ===== ARRIVAL SPLASH (unchanged) ===== */
+        /* ===== ARRIVAL SPLASH ===== */
         .arrival {
             position: fixed;
             z-index: 100;
@@ -551,7 +575,7 @@
             }
         }
 
-        /* ===== BOOKING BAR (UPGRADED) ===== */
+        /* ===== BOOKING BAR ===== */
         .booking-bar {
             position: relative;
             margin: -30px auto 0;
@@ -628,7 +652,7 @@
             z-index: 3;
         }
 
-        /* ===== CALM BAR (unchanged) ===== */
+        /* ===== CALM BAR ===== */
         .calm-bar {
             background: #102c25;
             color: #e8e4dc;
@@ -679,7 +703,7 @@
             }
         }
 
-        /* ===== INTRO (unchanged) ===== */
+        /* ===== INTRO ===== */
         .intro {
             padding: 100px 7vw 80px;
         }
@@ -696,7 +720,7 @@
             margin: 0;
         }
 
-        /* ===== FEATURE GRID (unchanged) ===== */
+        /* ===== FEATURE GRID ===== */
         .feature-grid {
             display: grid;
             grid-template-columns: 1.1fr .9fr;
@@ -763,7 +787,7 @@
             margin-left: 10px;
         }
 
-        /* ===== STAYS (unchanged) ===== */
+        /* ===== STAYS ===== */
         .stays {
             padding: 80px 6vw;
         }
@@ -867,7 +891,7 @@
             background: var(--cream);
         }
 
-        /* ===== ROOM DETAIL MODAL (unchanged) ===== */
+        /* ===== ROOM DETAIL MODAL ===== */
         #roomModal {
             padding: 0;
             border: 0;
@@ -946,7 +970,7 @@
             filter: brightness(1.08);
         }
 
-        /* ===== QUOTE (unchanged) ===== */
+        /* ===== QUOTE ===== */
         .quote {
             background: #e7e1d6;
             min-height: 480px;
@@ -970,7 +994,7 @@
             margin-top: 24px;
         }
 
-        /* ===== DINING (unchanged) ===== */
+        /* ===== DINING ===== */
         .dining {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -1017,7 +1041,7 @@
             font-weight: 500;
         }
 
-        /* ===== CHEF NOTE (unchanged) ===== */
+        /* ===== CHEF NOTE ===== */
         .chef-note {
             background: #f6f3eb;
             padding: 70px 7vw;
@@ -1060,7 +1084,7 @@
             color: var(--ink);
         }
 
-        /* ===== EXPERIENCES (unchanged) ===== */
+        /* ===== EXPERIENCES ===== */
         .experiences {
             background: var(--ink);
             color: #f5f2ea;
@@ -1130,7 +1154,7 @@
             letter-spacing: .12em;
         }
 
-        /* ===== OFFER (unchanged) ===== */
+        /* ===== OFFER ===== */
         .offer {
             min-height: 520px;
             background: linear-gradient(90deg, rgba(8, 28, 23, .65), rgba(8, 28, 23, .05)), url('https://images.unsplash.com/photo-1483347756197-71ef80e95f73?auto=format&fit=crop&w=1800&q=90') center/cover;
@@ -1173,7 +1197,7 @@
             margin-left: 12px;
         }
 
-        /* ===== OFFER COLLECTION (unchanged) ===== */
+        /* ===== OFFER COLLECTION ===== */
         .offer-collection {
             padding: 80px 6vw;
             background: var(--paper);
@@ -1235,7 +1259,7 @@
             transform: translateX(4px);
         }
 
-        /* ===== RITUALS (unchanged) ===== */
+        /* ===== RITUALS ===== */
         .rituals {
             background: #e8e1d5;
             padding: 80px 6vw;
@@ -1306,7 +1330,7 @@
             margin: 0;
         }
 
-        /* ===== SIGNATURE (unchanged) ===== */
+        /* ===== SIGNATURE ===== */
         .signature {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -1358,7 +1382,7 @@
             font-size: 12px;
         }
 
-        /* ===== PRIVATE OCCASIONS (unchanged) ===== */
+        /* ===== PRIVATE OCCASIONS ===== */
         .private-occasions {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -1400,7 +1424,7 @@
             margin-right: 8px;
         }
 
-        /* ===== GALLERY (unchanged) ===== */
+        /* ===== GALLERY ===== */
         .gallery-luxury {
             padding: 80px 5vw 90px;
             background: var(--paper);
@@ -1504,7 +1528,7 @@
             grid-column: span 2;
         }
 
-        /* ===== GUEST NOTES (unchanged) ===== */
+        /* ===== GUEST NOTES ===== */
         .guest-notes {
             margin: 0 4vw;
             background: #b18b52;
@@ -1587,7 +1611,7 @@
             font-weight: 400;
         }
 
-        /* ===== LOCATION (unchanged) ===== */
+        /* ===== LOCATION ===== */
         .location-section {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -1641,7 +1665,7 @@
             color: #757c78;
         }
 
-        /* ===== STATS (unchanged) ===== */
+        /* ===== STATS ===== */
         .stats-section {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -1663,7 +1687,7 @@
             letter-spacing: .1em;
         }
 
-        /* ===== TRUST (unchanged) ===== */
+        /* ===== TRUST ===== */
         .trust-section {
             padding: 50px 6vw 60px;
             text-align: center;
@@ -1684,7 +1708,7 @@
             line-height: 1.4;
         }
 
-        /* ===== FAQ / CONTACT (unchanged) ===== */
+        /* ===== FAQ / CONTACT ===== */
         .faq-contact {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -1828,7 +1852,7 @@
             margin-left: 12px;
         }
 
-        /* ===== JOURNAL (unchanged) ===== */
+        /* ===== JOURNAL ===== */
         .journal {
             padding: 80px 6vw;
             background: var(--paper);
@@ -1868,7 +1892,7 @@
             text-decoration: none;
         }
 
-        /* ===== WHATSAPP FLOAT (UPGRADED) ===== */
+        /* ===== WHATSAPP FLOAT ===== */
         .whatsapp-float {
             position: fixed;
             bottom: 24px;
@@ -1899,7 +1923,7 @@
             fill: #fff;
         }
 
-        /* ===== FOOTER (unchanged) ===== */
+        /* ===== FOOTER ===== */
         footer {
             background: #102c25;
             color: #eae9e1;
@@ -1995,7 +2019,7 @@
             gap: 12px;
         }
 
-        /* ===== BOOKING DIALOG (UPGRADED) ===== */
+        /* ===== BOOKING DIALOG ===== */
         dialog {
             padding: 0;
             border: 0;
@@ -2128,7 +2152,7 @@
             transform: translate(-50%, 0);
         }
 
-        /* ===== REVEAL (unchanged) ===== */
+        /* ===== REVEAL ===== */
         .reveal {
             opacity: 0;
             transform: translateY(18px);
@@ -2140,7 +2164,7 @@
         }
 
         /* ============================================================ */
-        /* ===== RESPONSIVE (booking components only) ===== */
+        /* ===== RESPONSIVE ===== */
         /* ============================================================ */
 
         @media(max-width: 1024px) {
@@ -2879,7 +2903,7 @@
         <small>5 KM BEYOND AZROU · A WORLD APART</small>
     </div>
 
-    <!-- ===== STICKY NAV (UPGRADED) ===== -->
+    <!-- ===== STICKY NAV ===== -->
     <header class="nav" id="mainNav">
         <a class="brand" href="#home" aria-label="Amrouss Dar home">
             <span>AMROUSS</span><i></i><span>DAR</span>
@@ -2899,6 +2923,7 @@
                 <button data-lang="es">ES</button>
             </div>
             <button class="theme-toggle" aria-label="Toggle dark mode" title="Toggle dark mode">◐</button>
+            <!-- ===== REFINED "RESERVE" BUTTON ===== -->
             <button class="nav-book" data-open-booking>
                 <span data-i18n="reserve">Reserve</span> <b>↗</b>
             </button>
@@ -2933,7 +2958,7 @@
             </div>
         </section>
 
-        <!-- ===== BOOKING BAR (UPGRADED) ===== -->
+        <!-- ===== BOOKING BAR ===== -->
         <section class="booking-bar" aria-label="Check availability">
             <span class="best-rate-badge">★ BEST RATE</span>
             <div>
@@ -3450,7 +3475,7 @@
         </div>
     </footer>
 
-    <!-- ===== BOOKING DIALOG (UPGRADED) ===== -->
+    <!-- ===== BOOKING DIALOG ===== -->
     <dialog id="booking">
         <button class="close" aria-label="Close booking">×</button>
         <div class="booking-panel">
@@ -3781,7 +3806,7 @@
             });
         });
 
-        console.log('🌲 Amrouss Dar — Booking design copied, everything else untouched');
+        console.log('🌲 Amrouss Dar — Refined Reserve button added');
     </script>
 </body>
 </html>
