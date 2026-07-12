@@ -123,7 +123,7 @@
             align-items: center;
             justify-content: center;
             pointer-events: all;
-            transition: opacity 1.6s var(--ease-out-expo), visibility 1.6s var(--ease-out-expo);
+            transition: opacity 1.8s var(--ease-out-expo), visibility 1.8s var(--ease-out-expo);
         }
         #intro-overlay.hidden {
             opacity: 0;
@@ -3276,7 +3276,7 @@
 <body>
 
     <!-- ============================================================ -->
-    <!--  THREE.JS INTRO OVERLAY                                      -->
+    <!--  THREE.JS INTRO OVERLAY — CINEMATIC DRONE SEQUENCE           -->
     <!-- ============================================================ -->
     <div id="intro-overlay">
         <canvas id="intro-canvas"></canvas>
@@ -4022,7 +4022,7 @@
     <!-- ============================================================ -->
     <script>
         // ============================================================ //
-        //  1. THREE.JS CINEMATIC INTRO                                 //
+        //  1. THREE.JS CINEMATIC INTRO — DRONE SEQUENCE               //
         // ============================================================ //
 
         (function() {
@@ -4034,14 +4034,19 @@
 
             let introActive = true;
             let progress = 0;
-            let scene, camera, renderer, particles, logoMesh, particleCount = 1200;
+            let scene, camera, renderer, particles, logoMesh, hotelGroup, doors = [],
+                interiorLight, receptionDesk;
+            let isSkipped = false;
+            const particleCount = 1800;
 
             // --- Scene Setup ---
             scene = new THREE.Scene();
             scene.background = new THREE.Color(0x0a0a0a);
+            scene.fog = new THREE.Fog(0x0a0a0a, 12, 25);
 
-            camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 100);
-            camera.position.set(0, 0, 8);
+            camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 50);
+            camera.position.set(0, 4, 18);
+            camera.lookAt(0, 1.5, 0);
 
             renderer = new THREE.WebGLRenderer({
                 canvas: canvas,
@@ -4051,36 +4056,217 @@
             renderer.setSize(window.innerWidth, window.innerHeight);
             renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
             renderer.toneMapping = THREE.ACESFilmicToneMapping;
-            renderer.toneMappingExposure = 1.2;
+            renderer.toneMappingExposure = 1.0;
+            renderer.shadowMap.enabled = true;
+            renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
             // --- Lights ---
-            const ambientLight = new THREE.AmbientLight(0x222233, 0.5);
+            const ambientLight = new THREE.AmbientLight(0x222244, 0.4);
             scene.add(ambientLight);
 
-            const keyLight = new THREE.DirectionalLight(0xffdd99, 1.8);
-            keyLight.position.set(2, 3, 4);
+            const moonLight = new THREE.DirectionalLight(0x446688, 0.3);
+            moonLight.position.set(-5, 5, 10);
+            scene.add(moonLight);
+
+            const keyLight = new THREE.DirectionalLight(0xffeedd, 1.2);
+            keyLight.position.set(5, 8, 4);
+            keyLight.castShadow = true;
+            keyLight.shadow.mapSize.width = 1024;
+            keyLight.shadow.mapSize.height = 1024;
+            const d = 10;
+            keyLight.shadow.camera.left = -d;
+            keyLight.shadow.camera.right = d;
+            keyLight.shadow.camera.top = d;
+            keyLight.shadow.camera.bottom = -d;
+            keyLight.shadow.camera.near = 1;
+            keyLight.shadow.camera.far = 15;
             scene.add(keyLight);
 
-            const fillLight = new THREE.DirectionalLight(0x446688, 0.6);
-            fillLight.position.set(-3, 1, -2);
+            const fillLight = new THREE.DirectionalLight(0x88aaff, 0.6);
+            fillLight.position.set(-4, 2, -3);
             scene.add(fillLight);
 
             const rimLight = new THREE.DirectionalLight(0xffcc88, 0.8);
-            rimLight.position.set(0, -2, -4);
+            rimLight.position.set(0, -2, -6);
             scene.add(rimLight);
 
-            // --- Particles ---
+            // --- Ground ---
+            const groundMat = new THREE.MeshStandardMaterial({
+                color: 0x1a1a1a,
+                roughness: 0.8,
+                metalness: 0.1,
+            });
+            const groundGeo = new THREE.PlaneGeometry(30, 30);
+            const ground = new THREE.Mesh(groundGeo, groundMat);
+            ground.rotation.x = -Math.PI / 2;
+            ground.position.y = -0.1;
+            ground.receiveShadow = true;
+            scene.add(ground);
+
+            // --- Build the Hotel (Group) ---
+            function createHotel() {
+                const group = new THREE.Group();
+
+                // Main Building
+                const mainMat = new THREE.MeshStandardMaterial({
+                    color: 0x1a1a1a,
+                    roughness: 0.5,
+                    metalness: 0.05
+                });
+                const mainGeo = new THREE.BoxGeometry(7, 3, 4.5);
+                const main = new THREE.Mesh(mainGeo, mainMat);
+                main.position.y = 1.5;
+                main.castShadow = true;
+                main.receiveShadow = true;
+                group.add(main);
+
+                // Roof
+                const roofMat = new THREE.MeshStandardMaterial({
+                    color: 0xb8944b,
+                    roughness: 0.6,
+                    metalness: 0.4
+                });
+                const roofGeo = new THREE.BoxGeometry(7.4, 0.15, 4.9);
+                const roof = new THREE.Mesh(roofGeo, roofMat);
+                roof.position.y = 3.1;
+                roof.castShadow = true;
+                group.add(roof);
+
+                // Left Wing
+                const wingMat = new THREE.MeshStandardMaterial({
+                    color: 0x222222,
+                    roughness: 0.6,
+                    metalness: 0.1
+                });
+                const wingGeo = new THREE.BoxGeometry(2.5, 2.5, 3);
+                const wingL = new THREE.Mesh(wingGeo, wingMat);
+                wingL.position.set(-4.7, 1.25, 0);
+                wingL.castShadow = true;
+                wingL.receiveShadow = true;
+                group.add(wingL);
+
+                // Right Wing
+                const wingR = new THREE.Mesh(wingGeo, wingMat);
+                wingR.position.set(4.7, 1.25, 0);
+                wingR.castShadow = true;
+                wingR.receiveShadow = true;
+                group.add(wingR);
+
+                // Wing Roofs
+                const wRoofMat = new THREE.MeshStandardMaterial({
+                    color: 0xb8944b,
+                    roughness: 0.6,
+                    metalness: 0.4
+                });
+                const wRoofGeo = new THREE.BoxGeometry(2.9, 0.1, 3.4);
+                const wRoofL = new THREE.Mesh(wRoofGeo, wRoofMat);
+                wRoofL.position.set(-4.7, 2.5, 0);
+                group.add(wRoofL);
+                const wRoofR = new THREE.Mesh(wRoofGeo, wRoofMat);
+                wRoofR.position.set(4.7, 2.5, 0);
+                group.add(wRoofR);
+
+                // Windows (Emissive)
+                const winMat = new THREE.MeshStandardMaterial({
+                    color: 0xffdd99,
+                    emissive: 0xffaa33,
+                    emissiveIntensity: 0.6
+                });
+                const winGeo = new THREE.BoxGeometry(0.4, 0.8, 0.1);
+                const winPositions = [
+                    [-2.5, 1.8, 2.26],
+                    [-1.5, 1.8, 2.26],
+                    [-0.5, 1.8, 2.26],
+                    [0.5, 1.8, 2.26],
+                    [1.5, 1.8, 2.26],
+                    [2.5, 1.8, 2.26],
+                    [-2.5, 0.8, 2.26],
+                    [-1.5, 0.8, 2.26],
+                    [-0.5, 0.8, 2.26],
+                    [0.5, 0.8, 2.26],
+                    [1.5, 0.8, 2.26],
+                    [2.5, 0.8, 2.26],
+                ];
+                winPositions.forEach(pos => {
+                    const win = new THREE.Mesh(winGeo, winMat);
+                    win.position.set(pos[0], pos[1], pos[2]);
+                    group.add(win);
+                });
+
+                // Entrance Doorway
+                const doorMat = new THREE.MeshStandardMaterial({
+                    color: 0x0a0a0a,
+                    roughness: 0.9,
+                    metalness: 0.1
+                });
+                const doorGeo = new THREE.BoxGeometry(1.4, 1.8, 0.2);
+
+                // Left Door
+                const doorL = new THREE.Mesh(doorGeo, doorMat);
+                doorL.position.set(-0.7, 0.9, 2.26);
+                doorL.castShadow = true;
+                group.add(doorL);
+                // Right Door
+                const doorR = new THREE.Mesh(doorGeo, doorMat);
+                doorR.position.set(0.7, 0.9, 2.26);
+                doorR.castShadow = true;
+                group.add(doorR);
+
+                doors = [doorL, doorR];
+
+                // Interior Warm Light (hidden initially)
+                const intLight = new THREE.PointLight(0xffaa44, 0, 6);
+                intLight.position.set(0, 1.2, 2.8);
+                group.add(intLight);
+                interiorLight = intLight;
+
+                // Reception Desk (visible inside)
+                const deskMat = new THREE.MeshStandardMaterial({
+                    color: 0xb8944b,
+                    roughness: 0.5,
+                    metalness: 0.2
+                });
+                const deskGeo = new THREE.BoxGeometry(1.8, 0.4, 0.8);
+                const desk = new THREE.Mesh(deskGeo, deskMat);
+                desk.position.set(0, 0.6, 3.2);
+                group.add(desk);
+                receptionDesk = desk;
+
+                // Chandelier (small)
+                const chandelierMat = new THREE.MeshStandardMaterial({
+                    color: 0xffdd44,
+                    emissive: 0xffaa22,
+                    emissiveIntensity: 0.3,
+                    roughness: 0.3,
+                    metalness: 0.8
+                });
+                const chandelierGeo = new THREE.SphereGeometry(0.2, 8, 8);
+                const chandelier = new THREE.Mesh(chandelierGeo, chandelierMat);
+                chandelier.position.set(0, 2.6, 2.5);
+                group.add(chandelier);
+                const chandelier2 = new THREE.Mesh(chandelierGeo, chandelierMat);
+                chandelier2.position.set(0, 2.6, 3.5);
+                group.add(chandelier2);
+
+                return group;
+            }
+
+            hotelGroup = createHotel();
+            hotelGroup.position.y = 0;
+            scene.add(hotelGroup);
+
+            // --- Particles (Fireflies / Dust) ---
             const particleGeo = new THREE.BufferGeometry();
             const positions = new Float32Array(particleCount * 3);
             const sizes = new Float32Array(particleCount);
             const colors = new Float32Array(particleCount * 3);
 
             for (let i = 0; i < particleCount; i++) {
-                const radius = 3 + Math.random() * 4;
+                const radius = 4 + Math.random() * 6;
                 const theta = Math.random() * Math.PI * 2;
                 const phi = Math.acos((Math.random() * 2) - 1);
                 positions[i * 3] = radius * Math.sin(phi) * Math.cos(theta);
-                positions[i * 3 + 1] = radius * Math.cos(phi) * 0.6;
+                positions[i * 3 + 1] = Math.random() * 4;
                 positions[i * 3 + 2] = radius * Math.sin(phi) * Math.sin(theta) - 2;
 
                 sizes[i] = 0.008 + Math.random() * 0.025;
@@ -4094,10 +4280,10 @@
             particleGeo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
 
             const particleMat = new THREE.PointsMaterial({
-                size: 0.04,
+                size: 0.05,
                 vertexColors: true,
                 transparent: true,
-                opacity: 0.7,
+                opacity: 0.6,
                 blending: THREE.AdditiveBlending,
                 depthWrite: false,
                 sizeAttenuation: true
@@ -4105,16 +4291,12 @@
             particles = new THREE.Points(particleGeo, particleMat);
             scene.add(particles);
 
-            // --- Logo (3D Text-like using a plane with canvas texture) ---
+            // --- Logo (Canvas Texture) ---
             const logoCanvas = document.createElement('canvas');
             logoCanvas.width = 800;
             logoCanvas.height = 300;
             const ctx = logoCanvas.getContext('2d');
-
-            // Background
             ctx.clearRect(0, 0, 800, 300);
-
-            // Gold gradient
             const grad = ctx.createLinearGradient(0, 0, 800, 0);
             grad.addColorStop(0, '#b8944b');
             grad.addColorStop(0.3, '#d4b06a');
@@ -4123,104 +4305,141 @@
             grad.addColorStop(1, '#b8944b');
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
-
-            // Main text
             ctx.font = 'bold 80px "Playfair Display", Georgia, serif';
-            ctx.shadowColor = 'rgba(184, 148, 75, 0.3)';
-            ctx.shadowBlur = 30;
+            ctx.shadowColor = 'rgba(184, 148, 75, 0.4)';
+            ctx.shadowBlur = 40;
             ctx.fillStyle = grad;
             ctx.fillText('AMROUSS', 400, 120);
-
             ctx.font = '400 42px "Playfair Display", Georgia, serif';
-            ctx.shadowBlur = 20;
+            ctx.shadowBlur = 25;
             ctx.fillStyle = '#d4b06a';
             ctx.fillText('touristic DarMaroc', 400, 190);
 
-            // Subtle gold border
-            ctx.shadowBlur = 0;
-            ctx.strokeStyle = 'rgba(184, 148, 75, 0.08)';
-            ctx.lineWidth = 0.5;
-            ctx.strokeText('AMROUSS', 400, 120);
-
             const texture = new THREE.CanvasTexture(logoCanvas);
             texture.needsUpdate = true;
-
             const logoMat = new THREE.MeshStandardMaterial({
                 map: texture,
                 transparent: true,
                 emissive: new THREE.Color(0xb8944b),
-                emissiveIntensity: 0.15,
-                metalness: 0.5,
-                roughness: 0.3,
+                emissiveIntensity: 0.2,
+                metalness: 0.4,
+                roughness: 0.2,
                 side: THREE.DoubleSide
             });
-
-            const logoGeo = new THREE.PlaneGeometry(5, 1.6);
+            const logoGeo = new THREE.PlaneGeometry(6, 1.8);
             logoMesh = new THREE.Mesh(logoGeo, logoMat);
-            logoMesh.position.set(0, 0.1, 0);
+            logoMesh.position.set(0, 2.2, 9);
             scene.add(logoMesh);
 
-            // Small gold ring behind logo
-            const ringGeo = new THREE.RingGeometry(2.2, 2.6, 64);
-            const ringMat = new THREE.MeshBasicMaterial({
-                color: 0xb8944b,
-                transparent: true,
-                opacity: 0.12,
-                side: THREE.DoubleSide
-            });
-            const ring = new THREE.Mesh(ringGeo, ringMat);
-            ring.position.set(0, 0.1, -0.2);
-            scene.add(ring);
-
-            // --- Animations ---
-            let time = 0;
-            let cameraZ = 8;
-            let targetZ = 6;
-            let isSkipped = false;
-
-            function animateIntro() {
-                if (!introActive) return;
-                requestAnimationFrame(animateIntro);
-
-                time += 0.01;
-
-                // Camera gently moves forward and back
-                const breath = Math.sin(time * 0.3) * 0.15;
-                cameraZ += (targetZ + breath - cameraZ) * 0.008;
-                camera.position.z = cameraZ;
-
-                // Camera slight drift
-                camera.position.x = Math.sin(time * 0.1) * 0.15;
-                camera.position.y = Math.cos(time * 0.08) * 0.05 + 0.1;
-                camera.lookAt(0, 0.1, 0);
-
-                // Particles rotate slowly
-                particles.rotation.y = time * 0.015;
-                particles.rotation.x = Math.sin(time * 0.01) * 0.02;
-
-                // Logo subtle float
-                logoMesh.position.y = 0.1 + Math.sin(time * 0.6) * 0.04;
-                logoMesh.rotation.z = Math.sin(time * 0.3) * 0.003;
-
-                // Ring pulse
-                ring.material.opacity = 0.08 + Math.sin(time * 0.5) * 0.04;
-
-                // Update loading progress
-                if (progress < 1) {
-                    progress += 0.003 + Math.random() * 0.005;
-                    if (progress > 1) progress = 1;
-                    const pct = Math.round(progress * 100);
-                    loadingBar.style.width = pct + '%';
-                    if (pct < 30) loadingText.textContent = 'Loading experience…';
-                    else if (pct < 60) loadingText.textContent = 'Preparing the Atlas…';
-                    else if (pct < 90) loadingText.textContent = 'Almost ready…';
-                    else loadingText.textContent = 'Welcome to Amrouss Dar';
+            // --- GSAP Timeline for Drone Sequence ---
+            const tl = gsap.timeline({
+                onComplete: () => {
+                    if (!isSkipped) exitIntro();
                 }
+            });
 
-                renderer.render(scene, camera);
-            }
+            // Phase 1: Black Screen & Logo (0s - 2s)
+            tl.set(camera.position, { x: 0, y: 4, z: 18 });
+            tl.set(camera.lookAt, { target: [0, 1.5, 0] });
+            tl.to(logoMesh.position, {
+                z: 4,
+                duration: 2,
+                ease: "power2.inOut",
+                onUpdate: () => {
+                    camera.lookAt(0, 1.5, 0);
+                }
+            });
 
-            // --- Resize ---
+            // Phase 2: Drone Approach (2s - 7s)
+            tl.to(camera.position, {
+                x: 0,
+                y: 2.5,
+                z: 6,
+                duration: 4,
+                ease: "power1.inOut",
+                onUpdate: () => {
+                    camera.lookAt(0, 1.2, 0);
+                    // Update loading progress
+                    progress = 0.3 + (7 - (camera.position.z - 6)) / 12;
+                    if (progress > 0.9) progress = 0.9;
+                    loadingBar.style.width = Math.round(progress * 100) + '%';
+                    if (progress > 0.6) loadingText.textContent = 'Approaching the Dar…';
+                }
+            });
+
+            // Phase 3: Doors Open (7s - 9s)
+            tl.call(() => {
+                // Animate doors open
+                gsap.to(doors[0].rotation, {
+                    y: -1.2,
+                    duration: 1.2,
+                    ease: "back.out(1.2)"
+                });
+                gsap.to(doors[1].rotation, {
+                    y: 1.2,
+                    duration: 1.2,
+                    ease: "back.out(1.2)"
+                });
+                // Interior light turns on
+                gsap.to(interiorLight, {
+                    intensity: 2.5,
+                    duration: 0.8,
+                    ease: "power2.out"
+                });
+                // Golden light spill
+                const spillMat = new THREE.MeshStandardMaterial({
+                    color: 0xffaa44,
+                    transparent: true,
+                    opacity: 0,
+                    emissive: 0xffaa33,
+                    emissiveIntensity: 0.5
+                });
+                const spillGeo = new THREE.PlaneGeometry(1.5, 1.5);
+                const spill = new THREE.Mesh(spillGeo, spillMat);
+                spill.position.set(0, 0.1, 2.7);
+                spill.rotation.x = -Math.PI / 2;
+                scene.add(spill);
+                gsap.to(spill.material, {
+                    opacity: 0.8,
+                    duration: 0.6
+                });
+            }, null, "+=0.5");
+
+            // Phase 4: Camera Enters & Reaches Reception (9s - 13s)
+            tl.to(camera.position, {
+                x: 0,
+                y: 1.8,
+                z: 1.5,
+                duration: 2.5,
+                ease: "power1.inOut",
+                onUpdate: () => {
+                    camera.lookAt(0, 1.6, 3.5);
+                    progress = 0.95;
+                    loadingBar.style.width = '95%';
+                    loadingText.textContent = 'Entering the Dar…';
+                }
+            })
+            .to(camera.position, {
+                x: 0,
+                y: 1.8,
+                z: -0.5,
+                duration: 1.5,
+                ease: "power1.inOut",
+                onUpdate: () => {
+                    camera.lookAt(0, 1.6, 4);
+                    progress = 1.0;
+                    loadingBar.style.width = '100%';
+                    loadingText.textContent = 'Welcome to Amrouss Dar';
+                }
+            });
+
+            // Phase 5: Transition (13s - 15s)
+            tl.call(() => {
+                // Fade out overlay
+                exitIntro();
+            }, null, "+=1.5");
+
+            // --- Resize Handler ---
             function onResize() {
                 const w = window.innerWidth;
                 const h = window.innerHeight;
@@ -4230,45 +4449,53 @@
             }
             window.addEventListener('resize', onResize);
 
-            // --- Skip / Exit ---
+            // --- Skip Intro ---
             function exitIntro() {
                 if (isSkipped) return;
                 isSkipped = true;
                 introActive = false;
-
-                // Fade out overlay
                 overlay.classList.add('hidden');
-
-                // Remove canvas after transition
                 setTimeout(() => {
                     renderer.dispose();
-                    // Start Lenis and GSAP after intro
                     initLenisAndGSAP();
                 }, 1800);
             }
 
-            skipBtn.addEventListener('click', exitIntro);
-
-            // Auto-exit after progress completes
-            const progressCheck = setInterval(() => {
-                if (progress >= 1 && !isSkipped) {
-                    clearInterval(progressCheck);
-                    setTimeout(exitIntro, 600);
+            skipBtn.addEventListener('click', () => {
+                if (!isSkipped) {
+                    tl.progress(1);
+                    exitIntro();
                 }
-            }, 100);
+            });
 
-            // Also exit after max 8 seconds (safety)
-            setTimeout(() => {
-                if (!isSkipped && progress < 1) {
-                    progress = 1;
-                    loadingBar.style.width = '100%';
-                    loadingText.textContent = 'Welcome to Amrouss Dar';
-                    setTimeout(exitIntro, 500);
+            // --- Animation Loop ---
+            let time = 0;
+
+            function animateIntro() {
+                if (!introActive) return;
+                requestAnimationFrame(animateIntro);
+                time += 0.01;
+
+                // Particle drift
+                particles.rotation.y = time * 0.008;
+
+                // Logo subtle pulse
+                if (logoMesh) {
+                    logoMesh.position.y = 2.2 + Math.sin(time * 0.5) * 0.05;
                 }
-            }, 8000);
 
-            // --- Start ---
+                renderer.render(scene, camera);
+            }
+
             animateIntro();
+
+            // Safety timeout
+            setTimeout(() => {
+                if (!isSkipped) {
+                    tl.progress(1);
+                    exitIntro();
+                }
+            }, 16000);
 
             // Expose for cleanup
             window.__introCleanup = function() {
@@ -4276,7 +4503,6 @@
                 scene = null;
                 renderer = null;
             };
-
         })();
 
 
@@ -4302,13 +4528,11 @@
             });
 
             lenis.on('scroll', () => {
-                // Update nav and booking bar
                 const scrolled = window.scrollY > 30;
                 document.getElementById('mainNav').classList.toggle('scrolled', scrolled);
                 document.getElementById('bookingBarWrapper').classList.toggle('scrolled', scrolled);
             });
 
-            // Connect Lenis to RAF
             function raf(time) {
                 lenis.raf(time);
                 requestAnimationFrame(raf);
@@ -4318,7 +4542,6 @@
             // --- GSAP + ScrollTrigger ---
             gsap.registerPlugin(ScrollTrigger);
 
-            // Hero parallax
             gsap.to('#heroBg', {
                 scale: 1.25,
                 y: '10%',
@@ -4331,7 +4554,6 @@
                 }
             });
 
-            // Reveal items with GSAP
             document.querySelectorAll('.reveal-item').forEach((el) => {
                 gsap.fromTo(el, {
                     opacity: 0,
@@ -4349,7 +4571,6 @@
                 });
             });
 
-            // Room cards stagger
             gsap.fromTo('.room-art-card', {
                 opacity: 0,
                 y: 40,
@@ -4368,7 +4589,6 @@
                 }
             });
 
-            // Feature grid items
             gsap.fromTo('.feature', {
                 opacity: 0,
                 y: 50,
@@ -4385,7 +4605,6 @@
                 }
             });
 
-            // Experience cards
             gsap.fromTo('.exp-card', {
                 opacity: 0,
                 y: 40,
@@ -4404,7 +4623,6 @@
                 }
             });
 
-            // Gallery tiles
             gsap.fromTo('.gallery-tile', {
                 opacity: 0,
                 scale: 0.92,
@@ -4421,7 +4639,6 @@
                 }
             });
 
-            // Stats
             gsap.fromTo('.stat b', {
                 opacity: 0,
                 y: 20,
@@ -4438,7 +4655,6 @@
                 }
             });
 
-            // Facility items
             gsap.fromTo('.facility-item', {
                 opacity: 0,
                 y: 30,
@@ -4455,7 +4671,6 @@
                 }
             });
 
-            // Policy blocks
             gsap.fromTo('.policy-block', {
                 opacity: 0,
                 y: 30,
@@ -4472,7 +4687,6 @@
                 }
             });
 
-            // Journal articles
             gsap.fromTo('.journal-grid article', {
                 opacity: 0,
                 y: 30,
@@ -4489,7 +4703,6 @@
                 }
             });
 
-            // Update ScrollTrigger on resize
             window.addEventListener('resize', () => {
                 ScrollTrigger.refresh();
             });
@@ -4522,14 +4735,12 @@
                 dot.classList.remove('visible');
             });
 
-            // Hover effects on interactive elements
             document.querySelectorAll('a, button, .room-art-card, .exp-card, .gallery-tile, .facility-item, .policy-block')
                 .forEach(el => {
                     el.addEventListener('mouseenter', () => dot.classList.add('hover'));
                     el.addEventListener('mouseleave', () => dot.classList.remove('hover'));
                 });
 
-            // Smooth follow
             function updateCursor() {
                 dotX += (mouseX - dotX) * 0.12;
                 dotY += (mouseY - dotY) * 0.12;
@@ -5105,19 +5316,17 @@
                     tile.style.display = (filter === 'all' || tile.dataset.gallery === filter) ? 'flex' :
                     'none';
                 });
-                // Re-trigger GSAP animations for visible tiles
                 ScrollTrigger.refresh();
             });
         });
 
-        // Refresh ScrollTrigger after everything loads
         window.addEventListener('load', () => {
             setTimeout(() => {
                 ScrollTrigger.refresh();
             }, 500);
         });
 
-        console.log('🛎️ Amrouss touristic DarMaroc — Cinematic experience with Three.js intro, Lenis smooth scroll & GSAP animations');
+        console.log('🛎️ Amrouss touristic DarMaroc — Cinematic drone intro, Lenis smooth scroll & GSAP animations');
     </script>
 </body>
 </html>
