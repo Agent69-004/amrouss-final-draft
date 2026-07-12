@@ -4892,7 +4892,7 @@
 
 
         // ============================================================ //
-        //  2. ROOM CAROUSEL — CINEMATIC SWITCHING                     //
+        //  2. ROOM CAROUSEL — FIXED ROOM SELECTION                   //
         // ============================================================ //
 
         const roomData = {
@@ -4972,72 +4972,96 @@
 
         let currentRoom = 'double';
         let isTransitioning = false;
+        let roomCarouselReady = false;
 
         function initRoomCarousel() {
-            // Thumbnail clicks
-            document.querySelectorAll('.room-thumb').forEach(thumb => {
-                thumb.addEventListener('click', function() {
-                    const room = this.dataset.room;
-                    if (room && room !== currentRoom && !isTransitioning) {
-                        switchRoom(room);
-                    }
+            if (roomCarouselReady) return;
+            roomCarouselReady = true;
+
+            // Get DOM elements
+            const thumbnails = document.querySelectorAll('.room-thumb');
+            const featuredImage = document.getElementById('featuredImage');
+            const featuredName = document.getElementById('featuredName');
+            const featuredEyebrow = document.getElementById('featuredEyebrow');
+            const featuredPrice = document.getElementById('featuredPrice');
+            const featuredDesc = document.getElementById('featuredDesc');
+            const featuredBadge = document.getElementById('featuredBadge');
+            const fSize = document.getElementById('fSize');
+            const fBed = document.getElementById('fBed');
+            const fPool = document.getElementById('fPool');
+            const fFireplace = document.getElementById('fFireplace');
+            const featuredBookBtn = document.getElementById('featuredBookBtn');
+            const featuredDetailsBtn = document.getElementById('featuredDetailsBtn');
+
+            // --- Thumbnail click handler ---
+            thumbnails.forEach(function(thumb) {
+                thumb.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const roomKey = this.dataset.room;
+                    if (!roomKey || roomKey === currentRoom || isTransitioning) return;
+                    switchRoom(roomKey);
                 });
             });
 
-            // Featured book and details buttons - use data attributes with current room
-            document.getElementById('featuredBookBtn').addEventListener('click', function(e) {
+            // --- Book & Details buttons ---
+            featuredBookBtn.addEventListener('click', function(e) {
                 e.stopPropagation();
                 openRoomModal(currentRoom);
             });
-            document.getElementById('featuredDetailsBtn').addEventListener('click', function(e) {
+            featuredDetailsBtn.addEventListener('click', function(e) {
                 e.stopPropagation();
                 openRoomModal(currentRoom);
             });
 
-            // Set initial room
-            updateFeaturedRoom('double');
+            // --- Set initial room ---
+            updateRoomDisplay('double');
         }
 
         function switchRoom(roomKey) {
             if (isTransitioning || roomKey === currentRoom) return;
+
+            // Validate room exists
+            const data = roomData[roomKey];
+            if (!data) {
+                console.warn('Room data not found for:', roomKey);
+                return;
+            }
+
             isTransitioning = true;
 
             // Update thumbnails
-            document.querySelectorAll('.room-thumb').forEach(th => {
+            document.querySelectorAll('.room-thumb').forEach(function(th) {
                 th.classList.toggle('active', th.dataset.room === roomKey);
             });
 
-            // Get data
-            const data = roomData[roomKey];
-            if (!data) { isTransitioning = false; return; }
-
-            // DOM elements
+            // Get DOM elements
             const img = document.getElementById('featuredImage');
             const name = document.getElementById('featuredName');
+            const eyebrow = document.getElementById('featuredEyebrow');
             const price = document.getElementById('featuredPrice');
             const desc = document.getElementById('featuredDesc');
             const badge = document.getElementById('featuredBadge');
-            const eyebrow = document.getElementById('featuredEyebrow');
             const size = document.getElementById('fSize');
             const bed = document.getElementById('fBed');
             const pool = document.getElementById('fPool');
             const fireplace = document.getElementById('fFireplace');
 
-            // 1. Fade image out and update
+            // --- 1. Fade image out ---
             gsap.to(img, {
                 opacity: 0,
                 scale: 1.02,
-                duration: 0.4,
+                duration: 0.35,
                 ease: 'power2.inOut',
                 onComplete: function() {
+                    // Set new image
                     img.src = data.images[0];
-                    // Once image is loaded, fade it back in
+                    // Fade image back in when loaded
                     const onLoad = function() {
                         img.removeEventListener('load', onLoad);
                         gsap.to(img, {
                             opacity: 1,
                             scale: 1,
-                            duration: 0.6,
+                            duration: 0.5,
                             ease: 'power2.out'
                         });
                     };
@@ -5047,25 +5071,25 @@
                         gsap.to(img, {
                             opacity: 1,
                             scale: 1,
-                            duration: 0.6,
+                            duration: 0.5,
                             ease: 'power2.out'
                         });
                     }
                 }
             });
 
-            // 2. Fade text out, update, fade in
+            // --- 2. Fade text out ---
             const textElements = [name, eyebrow, price, desc];
             const amenityEls = [size, bed, pool, fireplace];
 
             gsap.to(textElements, {
-                y: -16,
+                y: -15,
                 opacity: 0,
                 duration: 0.3,
                 stagger: 0.04,
                 ease: 'power2.in',
                 onComplete: function() {
-                    // Update all text content
+                    // --- Update all content ---
                     name.textContent = data.name;
                     eyebrow.textContent = data.name;
                     price.innerHTML = 'From <strong>' + data.price + '</strong> per night';
@@ -5076,18 +5100,18 @@
                     pool.textContent = data.pool;
                     fireplace.textContent = data.fireplace;
 
-                    // Fade text back in with stagger
+                    // --- Fade text back in with stagger ---
                     gsap.to(textElements, {
                         y: 0,
                         opacity: 1,
                         duration: 0.5,
                         stagger: 0.06,
                         ease: 'power2.out',
-                        delay: 0.1
+                        delay: 0.08
                     });
                     gsap.to(amenityEls, {
                         opacity: 1,
-                        duration: 0.3,
+                        duration: 0.35,
                         stagger: 0.03,
                         ease: 'power2.out',
                         delay: 0.15
@@ -5095,7 +5119,7 @@
                 }
             });
 
-            // 3. Fade amenities out (they'll be faded back in above)
+            // --- 3. Fade amenities out ---
             gsap.to(amenityEls, {
                 opacity: 0,
                 duration: 0.2,
@@ -5103,7 +5127,7 @@
                 ease: 'power2.in'
             }, 0);
 
-            // 4. Button pulse effect
+            // --- 4. Button pulse ---
             gsap.to('#featuredBookBtn', {
                 scale: 0.96,
                 duration: 0.12,
@@ -5119,20 +5143,27 @@
                 repeat: 1
             }, 0.25);
 
-            // Update current room
+            // --- Update current room ---
             currentRoom = roomKey;
 
-            // Unlock after animation
+            // --- Update modal data reference ---
+            const modalMoreDetails = document.getElementById('modalMoreDetails');
+            if (modalMoreDetails) {
+                modalMoreDetails.dataset.room = roomKey;
+            }
+
+            // --- Unlock after animation ---
             setTimeout(function() {
                 isTransitioning = false;
             }, 800);
         }
 
-        function updateFeaturedRoom(roomKey) {
+        function updateRoomDisplay(roomKey) {
             const data = roomData[roomKey];
             if (!data) return;
 
-            document.getElementById('featuredImage').src = data.images[0];
+            const img = document.getElementById('featuredImage');
+            img.src = data.images[0];
             document.getElementById('featuredName').textContent = data.name;
             document.getElementById('featuredEyebrow').textContent = data.name;
             document.getElementById('featuredPrice').innerHTML = 'From <strong>' + data.price + '</strong> per night';
@@ -5143,9 +5174,13 @@
             document.getElementById('fPool').textContent = data.pool;
             document.getElementById('fFireplace').textContent = data.fireplace;
 
-            document.querySelectorAll('.room-thumb').forEach(th => {
+            // Set active thumbnail
+            document.querySelectorAll('.room-thumb').forEach(function(th) {
                 th.classList.toggle('active', th.dataset.room === roomKey);
             });
+
+            document.getElementById('featuredBookBtn').dataset.room = roomKey;
+            document.getElementById('featuredDetailsBtn').dataset.room = roomKey;
 
             currentRoom = roomKey;
         }
@@ -6468,6 +6503,7 @@
         });
 
         console.log('🛎️ Amrouss touristic DarMaroc — Premium room selector with cinematic transitions, complete multilingual support & refined motion design');
+        console.log('✅ Room selector fixed — all room types are now clickable and update correctly.');
     </script>
 </body>
 </html>
