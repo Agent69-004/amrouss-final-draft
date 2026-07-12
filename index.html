@@ -39,6 +39,8 @@
             --ink: #1a1a1a;
             --cream: #f5f2ed;
             --gold: #b8944b;
+            --jade: #2d6b4f;
+            --jade-light: #3a8a64;
             --paper: #faf8f5;
             --deep: #0f1a16;
             --grey: #6b6b6b;
@@ -172,6 +174,17 @@
         }
         .btn-outline:hover .arrow {
             transform: translate(4px, -2px);
+        }
+
+        /* ===== JADE GREEN BUTTON ===== */
+        .btn-jade {
+            background: var(--jade);
+            color: #fff;
+            border: none;
+        }
+        .btn-jade:hover {
+            background: var(--jade-light);
+            transform: translateY(-2px);
         }
 
         .text-link {
@@ -388,7 +401,7 @@
             margin-left: 6px;
         }
 
-        /* ===== RESERVE BUTTON (with line-art bell) ===== */
+        /* ===== RESERVE BUTTON ===== */
         .nav-book {
             background: transparent;
             border: 1px solid rgba(255, 255, 255, 0.25);
@@ -437,7 +450,6 @@
             transform: translate(3px, -2px);
         }
 
-        /* ===== MENU BUTTON (mobile) ===== */
         .menu-btn {
             display: none;
             background: none;
@@ -505,16 +517,10 @@
             font-weight: 300;
             color: rgba(255, 255, 255, 0.7);
             max-width: 600px;
-            margin: 0 auto 40px;
+            margin: 0 auto;
             letter-spacing: 0.02em;
             line-height: 1.6;
             font-family: "DM Sans", sans-serif;
-        }
-        .hero-actions {
-            display: flex;
-            gap: 16px;
-            justify-content: center;
-            flex-wrap: wrap;
         }
 
         .hero-meta {
@@ -536,6 +542,111 @@
         @keyframes slowZoom {
             0% { transform: scale(1); }
             100% { transform: scale(1.06); }
+        }
+
+        /* ===== BOOKING BAR (dynamic with scroll) ===== */
+        .booking-bar-wrapper {
+            position: sticky;
+            top: 80px;
+            z-index: 50;
+            transition: all 0.4s ease;
+            background: transparent;
+            padding: 0 5vw;
+            margin-top: -24px;
+        }
+        .booking-bar-wrapper.scrolled {
+            background: rgba(250, 248, 245, 0.96);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            box-shadow: 0 2px 32px rgba(0, 0, 0, 0.04);
+            padding: 12px 5vw;
+            top: 72px;
+        }
+        .booking-bar {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: #fff;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1.2fr;
+            gap: 0;
+            box-shadow: 0 4px 40px rgba(0, 0, 0, 0.04);
+            border: 0;
+            transition: all 0.3s ease;
+            padding: 0;
+        }
+        .booking-bar>div {
+            padding: 16px 20px;
+            border-right: 1px solid var(--light-grey);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .booking-bar>div:last-child {
+            border-right: 0;
+            padding: 8px 20px;
+        }
+        .booking-bar label {
+            font-size: 8px;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--grey);
+            font-weight: 500;
+            margin-bottom: 4px;
+            display: block;
+        }
+        .booking-bar input,
+        .booking-bar select {
+            border: 0;
+            background: transparent;
+            color: var(--ink);
+            font-size: 14px;
+            font-family: "DM Sans", sans-serif;
+            width: 100%;
+            outline: 0;
+            padding: 4px 0;
+            min-height: 32px;
+        }
+        .booking-bar .btn-jade {
+            width: 100%;
+            padding: 14px 20px;
+            font-size: 10px;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            font-weight: 500;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: "DM Sans", sans-serif;
+            min-height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            background: var(--jade);
+            color: #fff;
+        }
+        .booking-bar .btn-jade:hover {
+            background: var(--jade-light);
+            transform: translateY(-2px);
+        }
+        .booking-bar .btn-jade .arrow {
+            font-size: 18px;
+            transition: transform 0.3s ease;
+        }
+        .booking-bar .btn-jade:hover .arrow {
+            transform: translate(4px, -2px);
+        }
+        .booking-bar .best-rate {
+            position: absolute;
+            top: -10px;
+            right: 20px;
+            background: var(--gold);
+            color: #fff;
+            padding: 2px 16px;
+            font-size: 7px;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            font-weight: 500;
         }
 
         /* ===== SECTION COMMON ===== */
@@ -571,11 +682,6 @@
             grid-template-columns: repeat(3, 1fr);
             gap: 40px;
         }
-        .grid-4 {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 30px;
-        }
 
         /* ===== INTRO ===== */
         .intro {
@@ -596,7 +702,7 @@
             color: var(--grey);
         }
 
-        /* ===== FEATURE GRID (immersive) ===== */
+        /* ===== FEATURE GRID ===== */
         .feature-grid {
             display: grid;
             grid-template-columns: 1.2fr 0.8fr;
@@ -652,88 +758,98 @@
         }
 
         /* ===== ROOMS ===== */
-        .rooms-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 30px;
-            margin-top: 50px;
+        .rooms-section {
+            padding: 100px 5vw;
+            max-width: 1400px;
+            margin: 0 auto;
         }
-        .room-card {
+        .rooms-scroll {
+            display: flex;
+            gap: 24px;
+            overflow-x: auto;
+            padding: 20px 4px 40px;
+            scroll-behavior: smooth;
+            -webkit-overflow-scrolling: touch;
+        }
+        .rooms-scroll::-webkit-scrollbar {
+            height: 4px;
+        }
+        .rooms-scroll::-webkit-scrollbar-track {
+            background: var(--light-grey);
+        }
+        .rooms-scroll::-webkit-scrollbar-thumb {
+            background: var(--gold);
+        }
+        .room-card-horizontal {
+            flex: 0 0 280px;
+            min-width: 260px;
             background: #fff;
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+            cursor: pointer;
+            overflow: hidden;
             border: 0;
-            box-shadow: none;
-            transition: transform 0.3s ease;
         }
-        .room-card:hover {
-            transform: translateY(-6px);
+        .room-card-horizontal:hover {
+            transform: scale(1.04);
+            box-shadow: 0 12px 48px rgba(0, 0, 0, 0.06);
+            z-index: 5;
         }
-        .room-card .image {
-            height: 340px;
+        .room-card-horizontal .image {
+            height: 220px;
             background-size: cover;
             background-position: center;
-            margin-bottom: 20px;
         }
-        .room-card .image.one {
-            background-image: url('https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=900&q=85');
+        .room-card-horizontal .image.double {
+            background-image: url('https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&w=900&q=85');
         }
-        .room-card .image.two {
-            background-image: url('https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=900&q=85');
+        .room-card-horizontal .image.twin {
+            background-image: url('https://images.unsplash.com/photo-1618773928121-c32242e63f39?auto=format&fit=crop&w=900&q=85');
         }
-        .room-card .image.three {
-            background-image: url('https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=900&q=85');
+        .room-card-horizontal .image.triple {
+            background-image: url('https://images.unsplash.com/photo-1560185127-6ed189bf02f4?auto=format&fit=crop&w=900&q=85');
         }
-        .room-card .info {
-            padding: 0 4px;
+        .room-card-horizontal .image.suite {
+            background-image: url('https://images.unsplash.com/photo-1631049307264-da0ec9d70304?auto=format&fit=crop&w=900&q=85');
         }
-        .room-card .info .eyebrow {
-            font-size: 9px;
-            margin-bottom: 6px;
+        .room-card-horizontal .info {
+            padding: 18px 20px 24px;
         }
-        .room-card .info h3 {
-            font-size: 24px;
+        .room-card-horizontal .info .eyebrow {
+            font-size: 8px;
             margin-bottom: 4px;
+            color: var(--grey);
         }
-        .room-card .info .price {
+        .room-card-horizontal .info h3 {
+            font-size: 22px;
+            margin-bottom: 2px;
+        }
+        .room-card-horizontal .info .price {
             font-size: 13px;
             font-weight: 500;
             color: var(--ink);
-            margin: 8px 0 16px;
+            margin: 6px 0 14px;
         }
-        .room-card .info .price small {
+        .room-card-horizontal .info .price small {
             font-weight: 400;
             color: var(--grey);
             font-size: 11px;
         }
-        .room-actions {
-            display: flex;
-            gap: 12px;
-            margin-top: 16px;
-        }
-        .room-actions button {
-            flex: 1;
-            padding: 12px 16px;
+        .room-card-horizontal .info .btn-small {
+            padding: 10px 24px;
             font-size: 9px;
             letter-spacing: 0.12em;
             text-transform: uppercase;
             font-weight: 500;
-            border: 1px solid var(--ink);
-            background: transparent;
+            background: var(--ink);
+            color: #fff;
+            border: 0;
             cursor: pointer;
             transition: all 0.3s;
             font-family: "DM Sans", sans-serif;
-            min-height: 44px;
+            min-height: 40px;
         }
-        .room-actions .book-now {
-            background: var(--ink);
-            color: #fff;
-            border-color: var(--ink);
-        }
-        .room-actions .book-now:hover {
+        .room-card-horizontal .info .btn-small:hover {
             background: var(--gold);
-            border-color: var(--gold);
-        }
-        .room-actions .details-btn:hover {
-            background: var(--light-grey);
         }
 
         /* ===== QUOTE ===== */
@@ -956,137 +1072,6 @@
             border-color: #fff;
         }
 
-        /* ===== OFFERS ===== */
-        .offers-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 30px;
-            margin-top: 50px;
-        }
-        .offer-card {
-            padding: 40px 36px;
-            background: #fff;
-            border: 0;
-            border-top: 2px solid var(--gold);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        .offer-card:hover {
-            transform: translateY(-6px);
-            box-shadow: 0 12px 48px rgba(0, 0, 0, 0.04);
-        }
-        .offer-card .label {
-            font-size: 9px;
-            letter-spacing: 0.12em;
-            text-transform: uppercase;
-            color: var(--gold);
-            font-weight: 500;
-        }
-        .offer-card h3 {
-            font-size: 26px;
-            margin: 12px 0 8px;
-        }
-        .offer-card p {
-            font-size: 14px;
-            color: var(--grey);
-            line-height: 1.7;
-            margin-bottom: 16px;
-        }
-        .offer-card .price {
-            font-size: 22px;
-            font-weight: 500;
-            color: var(--ink);
-            display: block;
-            margin-bottom: 20px;
-        }
-        .offer-card button {
-            padding: 12px 28px;
-            font-size: 9px;
-            letter-spacing: 0.12em;
-            text-transform: uppercase;
-            font-weight: 500;
-            background: var(--ink);
-            color: #fff;
-            border: 0;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-family: "DM Sans", sans-serif;
-            min-height: 44px;
-        }
-        .offer-card button:hover {
-            background: var(--gold);
-        }
-
-        /* ===== RITUALS ===== */
-        .rituals-section {
-            padding: 100px 5vw;
-            max-width: 1200px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: 0.8fr 1.2fr;
-            gap: 60px;
-            align-items: start;
-        }
-        .ritual-cards {
-            display: flex;
-            gap: 20px;
-        }
-        .ritual-card {
-            flex: 1;
-            min-height: 380px;
-            position: relative;
-            overflow: hidden;
-            color: #fff;
-            padding: 30px;
-            display: flex;
-            align-items: flex-end;
-        }
-        .ritual-card .bg {
-            position: absolute;
-            inset: 0;
-            background-size: cover;
-            background-position: center;
-            transition: transform 0.6s ease;
-        }
-        .ritual-card:hover .bg {
-            transform: scale(1.04);
-        }
-        .ritual-card .bg.first {
-            background-image: url('https://images.unsplash.com/photo-1519823551278-64ac92734fb1?auto=format&fit=crop&w=900&q=85');
-        }
-        .ritual-card .bg.second {
-            background-image: url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=900&q=85');
-        }
-        .ritual-card .overlay {
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(0deg, rgba(0, 0, 0, 0.6) 0%, transparent 60%);
-        }
-        .ritual-card .content {
-            position: relative;
-            z-index: 2;
-        }
-        .ritual-card .content .number {
-            font-size: 9px;
-            font-family: "DM Mono", monospace;
-            color: rgba(255, 255, 255, 0.3);
-            letter-spacing: 0.1em;
-            display: block;
-        }
-        .ritual-card .content h3 {
-            font-size: 28px;
-            font-weight: 500;
-            margin: 8px 0 4px;
-            line-height: 1.05;
-        }
-        .ritual-card .content p {
-            font-size: 13px;
-            color: rgba(255, 255, 255, 0.7);
-            max-width: 160px;
-        }
-        .ritual-card.second {
-            margin-top: 60px;
-        }
-
         /* ===== SIGNATURE ===== */
         .signature-section {
             display: grid;
@@ -1146,6 +1131,53 @@
             grid-column: 2;
             font-size: 12px;
             color: rgba(255, 255, 255, 0.5);
+        }
+
+        /* ===== EVENTS ===== */
+        .events-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            min-height: 500px;
+            background: var(--cream);
+        }
+        .events-section .image {
+            background: url('https://images.unsplash.com/photo-1519167758481-83f550bb49b3?auto=format&fit=crop&w=1400&q=85') center/cover;
+            min-height: 320px;
+        }
+        .events-section .text {
+            padding: 80px 60px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .events-section .text h2 {
+            font-size: clamp(34px, 4.5vw, 56px);
+        }
+        .events-section .text h2 em {
+            font-style: italic;
+        }
+        .events-section .text p {
+            font-size: 15px;
+            color: var(--grey);
+            line-height: 1.8;
+            max-width: 400px;
+            margin: 20px 0;
+        }
+        .events-section .text .stats {
+            display: flex;
+            gap: 40px;
+            margin: 20px 0 30px;
+        }
+        .events-section .text .stats b {
+            font-size: 28px;
+            font-family: "Playfair Display", Georgia, serif;
+            color: var(--gold);
+        }
+        .events-section .text .stats span {
+            font-size: 9px;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--grey);
         }
 
         /* ===== GALLERY ===== */
@@ -1644,7 +1676,7 @@
             border-color: var(--gold);
         }
 
-        /* ===== WHATSAPP FLOAT ===== */
+        /* ===== WHATSAPP BUTTON (dynamic with glow) ===== */
         .whatsapp-float {
             position: fixed;
             bottom: 28px;
@@ -1652,26 +1684,33 @@
             z-index: 50;
             background: #25d366;
             color: #fff;
-            width: 52px;
-            height: 52px;
+            width: 56px;
+            height: 56px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             text-decoration: none;
-            box-shadow: 0 4px 20px rgba(37, 211, 102, 0.3);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.5);
+            transition: all 0.3s ease;
             border: 0;
+            animation: whatsappPulse 2.5s ease-in-out infinite;
         }
         .whatsapp-float:hover {
-            transform: scale(1.08);
-            box-shadow: 0 8px 32px rgba(37, 211, 102, 0.4);
+            transform: scale(1.1);
+            box-shadow: 0 0 0 12px rgba(37, 211, 102, 0.15);
+            animation-play-state: paused;
             color: #fff;
         }
         .whatsapp-float svg {
-            width: 28px;
-            height: 28px;
+            width: 30px;
+            height: 30px;
             fill: #fff;
+        }
+        @keyframes whatsappPulse {
+            0% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.5); }
+            70% { box-shadow: 0 0 0 16px rgba(37, 211, 102, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); }
         }
 
         /* ===== FOOTER ===== */
@@ -1774,7 +1813,7 @@
             margin-right: auto;
         }
 
-        /* ===== DIALOG ===== */
+        /* ===== DIALOG (centered) ===== */
         dialog {
             padding: 0;
             border: 0;
@@ -1785,6 +1824,11 @@
             border-radius: 0;
             max-height: 94vh;
             overflow-y: auto;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            margin: 0;
         }
         dialog::backdrop {
             background: rgba(0, 0, 0, 0.7);
@@ -1792,16 +1836,21 @@
         }
         .booking-panel {
             padding: 48px 40px;
+            position: relative;
         }
         .booking-panel .close {
-            float: right;
+            position: absolute;
+            top: 16px;
+            right: 20px;
             border: 0;
             background: none;
             font-size: 28px;
             cursor: pointer;
             color: var(--grey);
             transition: color 0.3s;
-            padding: 0 8px;
+            padding: 4px 8px;
+            line-height: 1;
+            z-index: 5;
         }
         .booking-panel .close:hover {
             color: var(--ink);
@@ -1832,6 +1881,10 @@
             font-weight: 500;
             margin-bottom: 4px;
         }
+        .booking-panel label .required {
+            color: #d32f2f;
+            margin-left: 2px;
+        }
         .booking-panel input,
         .booking-panel select,
         .booking-panel textarea {
@@ -1846,6 +1899,11 @@
             outline: 0;
             min-height: 40px;
         }
+        .booking-panel input:focus,
+        .booking-panel select:focus,
+        .booking-panel textarea:focus {
+            border-bottom-color: var(--gold);
+        }
         .booking-panel textarea {
             resize: vertical;
             min-height: 60px;
@@ -1856,7 +1914,7 @@
         .booking-panel .reserve-btn {
             grid-column: 1 / -1;
             padding: 16px;
-            background: var(--ink);
+            background: var(--jade);
             color: #fff;
             border: 0;
             font-size: 10px;
@@ -1870,7 +1928,7 @@
             margin-top: 4px;
         }
         .booking-panel .reserve-btn:hover {
-            background: var(--gold);
+            background: var(--jade-light);
         }
 
         /* ===== TOAST ===== */
@@ -1911,7 +1969,7 @@
         /* ============================================================ */
 
         @media(max-width: 1024px) {
-            .grid-3, .rooms-grid, .offers-grid {
+            .grid-3 {
                 grid-template-columns: repeat(2, 1fr);
             }
             .facilities-grid {
@@ -1935,6 +1993,16 @@
             }
             .gallery-tile.wide {
                 grid-column: span 1;
+            }
+            .events-section {
+                grid-template-columns: 1fr;
+            }
+            .events-section .image {
+                order: -1;
+                min-height: 320px;
+            }
+            .events-section .text {
+                padding: 50px 5vw;
             }
         }
 
@@ -2000,20 +2068,42 @@
             .hero-content .subhead {
                 font-size: 16px;
             }
-            .hero-actions {
-                flex-direction: column;
-                align-items: center;
-            }
-            .hero-actions .btn-primary,
-            .hero-actions .btn-outline {
-                width: 100%;
-                max-width: 300px;
-                justify-content: center;
-            }
             .hero-meta {
                 font-size: 7px;
                 bottom: 16px;
                 padding: 0 4vw;
+            }
+
+            .booking-bar-wrapper {
+                top: 64px;
+                padding: 0 4vw;
+            }
+            .booking-bar-wrapper.scrolled {
+                top: 64px;
+                padding: 8px 4vw;
+            }
+            .booking-bar {
+                grid-template-columns: 1fr 1fr;
+                gap: 0;
+                padding: 0;
+            }
+            .booking-bar>div {
+                padding: 12px 14px;
+                border-right: 0;
+                border-bottom: 1px solid var(--light-grey);
+            }
+            .booking-bar>div:last-child {
+                border-bottom: 0;
+                padding: 8px 14px;
+                grid-column: 1 / -1;
+            }
+            .booking-bar input,
+            .booking-bar select {
+                font-size: 15px;
+            }
+            .booking-bar .btn-jade {
+                padding: 14px;
+                font-size: 11px;
             }
 
             .intro-grid,
@@ -2022,8 +2112,7 @@
             .signature-section,
             .contact-section,
             .faq-grid,
-            .location-grid,
-            .rituals-section {
+            .location-grid {
                 grid-template-columns: 1fr;
             }
             .quote-section .text,
@@ -2043,10 +2132,15 @@
                 order: 0;
             }
 
-            .rooms-grid,
-            .offers-grid,
-            .grid-3 {
-                grid-template-columns: 1fr;
+            .rooms-section {
+                padding: 60px 4vw;
+            }
+            .room-card-horizontal {
+                flex: 0 0 240px;
+                min-width: 220px;
+            }
+            .room-card-horizontal .image {
+                height: 180px;
             }
 
             .facilities-grid {
@@ -2054,16 +2148,6 @@
             }
             .policies-grid {
                 grid-template-columns: 1fr;
-            }
-
-            .ritual-cards {
-                flex-direction: column;
-            }
-            .ritual-card.second {
-                margin-top: 0;
-            }
-            .ritual-card {
-                min-height: 280px;
             }
 
             .stats-grid {
@@ -2114,7 +2198,7 @@
             }
 
             .booking-panel {
-                padding: 28px 20px;
+                padding: 32px 20px;
             }
             .booking-panel h2 {
                 font-size: 32px;
@@ -2171,6 +2255,17 @@
             }
             .testimonial-section blockquote {
                 font-size: 28px;
+            }
+
+            .whatsapp-float {
+                width: 48px;
+                height: 48px;
+                bottom: 16px;
+                right: 16px;
+            }
+            .whatsapp-float svg {
+                width: 26px;
+                height: 26px;
             }
         }
 
@@ -2229,6 +2324,20 @@
             }
             .brand small {
                 font-size: 6px;
+            }
+            .room-card-horizontal {
+                flex: 0 0 200px;
+                min-width: 180px;
+            }
+            .room-card-horizontal .image {
+                height: 150px;
+            }
+            .room-card-horizontal .info h3 {
+                font-size: 18px;
+            }
+            .room-card-horizontal .info .btn-small {
+                padding: 8px 16px;
+                font-size: 8px;
             }
         }
     </style>
@@ -2301,7 +2410,7 @@
         <button class="menu-btn" id="menuToggle" aria-label="Open menu">☰</button>
     </header>
 
-    <!-- ===== HERO ===== -->
+    <!-- ===== HERO (buttons removed) ===== -->
     <section class="hero" id="home">
         <div class="hero-bg"></div>
         <div class="hero-overlay"></div>
@@ -2309,16 +2418,6 @@
             <p class="eyebrow light" data-i18n="heroOverline">6 KM FROM AZROU · MIDDLE ATLAS</p>
             <h1>Amrouss<br><em>touristic</em> DarMaroc</h1>
             <p class="subhead" data-i18n="heroCopy">Six minutes beyond the city, a rare kind of quiet begins: cedar air, mountain light and nothing competing for your attention.</p>
-            <div class="hero-actions">
-                <a class="btn-primary" data-open-booking>
-                    <span data-i18n="availability">Check availability</span>
-                    <span class="arrow">→</span>
-                </a>
-                <a class="btn-outline" href="#story">
-                    <span data-i18n="discover">Discover the Dar</span>
-                    <span class="arrow">↓</span>
-                </a>
-            </div>
         </div>
         <div class="hero-meta">
             <span>Scroll to wander</span>
@@ -2326,39 +2425,34 @@
         </div>
     </section>
 
-    <!-- ===== BOOKING BAR ===== -->
-    <section class="booking-bar" style="position:relative;margin:-24px auto 0;width:92%;max-width:1200px;background:#fff;z-index:10;padding:20px 24px;display:grid;grid-template-columns:1fr 1fr 1fr 1.2fr;gap:0;box-shadow:0 4px 40px rgba(0,0,0,0.04);border:0;transition:transform .3s,box-shadow .3s;">
-        <div style="padding:0 16px;border-right:1px solid var(--light-grey);">
-            <label style="display:block;font-size:8px;letter-spacing:.14em;text-transform:uppercase;color:var(--grey);font-weight:500;margin-bottom:4px;" data-i18n="arrival">Arrival</label>
-            <input type="date" value="2026-08-14" style="border:0;background:transparent;color:var(--ink);font-size:14px;font-family:'DM Sans',sans-serif;width:100%;outline:0;padding:4px 0;" />
+    <!-- ===== BOOKING BAR (dynamic with scroll, jade green button) ===== -->
+    <div class="booking-bar-wrapper" id="bookingBarWrapper">
+        <div class="booking-bar">
+            <div>
+                <label data-i18n="arrival">Arrival</label>
+                <input type="date" value="2026-08-14" />
+            </div>
+            <div>
+                <label data-i18n="departure">Departure</label>
+                <input type="date" value="2026-08-17" />
+            </div>
+            <div>
+                <label data-i18n="guests">Guests</label>
+                <select>
+                    <option data-i18n="twoGuests">2 Guests</option>
+                    <option data-i18n="oneGuest">1 Guest</option>
+                    <option data-i18n="family">Family of 4</option>
+                </select>
+            </div>
+            <div>
+                <button class="btn-jade" data-open-booking>
+                    <span data-i18n="availability">Check availability</span>
+                    <span class="arrow">→</span>
+                </button>
+            </div>
+            <span class="best-rate">★ Best Rate</span>
         </div>
-        <div style="padding:0 16px;border-right:1px solid var(--light-grey);">
-            <label style="display:block;font-size:8px;letter-spacing:.14em;text-transform:uppercase;color:var(--grey);font-weight:500;margin-bottom:4px;" data-i18n="departure">Departure</label>
-            <input type="date" value="2026-08-17" style="border:0;background:transparent;color:var(--ink);font-size:14px;font-family:'DM Sans',sans-serif;width:100%;outline:0;padding:4px 0;" />
-        </div>
-        <div style="padding:0 16px;border-right:1px solid var(--light-grey);">
-            <label style="display:block;font-size:8px;letter-spacing:.14em;text-transform:uppercase;color:var(--grey);font-weight:500;margin-bottom:4px;" data-i18n="guests">Guests</label>
-            <select style="border:0;background:transparent;color:var(--ink);font-size:14px;font-family:'DM Sans',sans-serif;width:100%;outline:0;padding:4px 0;">
-                <option data-i18n="twoGuests">2 Guests</option>
-                <option data-i18n="oneGuest">1 Guest</option>
-                <option data-i18n="family">Family of 4</option>
-            </select>
-        </div>
-        <button data-open-booking style="border:0;background:var(--ink);color:#fff;font-size:10px;letter-spacing:.15em;text-transform:uppercase;font-weight:500;cursor:pointer;transition:background .3s;font-family:'DM Sans',sans-serif;padding:0 20px;min-height:48px;">
-            <span data-i18n="availability">Check availability</span>
-            <span style="font-size:18px;margin-left:10px;">→</span>
-        </button>
-        <div style="position:absolute;top:-10px;right:20px;background:var(--gold);color:#fff;padding:2px 16px;font-size:7px;letter-spacing:.1em;text-transform:uppercase;font-weight:500;">★ Best Rate</div>
-        <style>
-            @media(max-width:768px){
-                .booking-bar{grid-template-columns:1fr 1fr;padding:16px;gap:12px;}
-                .booking-bar>div{padding:0 8px;border-right:0;}
-                .booking-bar>div:nth-child(3){display:none;}
-                .booking-bar button{grid-column:1/-1;padding:16px;margin-top:4px;}
-                .booking-bar input,.booking-bar select{font-size:15px;}
-            }
-        </style>
-    </section>
+    </div>
 
     <!-- ===== INTRO ===== -->
     <section class="intro reveal" id="story">
@@ -2399,70 +2493,52 @@
         </div>
     </div>
 
-    <!-- ===== ROOMS ===== -->
-    <section class="section" id="stay">
+    <!-- ===== ROOMS (4 options: Double, Twin, Triple, Suite) ===== -->
+    <section class="rooms-section" id="stay">
         <div class="section-center reveal">
             <p class="eyebrow">STAY AT AMROUSS DAR</p>
             <h2>Rooms with <em>room to breathe.</em></h2>
-            <p class="section-sub">Each space is crafted for deep rest, mountain light, and the quiet luxury of being yourself.</p>
+            <p class="section-sub">Choose from four carefully curated room types, each designed for comfort and tranquility.</p>
         </div>
-        <div class="rooms-grid">
-            <div class="room-card reveal">
-                <div class="image one"></div>
+        <div class="rooms-scroll">
+            <div class="room-card-horizontal">
+                <div class="image double"></div>
                 <div class="info">
-                    <p class="eyebrow">01 · 2 GUESTS · 38 M²</p>
-                    <h3>Cedar Room</h3>
+                    <p class="eyebrow">DOUBLE</p>
+                    <h3>Double Room</h3>
                     <p class="price">From <strong>1,950 MAD</strong> <small>per night</small></p>
-                    <div class="room-actions">
-                        <button class="book-now" data-open-booking>Book Now</button>
-                        <button class="details-btn" data-room="cedar">View Details</button>
-                    </div>
+                    <button class="btn-small" data-open-booking>Book Now</button>
                 </div>
             </div>
-            <div class="room-card reveal">
-                <div class="image two"></div>
+            <div class="room-card-horizontal">
+                <div class="image twin"></div>
                 <div class="info">
-                    <p class="eyebrow">02 · 3 GUESTS · 52 M²</p>
-                    <h3>Atlas Suite</h3>
-                    <p class="price">From <strong>2,700 MAD</strong> <small>per night</small></p>
-                    <div class="room-actions">
-                        <button class="book-now" data-open-booking>Book Now</button>
-                        <button class="details-btn" data-room="atlas">View Details</button>
-                    </div>
+                    <p class="eyebrow">TWIN</p>
+                    <h3>Twin Room</h3>
+                    <p class="price">From <strong>2,100 MAD</strong> <small>per night</small></p>
+                    <button class="btn-small" data-open-booking>Book Now</button>
                 </div>
             </div>
-            <div class="room-card reveal">
-                <div class="image three"></div>
+            <div class="room-card-horizontal">
+                <div class="image triple"></div>
                 <div class="info">
-                    <p class="eyebrow">03 · 4 GUESTS · 76 M²</p>
-                    <h3>The Amrouss House</h3>
-                    <p class="price">From <strong>4,200 MAD</strong> <small>per night</small></p>
-                    <div class="room-actions">
-                        <button class="book-now" data-open-booking>Book Now</button>
-                        <button class="details-btn" data-room="house">View Details</button>
-                    </div>
+                    <p class="eyebrow">TRIPLE</p>
+                    <h3>Triple Room</h3>
+                    <p class="price">From <strong>2,400 MAD</strong> <small>per night</small></p>
+                    <button class="btn-small" data-open-booking>Book Now</button>
+                </div>
+            </div>
+            <div class="room-card-horizontal">
+                <div class="image suite"></div>
+                <div class="info">
+                    <p class="eyebrow">SUITE</p>
+                    <h3>Suite</h3>
+                    <p class="price">From <strong>3,200 MAD</strong> <small>per night</small></p>
+                    <button class="btn-small" data-open-booking>Book Now</button>
                 </div>
             </div>
         </div>
     </section>
-
-    <!-- ===== ROOM DETAIL MODAL ===== -->
-    <dialog id="roomModal">
-        <div class="booking-panel">
-            <button class="close" id="closeRoomModal">×</button>
-            <h2 id="modalRoomName">Cedar Room</h2>
-            <p class="modal-sub" id="modalRoomSub" style="color:var(--grey);font-size:11px;margin-bottom:16px;">01 · 2 GUESTS · 38 M²</p>
-            <ul id="modalAmenities" style="list-style:none;padding:0;margin:16px 0 24px;">
-                <li style="padding:8px 0;border-bottom:1px solid var(--light-grey);display:flex;gap:12px;font-size:14px;">✓ 400-thread-count Egyptian cotton linens</li>
-                <li style="padding:8px 0;border-bottom:1px solid var(--light-grey);display:flex;gap:12px;font-size:14px;">✓ Rainfall shower with Atlas spring water</li>
-                <li style="padding:8px 0;border-bottom:1px solid var(--light-grey);display:flex;gap:12px;font-size:14px;">✓ Private terrace with cedar forest view</li>
-                <li style="padding:8px 0;border-bottom:1px solid var(--light-grey);display:flex;gap:12px;font-size:14px;">✓ Blackout linen curtains for deep sleep</li>
-                <li style="padding:8px 0;border-bottom:1px solid var(--light-grey);display:flex;gap:12px;font-size:14px;">✓ Sound-softened walls for absolute quiet</li>
-                <li style="padding:8px 0;display:flex;gap:12px;font-size:14px;">✓ Complimentary Wi-Fi & smart TV</li>
-            </ul>
-            <button class="modal-book-btn" data-open-booking style="width:100%;padding:16px;background:var(--ink);color:#fff;border:0;font:10px 'DM Sans';letter-spacing:.1em;text-transform:uppercase;cursor:pointer;transition:background .3s;min-height:50px;">Book This Room <span style="margin-left:12px;">→</span></button>
-        </div>
-    </dialog>
 
     <!-- ===== QUOTE ===== -->
     <section class="quote-section">
@@ -2574,78 +2650,6 @@
         </div>
     </section>
 
-    <!-- ===== OFFER ===== -->
-    <section class="offer-section" style="min-height:480px;background:linear-gradient(90deg,rgba(8,28,23,.7),rgba(8,28,23,.1)),url('https://images.unsplash.com/photo-1483347756197-71ef80e95f73?auto=format&fit=crop&w=1800&q=90') center/cover;color:#fff;display:flex;align-items:center;padding:60px 5vw;">
-        <div style="max-width:500px;">
-            <p class="eyebrow light">SEASONAL GATHERINGS</p>
-            <h2 style="font-size:clamp(44px,6vw,72px);line-height:.98;">Winter,<br /><em style="font-style:italic;color:var(--gold);">the Amrouss way.</em></h2>
-            <p style="font-size:16px;line-height:1.7;margin:24px 0;color:rgba(255,255,255,0.7);">Three nights among the cedars, fireside dinners and a guided walk through the quiet white Atlas.</p>
-            <button class="btn-primary" data-open-booking style="background:var(--gold);color:var(--ink);">View the winter offer <span class="arrow">→</span></button>
-        </div>
-    </section>
-
-    <!-- ===== OFFERS ===== -->
-    <section class="section" id="offers">
-        <div class="section-center reveal">
-            <p class="eyebrow">A LITTLE MORE REASON TO STAY</p>
-            <h2>Made for <em>your kind of escape.</em></h2>
-            <p class="section-sub">Whether you're seeking solitude, family time, or romance — we have the perfect stay for you.</p>
-        </div>
-        <div class="offers-grid">
-            <div class="offer-card reveal">
-                <span class="label">01 · WEEKEND ESCAPE</span>
-                <h3>Two nights<br />to exhale.</h3>
-                <p>Breakfast, a poolside afternoon and late checkout.</p>
-                <span class="price">FROM 4,900 MAD</span>
-                <button data-open-booking>Explore →</button>
-            </div>
-            <div class="offer-card reveal">
-                <span class="label">02 · FAMILY ATLAS</span>
-                <h3>More room<br />for wonder.</h3>
-                <p>Family suite, garden breakfast and a guided cedar walk.</p>
-                <span class="price">FROM 7,800 MAD</span>
-                <button data-open-booking>Explore →</button>
-            </div>
-            <div class="offer-card reveal">
-                <span class="label">03 · HONEYMOON</span>
-                <h3>Just you,<br />and the quiet.</h3>
-                <p>Private dinner, cedar ritual and an Atlas sunrise.</p>
-                <span class="price">FROM 9,600 MAD</span>
-                <button data-open-booking>Explore →</button>
-            </div>
-        </div>
-    </section>
-
-    <!-- ===== RITUALS ===== -->
-    <section class="rituals-section" id="wellbeing">
-        <div class="reveal">
-            <p class="eyebrow">THE AMROUSS RITUALS</p>
-            <h2 style="font-size:clamp(34px,4.5vw,56px);">Wellbeing, written<br /><em style="font-style:italic;">by the landscape.</em></h2>
-            <p style="font-size:15px;color:var(--grey);line-height:1.8;max-width:360px;margin:24px 0;">Small, sensory rituals to recalibrate body and mind — from cedar steam to the silence of a first walk at dawn.</p>
-            <a href="#contact" class="text-link">Plan a private ritual <span class="arrow">↗</span></a>
-        </div>
-        <div class="ritual-cards">
-            <div class="ritual-card reveal">
-                <div class="bg first"></div>
-                <div class="overlay"></div>
-                <div class="content">
-                    <span class="number">01</span>
-                    <h3>Cedar<br />Steam House</h3>
-                    <p data-i18n="ritualSteam">A warm, mineral pause, infused with the forest.</p>
-                </div>
-            </div>
-            <div class="ritual-card second reveal">
-                <div class="bg second"></div>
-                <div class="overlay"></div>
-                <div class="content">
-                    <span class="number">02</span>
-                    <h3>Atlas<br />Sunrise</h3>
-                    <p data-i18n="ritualSunrise">Tea at first light, over a waking valley.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
     <!-- ===== SIGNATURE ===== -->
     <section class="signature-section">
         <div class="image"></div>
@@ -2662,19 +2666,18 @@
     </section>
 
     <!-- ===== EVENTS ===== -->
-    <section style="display:grid;grid-template-columns:1fr 1fr;min-height:500px;background:var(--cream);">
-        <div style="background:url('https://images.unsplash.com/photo-1519167758481-83f550bb49b3?auto=format&fit=crop&w=1400&q=85') center/cover;min-height:320px;"></div>
-        <div style="padding:80px 60px;display:flex;flex-direction:column;justify-content:center;">
+    <section class="events-section">
+        <div class="image"></div>
+        <div class="text">
             <p class="eyebrow">GATHER WITH INTENTION</p>
-            <h2 style="font-size:clamp(34px,4.5vw,56px);">A celebration with<br /><em style="font-style:italic;">space around it.</em></h2>
-            <p style="font-size:15px;color:var(--grey);line-height:1.8;max-width:400px;margin:20px 0;">For an intimate Atlas wedding, a family milestone or a team that needs to think differently, Amrouss Dar can become entirely yours.</p>
-            <div style="display:flex;gap:40px;margin:20px 0 30px;">
-                <div><b style="font-size:28px;font-family:'Playfair Display',serif;color:var(--gold);">32</b><br><span style="font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--grey);">Guests · Full takeover</span></div>
-                <div><b style="font-size:28px;font-family:'Playfair Display',serif;color:var(--gold);">02</b><br><span style="font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--grey);">Private event spaces</span></div>
+            <h2>A celebration with<br /><em>space around it.</em></h2>
+            <p>For an intimate Atlas wedding, a family milestone or a team that needs to think differently, Amrouss Dar can become entirely yours.</p>
+            <div class="stats">
+                <div><b>32</b><br><span>Guests · Full takeover</span></div>
+                <div><b>02</b><br><span>Private event spaces</span></div>
             </div>
             <a href="#contact" class="text-link">Speak with our events team <span class="arrow">↗</span></a>
         </div>
-        <style>@media(max-width:768px){section[style*="grid-template-columns:1fr 1fr;"]{grid-template-columns:1fr;}section[style*="grid-template-columns:1fr 1fr;"]>div{padding:50px 5vw;}}</style>
     </section>
 
     <!-- ===== GALLERY ===== -->
@@ -2826,9 +2829,11 @@
         </div>
     </section>
 
-    <!-- ===== WHATSAPP ===== -->
+    <!-- ===== WHATSAPP (dynamic with glow, exact logo) ===== -->
     <a href="https://wa.me/212630485646?text=Hello%2C%20I%27d%20like%20to%20book%20a%20stay%20at%20Amrouss%20Dar." target="_blank" rel="noopener" class="whatsapp-float" aria-label="Contact us on WhatsApp">
-        <svg viewBox="0 0 24 24"><path d="M12.032 21.965c-1.873 0-3.694-.51-5.284-1.472l-4.748 1.556 1.593-4.628c-1.076-1.692-1.646-3.62-1.646-5.596 0-5.741 4.667-10.41 10.405-10.41 5.74 0 10.407 4.669 10.407 10.41 0 5.738-4.667 10.406-10.407 10.406zm0-19.14c-4.817 0-8.733 3.916-8.733 8.732 0 1.925.628 3.792 1.808 5.316l-1.186 3.44 3.526-1.154c1.5.916 3.241 1.395 4.985 1.395 4.816 0 8.732-3.915 8.732-8.731 0-4.816-3.916-8.732-8.732-8.732z"/><path d="M17.054 13.886c-.157-.08-.932-.46-1.075-.512-.144-.052-.25-.08-.354.08-.103.16-.403.51-.493.615-.09.104-.18.116-.337.037-.157-.08-.663-.244-1.263-.778-.464-.414-.776-.924-.868-1.08-.092-.156-.01-.24.069-.318.07-.07.157-.18.235-.27.079-.09.105-.155.158-.258.052-.103.026-.193-.013-.27-.039-.078-.354-.853-.485-1.168-.128-.308-.258-.267-.354-.273-.09-.006-.195-.01-.299-.01-.104 0-.271.039-.412.193-.141.155-.537.524-.537 1.279 0 .755.55 1.485.627 1.588.076.103 1.083 1.654 2.624 2.196.366.129.652.206.875.272.367.116.701.099.965.06.294-.043.932-.381 1.063-.748.131-.367.131-.682.092-.748-.04-.066-.145-.106-.302-.186z"/></svg>
+        <svg viewBox="0 0 24 24">
+            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+        </svg>
     </a>
 
     <!-- ===== FOOTER ===== -->
@@ -2843,11 +2848,10 @@
                 <a href="#stay">Rooms</a>
                 <a href="#dining">Dining</a>
                 <a href="#experiences">Experiences</a>
-                <a href="#offers">Offers</a>
+                <a href="#facilities">Facilities</a>
             </div>
             <div>
                 <h4>The Dar</h4>
-                <a href="#wellbeing">Wellbeing</a>
                 <a href="#contact">Contact</a>
                 <a href="#policies">Policies</a>
                 <a href="#privacy">Privacy</a>
@@ -2869,7 +2873,7 @@
         </div>
     </footer>
 
-    <!-- ===== BOOKING DIALOG ===== -->
+    <!-- ===== BOOKING DIALOG (centered, phone required, email optional) ===== -->
     <dialog id="booking">
         <div class="booking-panel">
             <button class="close" aria-label="Close booking">×</button>
@@ -2881,8 +2885,9 @@
                 <label>Departure<input required type="date" value="2026-08-17" /></label>
                 <label>Adults<select><option>2 Guests</option><option>1 Guest</option><option>3 Guests</option><option>4 Guests</option></select></label>
                 <label>Children<select><option>None</option><option>1 Child</option><option>2 Children</option><option>3 Children</option></select></label>
-                <label>Room type<select><option>Cedar Room</option><option>Atlas Suite</option><option>The Amrouss House</option><option>No preference</option></select></label>
-                <label>Your email<input required type="email" placeholder="you@example.com" /></label>
+                <label>Room type<select><option>Double</option><option>Twin</option><option>Triple</option><option>Suite</option><option>No preference</option></select></label>
+                <label>Phone <span class="required">*</span><input required type="tel" placeholder="+212 6XX XX XX XX" /></label>
+                <label>Email <span style="font-weight:400;color:var(--grey);font-size:8px;">(optional)</span><input type="email" placeholder="you@example.com" /></label>
                 <label class="full">Special requests<textarea placeholder="Transfers, celebrations, dietary requirements…"></textarea></label>
                 <button class="reserve-btn" type="submit">Request reservation <span>→</span></button>
             </form>
@@ -2894,91 +2899,79 @@
 
     <!-- ===== JAVASCRIPT ===== -->
     <script>
-        // ===== TRANSLATIONS (all languages) =====
+        // ===== TRANSLATIONS =====
         const translations = {
             en: {
                 navStay: 'Stay', navStory: 'The Dar', navDining: 'Dining', navExperiences: 'Experiences', contact: 'Contact',
                 reserve: 'Reserve', heroOverline: '6 KM FROM AZROU · MIDDLE ATLAS', heroCopy: 'Six minutes beyond the city, a rare kind of quiet begins: cedar air, mountain light and nothing competing for your attention.',
-                availability: 'Check availability', discover: 'Discover the Dar', arrival: 'Arrival', departure: 'Departure',
-                guests: 'Guests', twoGuests: '2 Guests', oneGuest: '1 Guest', family: 'Family of 4',
-                ritualSteam: 'A warm, mineral pause, infused with the forest.', ritualSunrise: 'Tea at first light, over a waking valley.'
+                availability: 'Check availability', arrival: 'Arrival', departure: 'Departure',
+                guests: 'Guests', twoGuests: '2 Guests', oneGuest: '1 Guest', family: 'Family of 4'
             },
             fr: {
                 navStay: 'Séjours', navStory: 'La Maison', navDining: 'Table', navExperiences: 'Expériences', contact: 'Contact',
                 reserve: 'Réserver', heroOverline: 'À 6 KM D\'AZROU · MOYEN ATLAS', heroCopy: 'À six minutes de la ville commence un silence rare : l\'air des cèdres, la lumière des montagnes et rien pour vous distraire.',
-                availability: 'Voir disponibilités', discover: 'Découvrir le Dar', arrival: 'Arrivée', departure: 'Départ',
-                guests: 'Voyageurs', twoGuests: '2 voyageurs', oneGuest: '1 voyageur', family: 'Famille de 4',
-                ritualSteam: 'Une pause chaude et minérale, infusée par la forêt.', ritualSunrise: 'Un thé aux premières lueurs, face à la vallée qui s\'éveille.'
+                availability: 'Voir disponibilités', arrival: 'Arrivée', departure: 'Départ',
+                guests: 'Voyageurs', twoGuests: '2 voyageurs', oneGuest: '1 voyageur', family: 'Famille de 4'
             },
             es: {
                 navStay: 'Estancias', navStory: 'El Dar', navDining: 'Gastronomía', navExperiences: 'Experiencias', contact: 'Contacto',
                 reserve: 'Reservar', heroOverline: 'A 6 KM DE AZROU · MEDIO ATLAS', heroCopy: 'A seis minutos de la ciudad empieza un silencio excepcional: aire de cedro, luz de montaña y nada que reclame tu atención.',
-                availability: 'Ver disponibilidad', discover: 'Descubrir el Dar', arrival: 'Llegada', departure: 'Salida',
-                guests: 'Huéspedes', twoGuests: '2 huéspedes', oneGuest: '1 huésped', family: 'Familia de 4',
-                ritualSteam: 'Una pausa cálida y mineral, perfumada por el bosque.', ritualSunrise: 'Té al amanecer, ante un valle que despierta.'
+                availability: 'Ver disponibilidad', arrival: 'Llegada', departure: 'Salida',
+                guests: 'Huéspedes', twoGuests: '2 huéspedes', oneGuest: '1 huésped', family: 'Familia de 4'
             },
             de: {
                 navStay: 'Aufenthalt', navStory: 'Das Dar', navDining: 'Gastronomie', navExperiences: 'Erlebnisse', contact: 'Kontakt',
                 reserve: 'Reservieren', heroOverline: '6 KM VON AZROU · MITTELATLAS', heroCopy: 'Sechs Minuten außerhalb der Stadt beginnt eine seltene Stille: Zedernluft, Berglicht und nichts, das um Ihre Aufmerksamkeit buhlt.',
-                availability: 'Verfügbarkeit prüfen', discover: 'Das Dar entdecken', arrival: 'Anreise', departure: 'Abreise',
-                guests: 'Gäste', twoGuests: '2 Gäste', oneGuest: '1 Gast', family: 'Familie von 4',
-                ritualSteam: 'Eine warme, mineralische Pause, durchzogen vom Wald.', ritualSunrise: 'Tee bei der ersten Morgensonne über dem erwachenden Tal.'
+                availability: 'Verfügbarkeit prüfen', arrival: 'Anreise', departure: 'Abreise',
+                guests: 'Gäste', twoGuests: '2 Gäste', oneGuest: '1 Gast', family: 'Familie von 4'
             },
             it: {
                 navStay: 'Soggiorno', navStory: 'Il Dar', navDining: 'Cucina', navExperiences: 'Esperienze', contact: 'Contatto',
                 reserve: 'Prenota', heroOverline: '6 KM DA AZROU · MEDIO ATLANTE', heroCopy: 'A sei minuti dalla città inizia un silenzio raro: aria di cedro, luce di montagna e niente che cerca la vostra attenzione.',
-                availability: 'Verifica disponibilità', discover: 'Scopri il Dar', arrival: 'Arrivo', departure: 'Partenza',
-                guests: 'Ospiti', twoGuests: '2 ospiti', oneGuest: '1 ospite', family: 'Famiglia di 4',
-                ritualSteam: 'Una pausa calda e minerale, pervasa dal bosco.', ritualSunrise: 'Tè alle prime luci dell\'alba, sulla valle che si risveglia.'
+                availability: 'Verifica disponibilità', arrival: 'Arrivo', departure: 'Partenza',
+                guests: 'Ospiti', twoGuests: '2 ospiti', oneGuest: '1 ospite', family: 'Famiglia di 4'
             },
             pt: {
                 navStay: 'Estadia', navStory: 'O Dar', navDining: 'Gastronomia', navExperiences: 'Experiências', contact: 'Contato',
                 reserve: 'Reservar', heroOverline: '6 KM DE AZROU · MÉDIO ATLAS', heroCopy: 'A seis minutos da cidade, começa um raro silêncio: ar de cedro, luz da montanha e nada que dispute a sua atenção.',
-                availability: 'Verificar disponibilidade', discover: 'Descobrir o Dar', arrival: 'Chegada', departure: 'Partida',
-                guests: 'Hóspedes', twoGuests: '2 hóspedes', oneGuest: '1 hóspede', family: 'Família de 4',
-                ritualSteam: 'Uma pausa quente e mineral, infundida pela floresta.', ritualSunrise: 'Chá ao amanhecer, sobre o vale que desperta.'
+                availability: 'Verificar disponibilidade', arrival: 'Chegada', departure: 'Partida',
+                guests: 'Hóspedes', twoGuests: '2 hóspedes', oneGuest: '1 hóspede', family: 'Família de 4'
             },
             nl: {
                 navStay: 'Verblijf', navStory: 'Het Dar', navDining: 'Gastronomie', navExperiences: 'Ervaringen', contact: 'Contact',
                 reserve: 'Reserveren', heroOverline: '6 KM VAN AZROU · MIDDEN-ATLAS', heroCopy: 'Zes minuten buiten de stad begint een zeldzame stilte: cederlucht, berglicht en niets dat uw aandacht opeist.',
-                availability: 'Beschikbaarheid controleren', discover: 'Het Dar ontdekken', arrival: 'Aankomst', departure: 'Vertrek',
-                guests: 'Gasten', twoGuests: '2 gasten', oneGuest: '1 gast', family: 'Gezin van 4',
-                ritualSteam: 'Een warme, minerale pauze, doordrenkt van het bos.', ritualSunrise: 'Thee bij het eerste licht, over een ontwakend dal.'
+                availability: 'Beschikbaarheid controleren', arrival: 'Aankomst', departure: 'Vertrek',
+                guests: 'Gasten', twoGuests: '2 gasten', oneGuest: '1 gast', family: 'Gezin van 4'
             },
             ar: {
                 navStay: 'الإقامة', navStory: 'الدار', navDining: 'المطبخ', navExperiences: 'التجارب', contact: 'اتصل بنا',
                 reserve: 'احجز', heroOverline: '6 كم من أزرو · الأطلس المتوسط', heroCopy: 'على بعد ست دقائق من المدينة، يبدأ هدوء نادر: هواء الأرز، ضوء الجبال ولا شيء ينافس انتباهك.',
-                availability: 'تحقق من التوفر', discover: 'اكتشف الدار', arrival: 'الوصول', departure: 'المغادرة',
-                guests: 'الضيوف', twoGuests: 'ضيفان', oneGuest: 'ضيف واحد', family: 'عائلة من 4',
-                ritualSteam: 'توقف دافئ ومعدني، منقوع برائحة الغابة.', ritualSunrise: 'شاي عند أول ضوء، فوق وادٍ يستيقظ.'
+                availability: 'تحقق من التوفر', arrival: 'الوصول', departure: 'المغادرة',
+                guests: 'الضيوف', twoGuests: 'ضيفان', oneGuest: 'ضيف واحد', family: 'عائلة من 4'
             },
             zh: {
                 navStay: '住宿', navStory: '达尔酒店', navDining: '餐饮', navExperiences: '体验', contact: '联系我们',
                 reserve: '预订', heroOverline: '距阿兹鲁6公里 · 中阿特拉斯', heroCopy: '距离城市仅六分钟，一种罕见的宁静开始：雪松空气、山间光线，没有任何事物争夺您的注意力。',
-                availability: '查询空房', discover: '探索达尔', arrival: '抵达', departure: '离开',
-                guests: '客人', twoGuests: '2位客人', oneGuest: '1位客人', family: '4人家庭',
-                ritualSteam: '一次温暖、矿物质的停顿，浸染着森林的气息。', ritualSunrise: '在第一缕晨光中品茶，俯瞰苏醒的山谷。'
+                availability: '查询空房', arrival: '抵达', departure: '离开',
+                guests: '客人', twoGuests: '2位客人', oneGuest: '1位客人', family: '4人家庭'
             },
             ja: {
                 navStay: '滞在', navStory: 'ダール', navDining: 'ダイニング', navExperiences: '体験', contact: 'お問い合わせ',
                 reserve: '予約', heroOverline: 'アズルーより6km · 中部アトラス', heroCopy: '街からわずか6分、希少な静けさが始まります：杉の香り、山の光、そしてあなたの注意を奪うものは何もありません。',
-                availability: '空室確認', discover: 'ダールを発見', arrival: '到着', departure: '出発',
-                guests: 'ゲスト', twoGuests: '2名様', oneGuest: '1名様', family: '4人家族',
-                ritualSteam: '森の香りに包まれた、温かいミネラルのひととき。', ritualSunrise: '目覚める谷を見下ろす、夜明けのお茶。'
+                availability: '空室確認', arrival: '到着', departure: '出発',
+                guests: 'ゲスト', twoGuests: '2名様', oneGuest: '1名様', family: '4人家族'
             },
             ru: {
                 navStay: 'Проживание', navStory: 'Дар', navDining: 'Кухня', navExperiences: 'Впечатления', contact: 'Контакты',
                 reserve: 'Забронировать', heroOverline: '6 КМ ОТ АЗРУ · СРЕДНИЙ АТЛАС', heroCopy: 'В шести минутах от города начинается редкая тишина: воздух кедров, горный свет и ничто не борется за ваше внимание.',
-                availability: 'Проверить наличие', discover: 'Открыть Дар', arrival: 'Прибытие', departure: 'Отъезд',
-                guests: 'Гости', twoGuests: '2 гостя', oneGuest: '1 гость', family: 'Семья из 4',
-                ritualSteam: 'Тёплая минеральная пауза, наполненная лесом.', ritualSunrise: 'Чай на рассвете над пробуждающейся долиной.'
+                availability: 'Проверить наличие', arrival: 'Прибытие', departure: 'Отъезд',
+                guests: 'Гости', twoGuests: '2 гостя', oneGuest: '1 гость', family: 'Семья из 4'
             },
             tr: {
                 navStay: 'Konaklama', navStory: 'Dar', navDining: 'Yemek', navExperiences: 'Deneyimler', contact: 'İletişim',
                 reserve: 'Rezervasyon', heroOverline: 'AZROU\'YA 6 KM · ORTA ATLAS', heroCopy: 'Şehrin altı dakika ötesinde, nadir bir sessizlik başlar: sedir kokusu, dağ ışığı ve dikkatinizi dağıtacak hiçbir şey.',
-                availability: 'Müsaitlik kontrol et', discover: 'Dar\'ı keşfet', arrival: 'Geliş', departure: 'Ayrılış',
-                guests: 'Misafirler', twoGuests: '2 misafir', oneGuest: '1 misafir', family: '4 kişilik aile',
-                ritualSteam: 'Ormanın özüyle dolu, sıcak ve mineral bir mola.', ritualSunrise: 'Uyanan vadiye karşı, ilk ışıkta çay.'
+                availability: 'Müsaitlik kontrol et', arrival: 'Geliş', departure: 'Ayrılış',
+                guests: 'Misafirler', twoGuests: '2 misafir', oneGuest: '1 misafir', family: '4 kişilik aile'
             }
         };
 
@@ -3043,10 +3036,13 @@
             });
         });
 
-        // ===== STICKY NAV =====
+        // ===== STICKY NAV & BOOKING BAR =====
         const nav = document.getElementById('mainNav');
+        const bookingWrapper = document.getElementById('bookingBarWrapper');
         window.addEventListener('scroll', () => {
-            nav.classList.toggle('scrolled', window.scrollY > 30);
+            const scrolled = window.scrollY > 30;
+            nav.classList.toggle('scrolled', scrolled);
+            bookingWrapper.classList.toggle('scrolled', scrolled);
         });
 
         // ===== DIALOG =====
@@ -3069,56 +3065,6 @@
             setTimeout(() => toast.classList.remove('show'), 4000);
         });
 
-        // ===== ROOM MODAL =====
-        const roomModal = document.getElementById('roomModal');
-        const closeRoomModal = document.getElementById('closeRoomModal');
-        const modalRoomName = document.getElementById('modalRoomName');
-        const modalRoomSub = document.getElementById('modalRoomSub');
-        const modalAmenities = document.getElementById('modalAmenities');
-        const roomData = {
-            cedar: {
-                name: 'Cedar Room',
-                sub: '01 · 2 GUESTS · 38 M²',
-                amenities: ['400-thread-count Egyptian cotton linens', 'Rainfall shower with Atlas spring water',
-                    'Private terrace with cedar forest view', 'Blackout linen curtains for deep sleep',
-                    'Sound-softened walls for absolute quiet', 'Complimentary Wi-Fi & smart TV'
-                ]
-            },
-            atlas: {
-                name: 'Atlas Suite',
-                sub: '02 · 3 GUESTS · 52 M²',
-                amenities: ['Super-king bed with luxury organic mattress',
-                    'Spacious living area with wood-burning fireplace',
-                    'Panoramic balcony overlooking the cedar canopy', 'Soaking tub with mountain spring water',
-                    'Separate rainfall shower', 'Minibar with local artisanal treats',
-                    'Complimentary Wi-Fi & sound system'
-                ]
-            },
-            house: {
-                name: 'The Amrouss House',
-                sub: '03 · 4 GUESTS · 76 M²',
-                amenities: ['Two king bedrooms with en-suite bathrooms',
-                    'Open-plan living & dining with full kitchenette',
-                    'Private garden with outdoor dining area', 'Hammam-style shower in master bathroom',
-                    'Eco-friendly luxury bath amenities', 'Dedicated fireplace in the living room',
-                    'Private entrance & terrace'
-                ]
-            }
-        };
-        document.querySelectorAll('.details-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                const data = roomData[btn.dataset.room];
-                if (!data) return;
-                modalRoomName.textContent = data.name;
-                modalRoomSub.textContent = data.sub;
-                modalAmenities.innerHTML = data.amenities.map(a => `<li style="padding:8px 0;border-bottom:1px solid var(--light-grey);display:flex;gap:12px;font-size:14px;">✓ ${a}</li>`)
-                    .join('');
-                roomModal.showModal();
-            });
-        });
-        closeRoomModal.addEventListener('click', () => roomModal.close());
-        roomModal.addEventListener('click', event => { if (event.target === roomModal) roomModal.close(); });
-
         // ===== REVEAL =====
         const observer = new IntersectionObserver(items => {
             items.forEach(item => {
@@ -3132,13 +3078,9 @@
 
         // ===== REVIEWS =====
         const reviews = [
-            ['“A beautiful antidote to the everyday. The air, the service, the silence — perfection.”',
-                'JULIEN & CLARA · PARIS'
-            ],
+            ['“A beautiful antidote to the everyday. The air, the service, the silence — perfection.”', 'JULIEN & CLARA · PARIS'],
             ['“The rare kind of place that makes you want to keep its secret. We will return.”', 'MAYA R. · LONDON'],
-            ['“It felt less like a hotel and more like discovering a beautiful home in the Atlas.”',
-                'YASSINE E. · CASABLANCA'
-            ]
+            ['“It felt less like a hotel and more like discovering a beautiful home in the Atlas.”', 'YASSINE E. · CASABLANCA']
         ];
         let reviewIdx = 0;
 
@@ -3165,13 +3107,12 @@
                 this.classList.add('active');
                 const filter = this.dataset.filter;
                 document.querySelectorAll('.gallery-tile').forEach(tile => {
-                    tile.style.display = (filter === 'all' || tile.dataset.gallery === filter) ? 'flex' :
-                        'none';
+                    tile.style.display = (filter === 'all' || tile.dataset.gallery === filter) ? 'flex' : 'none';
                 });
             });
         });
 
-        console.log('🛎️ Amrouss touristic DarMaroc — Minimalist, Immersive Editorial Design');
+        console.log('🛎️ Amrouss touristic DarMaroc — All adjustments applied');
     </script>
 </body>
 </html>
