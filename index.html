@@ -29,6 +29,7 @@
             --cream: #f5f2ed;
             --gold: #b8944b;
             --gold-light: #d4b06a;
+            --gold-glow: rgba(184, 148, 75, 0.3);
             --jade: #2d6b4f;
             --jade-light: #3a8a64;
             --olive: #556b2f;
@@ -37,13 +38,15 @@
             --deep: #0f1a16;
             --grey: #6b6b6b;
             --light-grey: #e8e4dd;
-            --glow: rgba(184, 148, 75, 0.4);
             --glass-bg: rgba(250, 248, 245, 0.72);
             --glass-border: rgba(255, 255, 255, 0.12);
             --shadow-soft: 0 8px 40px rgba(0, 0, 0, 0.04);
             --shadow-lux: 0 20px 80px rgba(0, 0, 0, 0.08);
             --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
             --ease-in-out-quart: cubic-bezier(0.77, 0, 0.175, 1);
+            --font-serif: "Playfair Display", Georgia, serif;
+            --font-sans: "DM Sans", sans-serif;
+            --font-mono: "DM Mono", monospace;
         }
         * {
             box-sizing: border-box;
@@ -52,13 +55,12 @@
         }
         html {
             scroll-behavior: auto;
-            /* Lenis handles scrolling */;
         }
         body {
             margin: 0;
             background: var(--paper);
             color: var(--ink);
-            font-family: "DM Sans", sans-serif;
+            font-family: var(--font-sans);
             font-size: 16px;
             line-height: 1.7;
             overflow-x: hidden;
@@ -92,9 +94,10 @@
             pointer-events: none;
             z-index: 9999;
             transform: translate(-50%, -50%);
-            transition: width 0.3s ease, height 0.3s ease, background 0.3s ease, opacity 0.3s ease;
+            transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1), height 0.4s cubic-bezier(0.16, 1, 0.3, 1), background 0.4s ease, opacity 0.4s ease;
             mix-blend-mode: difference;
             opacity: 0;
+            will-change: transform, width, height;
         }
         .cursor-dot.visible {
             opacity: 1;
@@ -102,8 +105,15 @@
         .cursor-dot.hover {
             width: 48px;
             height: 48px;
-            background: rgba(184, 148, 75, 0.15);
+            background: rgba(184, 148, 75, 0.12);
             mix-blend-mode: normal;
+        }
+        .cursor-dot.hover::after {
+            content: '';
+            position: absolute;
+            inset: 4px;
+            border-radius: 50%;
+            border: 1px solid rgba(184, 148, 75, 0.2);
         }
         @media (max-width: 768px) {
             .cursor-dot {
@@ -123,7 +133,7 @@
             align-items: center;
             justify-content: center;
             pointer-events: all;
-            transition: opacity 1.8s var(--ease-out-expo), visibility 1.8s var(--ease-out-expo);
+            transition: opacity 2s var(--ease-out-expo), visibility 2s var(--ease-out-expo);
         }
         #intro-overlay.hidden {
             opacity: 0;
@@ -150,7 +160,7 @@
             padding: 0 5vw;
         }
         #loading-progress {
-            font-family: "DM Mono", monospace;
+            font-family: var(--font-mono);
             font-size: 11px;
             letter-spacing: 0.2em;
             color: rgba(255, 255, 255, 0.3);
@@ -182,7 +192,7 @@
             font-size: 9px;
             letter-spacing: 0.2em;
             text-transform: uppercase;
-            font-family: "DM Sans", sans-serif;
+            font-family: var(--font-sans);
             cursor: pointer;
             transition: all 0.4s ease;
             border-radius: 0;
@@ -213,7 +223,7 @@
         h3,
         h4,
         .brand {
-            font-family: "Playfair Display", Georgia, serif;
+            font-family: var(--font-serif);
             font-weight: 500;
             letter-spacing: -0.03em;
             line-height: 1.1;
@@ -240,10 +250,10 @@
             color: var(--grey);
             font-weight: 500;
             margin-bottom: 16px;
-            font-family: "DM Sans", sans-serif;
+            font-family: var(--font-sans);
         }
         .eyebrow.light {
-            color: rgba(255, 255, 255, 0.5);
+            color: rgba(255, 255, 255, 0.4);
         }
 
         /* ============================================================ */
@@ -263,8 +273,8 @@
             font-weight: 500;
             border: none;
             cursor: pointer;
-            transition: all 0.5s var(--ease-out-expo);
-            font-family: "DM Sans", sans-serif;
+            transition: all 0.6s var(--ease-out-expo);
+            font-family: var(--font-sans);
             min-height: 54px;
             position: relative;
             overflow: hidden;
@@ -276,7 +286,7 @@
             inset: 0;
             background: linear-gradient(135deg, var(--gold), var(--gold-light));
             opacity: 0;
-            transition: opacity 0.5s ease;
+            transition: opacity 0.6s ease;
         }
         .btn-primary:hover::before {
             opacity: 1;
@@ -287,7 +297,7 @@
         }
         .btn-primary .arrow {
             font-size: 18px;
-            transition: transform 0.4s var(--ease-out-expo);
+            transition: transform 0.5s var(--ease-out-expo);
             position: relative;
             z-index: 1;
         }
@@ -309,14 +319,14 @@
             letter-spacing: 0.15em;
             text-transform: uppercase;
             font-weight: 600;
-            font-family: "DM Sans", sans-serif;
+            font-family: var(--font-sans);
             min-height: 50px;
             border: none;
             cursor: pointer;
             position: relative;
             background: var(--jade);
             color: #fff;
-            transition: all 0.5s var(--ease-out-expo);
+            transition: all 0.6s var(--ease-out-expo);
             overflow: hidden;
             border-radius: 0;
         }
@@ -359,7 +369,7 @@
         }
         .btn-book-glow .glow-text .arrow {
             font-size: 16px;
-            transition: transform 0.4s var(--ease-out-expo);
+            transition: transform 0.5s var(--ease-out-expo);
         }
         .btn-book-glow:hover .glow-text .arrow {
             transform: translate(6px, -2px);
@@ -390,8 +400,8 @@
             background: transparent;
             color: var(--ink);
             cursor: pointer;
-            transition: all 0.5s var(--ease-out-expo);
-            font-family: "DM Sans", sans-serif;
+            transition: all 0.6s var(--ease-out-expo);
+            font-family: var(--font-sans);
             min-height: 50px;
             border-radius: 0;
             position: relative;
@@ -403,7 +413,7 @@
             background: var(--ink);
             transform: scaleX(0);
             transform-origin: right;
-            transition: transform 0.5s var(--ease-out-expo);
+            transition: transform 0.6s var(--ease-out-expo);
             z-index: -1;
         }
         .btn-outline-dark:hover::after {
@@ -417,7 +427,7 @@
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
         }
         .btn-outline-dark .arrow {
-            transition: transform 0.4s var(--ease-out-expo);
+            transition: transform 0.5s var(--ease-out-expo);
         }
         .btn-outline-dark:hover .arrow {
             transform: translate(4px, -2px);
@@ -438,7 +448,7 @@
             align-items: center;
             justify-content: space-between;
             color: #fff;
-            transition: all 0.6s var(--ease-out-expo);
+            transition: all 0.8s var(--ease-out-expo);
             background: transparent;
             width: 100%;
             backdrop-filter: none;
@@ -515,11 +525,20 @@
             letter-spacing: 0.25em;
             opacity: 0.5;
             font-weight: 400;
-            font-family: "DM Sans", sans-serif;
+            font-family: var(--font-sans);
             display: block;
             width: 100%;
             text-align: center;
             margin-top: 1px;
+        }
+        .brand .gold-dot {
+            display: inline-block;
+            width: 4px;
+            height: 4px;
+            background: var(--gold);
+            border-radius: 50%;
+            margin: 0 2px;
+            opacity: 0.6;
         }
 
         .nav-links {
@@ -545,7 +564,7 @@
             width: 0;
             height: 1.5px;
             background: var(--gold);
-            transition: width 0.5s var(--ease-out-expo);
+            transition: width 0.6s var(--ease-out-expo);
         }
         .nav-links a:hover::after {
             width: 100%;
@@ -569,7 +588,7 @@
             border: 0;
             color: #fff;
             font-size: 10px;
-            font-family: "DM Mono", monospace;
+            font-family: var(--font-mono);
             letter-spacing: 0.08em;
             cursor: pointer;
             padding: 6px 4px;
@@ -581,7 +600,7 @@
         .lang-toggle .arrow-down {
             font-size: 8px;
             opacity: 0.5;
-            transition: transform 0.4s var(--ease-out-expo);
+            transition: transform 0.5s var(--ease-out-expo);
         }
         .lang-toggle:hover .arrow-down {
             transform: rotate(180deg);
@@ -601,7 +620,7 @@
             opacity: 0;
             visibility: hidden;
             transform: translateY(-8px) scale(0.98);
-            transition: all 0.4s var(--ease-out-expo);
+            transition: all 0.5s var(--ease-out-expo);
             z-index: 60;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
         }
@@ -619,7 +638,7 @@
             border: 0;
             color: rgba(255, 255, 255, 0.5);
             font-size: 11px;
-            font-family: "DM Sans", sans-serif;
+            font-family: var(--font-sans);
             cursor: pointer;
             transition: all 0.2s ease;
         }
@@ -645,9 +664,9 @@
             letter-spacing: 0.12em;
             text-transform: uppercase;
             font-weight: 500;
-            font-family: "DM Sans", sans-serif;
+            font-family: var(--font-sans);
             cursor: pointer;
-            transition: all 0.5s var(--ease-out-expo);
+            transition: all 0.6s var(--ease-out-expo);
             display: flex;
             align-items: center;
             gap: 10px;
@@ -660,7 +679,7 @@
             height: 18px;
             display: inline-block;
             flex-shrink: 0;
-            transition: transform 0.5s var(--ease-out-expo);
+            transition: transform 0.6s var(--ease-out-expo);
         }
         .nav-book .bell-icon svg {
             width: 100%;
@@ -680,8 +699,8 @@
         }
         .nav-book .arrow-right {
             font-size: 14px;
-            transition: transform 0.4s var(--ease-out-expo);
-            font-family: "DM Sans", sans-serif;
+            transition: transform 0.5s var(--ease-out-expo);
+            font-family: var(--font-sans);
         }
         .nav-book:hover .arrow-right {
             transform: translate(4px, -2px);
@@ -700,7 +719,7 @@
         }
 
         /* ============================================================ */
-        /*  HERO — CINEMATIC EFFECT                                     */
+        /*  HERO — CINEMATIC WITH VOLUMETRIC LIGHT                     */
         /* ============================================================ */
         .hero {
             min-height: 100vh;
@@ -728,8 +747,8 @@
             position: absolute;
             inset: 0;
             background:
-                radial-gradient(ellipse at 30% 40%, rgba(184, 148, 75, 0.04) 0%, transparent 60%),
-                radial-gradient(ellipse at 70% 60%, rgba(184, 148, 75, 0.02) 0%, transparent 40%);
+                radial-gradient(ellipse at 30% 40%, rgba(184, 148, 75, 0.06) 0%, transparent 60%),
+                radial-gradient(ellipse at 70% 60%, rgba(184, 148, 75, 0.03) 0%, transparent 40%);
         }
         .hero-overlay {
             position: absolute;
@@ -738,9 +757,143 @@
                 linear-gradient(180deg, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0.5) 60%, rgba(0, 0, 0, 0.75) 100%);
             z-index: 1;
         }
+        /* Volumetric light rays */
+        .hero-rays {
+            position: absolute;
+            inset: 0;
+            z-index: 1;
+            pointer-events: none;
+            overflow: hidden;
+        }
+        .hero-rays .ray {
+            position: absolute;
+            top: -20%;
+            width: 2px;
+            height: 140%;
+            background: linear-gradient(180deg, rgba(255, 220, 150, 0.04) 0%, transparent 100%);
+            transform-origin: top center;
+            animation: rayMove 20s ease-in-out infinite alternate;
+        }
+        .hero-rays .ray:nth-child(1) {
+            left: 20%;
+            animation-delay: 0s;
+            width: 3px;
+        }
+        .hero-rays .ray:nth-child(2) {
+            left: 40%;
+            animation-delay: 3s;
+            width: 1.5px;
+        }
+        .hero-rays .ray:nth-child(3) {
+            left: 60%;
+            animation-delay: 6s;
+            width: 2.5px;
+        }
+        .hero-rays .ray:nth-child(4) {
+            left: 80%;
+            animation-delay: 9s;
+            width: 1.5px;
+        }
+        .hero-rays .ray:nth-child(5) {
+            left: 10%;
+            animation-delay: 1.5s;
+            width: 1px;
+        }
+        .hero-rays .ray:nth-child(6) {
+            left: 90%;
+            animation-delay: 4.5s;
+            width: 2px;
+        }
+        @keyframes rayMove {
+            0% {
+                transform: rotate(-5deg) scaleY(0.8);
+                opacity: 0.3;
+            }
+            50% {
+                transform: rotate(3deg) scaleY(1.2);
+                opacity: 0.7;
+            }
+            100% {
+                transform: rotate(-3deg) scaleY(0.9);
+                opacity: 0.4;
+            }
+        }
+        /* Floating particles in hero */
+        .hero-particles {
+            position: absolute;
+            inset: 0;
+            z-index: 1;
+            pointer-events: none;
+            overflow: hidden;
+        }
+        .hero-particles span {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.06);
+            border-radius: 50%;
+            animation: heroParticleFloat 12s ease-in-out infinite alternate;
+        }
+        .hero-particles span:nth-child(1) {
+            left: 10%;
+            top: 30%;
+            animation-delay: 0s;
+        }
+        .hero-particles span:nth-child(2) {
+            left: 25%;
+            top: 60%;
+            animation-delay: 2s;
+            width: 3px;
+            height: 3px;
+        }
+        .hero-particles span:nth-child(3) {
+            left: 50%;
+            top: 20%;
+            animation-delay: 4s;
+        }
+        .hero-particles span:nth-child(4) {
+            left: 70%;
+            top: 55%;
+            animation-delay: 1s;
+            width: 4px;
+            height: 4px;
+        }
+        .hero-particles span:nth-child(5) {
+            left: 85%;
+            top: 40%;
+            animation-delay: 3s;
+        }
+        .hero-particles span:nth-child(6) {
+            left: 40%;
+            top: 75%;
+            animation-delay: 5s;
+            width: 3px;
+            height: 3px;
+        }
+        .hero-particles span:nth-child(7) {
+            left: 15%;
+            top: 80%;
+            animation-delay: 1.5s;
+        }
+        .hero-particles span:nth-child(8) {
+            left: 65%;
+            top: 15%;
+            animation-delay: 3.5s;
+        }
+        @keyframes heroParticleFloat {
+            0% {
+                transform: translateY(0) scale(1);
+                opacity: 0.1;
+            }
+            100% {
+                transform: translateY(-80px) scale(1.5);
+                opacity: 0.5;
+            }
+        }
+
         .hero-content {
             position: relative;
-            z-index: 2;
+            z-index: 3;
             max-width: 900px;
             padding: 0 5vw;
             margin-top: 20px;
@@ -761,6 +914,9 @@
             opacity: 0;
             animation: fadeSlideUp 1.4s 1s both;
         }
+        .hero-content h1 .word {
+            display: inline-block;
+        }
         .hero-content h1 em {
             font-weight: 500;
             font-style: italic;
@@ -775,7 +931,7 @@
             margin: 0 auto;
             letter-spacing: 0.02em;
             line-height: 1.6;
-            font-family: "DM Sans", sans-serif;
+            font-family: var(--font-sans);
             opacity: 0;
             animation: fadeSlideUp 1.2s 1.2s both;
         }
@@ -809,25 +965,25 @@
             display: flex;
             justify-content: space-between;
             padding: 0 5vw;
-            z-index: 2;
+            z-index: 3;
             font-size: 9px;
             letter-spacing: 0.15em;
             text-transform: uppercase;
             color: rgba(255, 255, 255, 0.25);
-            font-family: "DM Mono", monospace;
+            font-family: var(--font-mono);
             width: 100%;
             opacity: 0;
             animation: fadeSlideUp 1s 1.4s both;
         }
 
         /* ============================================================ */
-        /*  BOOKING BAR — ENHANCED                                     */
+        /*  BOOKING BAR — REFINED                                      */
         /* ============================================================ */
         .booking-bar-wrapper {
             position: sticky;
             top: 68px;
             z-index: 50;
-            transition: all 0.6s var(--ease-out-expo);
+            transition: all 0.8s var(--ease-out-expo);
             background: transparent;
             padding: 0 5vw;
             margin-top: -24px;
@@ -855,6 +1011,14 @@
             padding: 0;
             width: 100%;
             position: relative;
+            overflow: hidden;
+        }
+        .booking-bar::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, transparent 0%, rgba(184, 148, 75, 0.02) 50%, transparent 100%);
+            pointer-events: none;
         }
         .booking-bar>div {
             padding: 16px 20px;
@@ -863,10 +1027,18 @@
             flex-direction: column;
             justify-content: center;
             position: relative;
+            transition: background 0.3s ease;
+        }
+        .booking-bar>div:hover {
+            background: rgba(245, 242, 237, 0.3);
         }
         .booking-bar>div:last-child {
             border-right: 0;
             padding: 8px 20px;
+            background: var(--olive);
+        }
+        .booking-bar>div:last-child:hover {
+            background: var(--olive-light);
         }
         .booking-bar label {
             font-size: 8px;
@@ -876,6 +1048,7 @@
             font-weight: 500;
             margin-bottom: 4px;
             display: block;
+            transition: color 0.3s;
         }
         .booking-bar input,
         .booking-bar select {
@@ -883,15 +1056,20 @@
             background: transparent;
             color: var(--ink);
             font-size: 14px;
-            font-family: "DM Sans", sans-serif;
+            font-family: var(--font-sans);
             width: 100%;
             outline: 0;
             padding: 4px 0;
             min-height: 32px;
             transition: color 0.3s;
+            cursor: pointer;
         }
         .booking-bar input:focus,
         .booking-bar select:focus {
+            color: var(--gold);
+        }
+        .booking-bar input:focus+label,
+        .booking-bar select:focus+label {
             color: var(--gold);
         }
         .booking-bar .btn-olive {
@@ -903,14 +1081,14 @@
             font-weight: 500;
             border: none;
             cursor: pointer;
-            transition: all 0.5s var(--ease-out-expo);
-            font-family: "DM Sans", sans-serif;
+            transition: all 0.6s var(--ease-out-expo);
+            font-family: var(--font-sans);
             min-height: 48px;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 10px;
-            background: var(--olive);
+            background: transparent;
             color: #fff;
             border-radius: 0;
             position: relative;
@@ -937,7 +1115,7 @@
         }
         .booking-bar .btn-olive .arrow {
             font-size: 18px;
-            transition: transform 0.4s var(--ease-out-expo);
+            transition: transform 0.5s var(--ease-out-expo);
             position: relative;
             z-index: 1;
         }
@@ -956,6 +1134,7 @@
             text-transform: uppercase;
             font-weight: 500;
             border-radius: 0;
+            box-shadow: 0 2px 12px rgba(184, 148, 75, 0.25);
         }
 
         /* ============================================================ */
@@ -1046,6 +1225,13 @@
             line-height: 1.9;
             color: var(--grey);
         }
+        .intro .deco-line {
+            display: block;
+            width: 40px;
+            height: 2px;
+            background: var(--gold);
+            margin: 20px 0 0;
+        }
 
         /* ============================================================ */
         /*  FEATURE GRID — ENHANCED                                    */
@@ -1069,7 +1255,7 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transition: transform 1.2s var(--ease-out-expo);
+            transition: transform 1.4s var(--ease-out-expo);
             will-change: transform;
         }
         .feature:hover img {
@@ -1078,7 +1264,7 @@
         .feature .overlay {
             position: absolute;
             inset: 0;
-            background: linear-gradient(0deg, rgba(0, 0, 0, 0.5) 0%, transparent 60%);
+            background: linear-gradient(0deg, rgba(0, 0, 0, 0.6) 0%, transparent 60%);
         }
         .feature .content {
             position: absolute;
@@ -1107,14 +1293,14 @@
             font-weight: 500;
             border-bottom: 1px solid rgba(255, 255, 255, 0.3);
             padding-bottom: 4px;
-            transition: all 0.3s ease;
+            transition: all 0.4s var(--ease-out-expo);
         }
         .feature .content .text-link:hover {
             border-color: #fff;
             color: #fff;
         }
         .feature .content .text-link .arrow {
-            transition: transform 0.4s var(--ease-out-expo);
+            transition: transform 0.5s var(--ease-out-expo);
         }
         .feature .content .text-link:hover .arrow {
             transform: translate(4px, -2px);
@@ -1125,7 +1311,7 @@
         }
 
         /* ============================================================ */
-        /*  ROOMS — ENHANCED ARTISTIC DISPLAY                           */
+        /*  ROOMS — ENHANCED WITH 3D TILT                              */
         /* ============================================================ */
         .rooms-section {
             padding: 100px 5vw 60px;
@@ -1146,9 +1332,11 @@
             background: #fff;
             overflow: hidden;
             cursor: pointer;
-            transition: all 0.7s var(--ease-out-expo);
-            transform: translateY(0);
+            transition: all 0.8s var(--ease-out-expo);
+            transform: translateY(0) rotateX(0) rotateY(0);
             will-change: transform, box-shadow;
+            transform-style: preserve-3d;
+            perspective: 800px;
         }
         .room-art-card:hover {
             transform: translateY(-16px) scale(1.01);
@@ -1158,12 +1346,13 @@
             position: relative;
             overflow: hidden;
             height: 280px;
+            transform: translateZ(0);
         }
         .room-art-card .art-image img {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transition: transform 1s var(--ease-out-expo);
+            transition: transform 1.2s var(--ease-out-expo);
             will-change: transform;
         }
         .room-art-card:hover .art-image img {
@@ -1197,10 +1386,11 @@
         .room-art-card .art-info {
             padding: 22px 24px 28px;
             position: relative;
+            transform: translateZ(20px);
         }
         .room-art-card .art-info .room-name {
             font-size: 20px;
-            font-family: "Playfair Display", Georgia, serif;
+            font-family: var(--font-serif);
             font-weight: 500;
             margin-bottom: 2px;
         }
@@ -1287,7 +1477,7 @@
             font-size: 22px;
             cursor: pointer;
             color: var(--ink);
-            transition: all 0.5s var(--ease-out-expo);
+            transition: all 0.6s var(--ease-out-expo);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -1329,7 +1519,7 @@
             object-fit: cover;
             cursor: pointer;
             border: 2px solid rgba(255, 255, 255, 0.15);
-            transition: all 0.4s var(--ease-out-expo);
+            transition: all 0.5s var(--ease-out-expo);
             opacity: 0.4;
         }
         .modal-gallery-wrap .gallery-thumbs .thumb:hover,
@@ -1376,7 +1566,7 @@
             font-size: 11px;
             letter-spacing: 0.08em;
             color: rgba(255, 255, 255, 0.7);
-            font-family: "DM Mono", monospace;
+            font-family: var(--font-mono);
             background: rgba(0, 0, 0, 0.3);
             padding: 4px 14px;
             border-radius: 20px;
@@ -1400,7 +1590,7 @@
         }
         .modal-content-right .room-title {
             font-size: 34px;
-            font-family: "Playfair Display", Georgia, serif;
+            font-family: var(--font-serif);
             font-weight: 500;
             line-height: 1.05;
             margin-bottom: 4px;
@@ -1500,7 +1690,7 @@
         }
         .more-details-content h3 {
             font-size: 28px;
-            font-family: "Playfair Display", Georgia, serif;
+            font-family: var(--font-serif);
             font-weight: 500;
             margin-bottom: 4px;
         }
@@ -1565,8 +1755,16 @@
             flex-direction: column;
             justify-content: center;
         }
+        .quote-section .text .quote-mark {
+            font-family: var(--font-serif);
+            font-size: 60px;
+            color: var(--gold);
+            line-height: 0.6;
+            opacity: 0.3;
+            margin-bottom: 8px;
+        }
         .quote-section .text blockquote {
-            font-family: "Playfair Display", Georgia, serif;
+            font-family: var(--font-serif);
             font-size: clamp(32px, 4vw, 56px);
             font-weight: 500;
             line-height: 1.1;
@@ -1647,14 +1845,14 @@
         }
         .chef-section .mark {
             font-size: 80px;
-            font-family: "Playfair Display", Georgia, serif;
+            font-family: var(--font-serif);
             color: var(--gold);
             line-height: 0.7;
             display: block;
             margin-bottom: 16px;
         }
         .chef-section blockquote {
-            font-family: "Playfair Display", Georgia, serif;
+            font-family: var(--font-serif);
             font-size: clamp(28px, 3vw, 42px);
             font-weight: 500;
             line-height: 1.1;
@@ -1720,12 +1918,14 @@
             overflow: hidden;
             cursor: pointer;
             will-change: transform;
+            transform-style: preserve-3d;
+            perspective: 800px;
         }
         .exp-card img {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transition: transform 0.8s var(--ease-out-expo);
+            transition: transform 1s var(--ease-out-expo);
             will-change: transform;
         }
         .exp-card:hover img {
@@ -1745,7 +1945,7 @@
         }
         .exp-card .content .number {
             font-size: 9px;
-            font-family: "DM Mono", monospace;
+            font-family: var(--font-mono);
             color: rgba(255, 255, 255, 0.3);
             letter-spacing: 0.1em;
             display: block;
@@ -1763,7 +1963,7 @@
             color: rgba(255, 255, 255, 0.5);
             margin-top: 12px;
             display: inline-block;
-            transition: all 0.3s ease;
+            transition: all 0.4s var(--ease-out-expo);
             border-bottom: 1px solid rgba(255, 255, 255, 0.2);
             padding-bottom: 4px;
         }
@@ -1794,7 +1994,7 @@
             color: var(--gold);
             line-height: 0.7;
             margin-bottom: 24px;
-            font-family: "Playfair Display", Georgia, serif;
+            font-family: var(--font-serif);
         }
         .signature-section .text h2 {
             font-size: clamp(34px, 4vw, 56px);
@@ -1821,7 +2021,7 @@
         .signature-list .item .num {
             font-size: 10px;
             color: var(--gold);
-            font-family: "DM Mono", monospace;
+            font-family: var(--font-mono);
         }
         .signature-list .item .title {
             font-weight: 500;
@@ -1870,7 +2070,7 @@
         }
         .events-section .text .stats b {
             font-size: 28px;
-            font-family: "Playfair Display", Georgia, serif;
+            font-family: var(--font-serif);
             color: var(--gold);
         }
         .events-section .text .stats span {
@@ -1894,7 +2094,7 @@
             overflow: hidden;
             cursor: pointer;
             min-height: 120px;
-            transition: transform 0.5s var(--ease-out-expo);
+            transition: transform 0.6s var(--ease-out-expo);
             will-change: transform;
         }
         .gallery-tile:hover {
@@ -1939,9 +2139,10 @@
             cursor: pointer;
             padding: 4px 0;
             font-weight: 500;
-            font-family: "DM Sans", sans-serif;
-            transition: all 0.4s var(--ease-out-expo);
+            font-family: var(--font-sans);
+            transition: all 0.5s var(--ease-out-expo);
             border-bottom: 1.5px solid transparent;
+            position: relative;
         }
         .gallery-filters button.active {
             color: var(--ink);
@@ -1958,14 +2159,19 @@
             width: 100%;
         }
         .testimonial-section blockquote {
-            font-family: "Playfair Display", Georgia, serif;
+            font-family: var(--font-serif);
             font-size: clamp(32px, 4.5vw, 60px);
             font-weight: 500;
             line-height: 1.1;
             max-width: 900px;
             margin: 0 auto 16px;
             letter-spacing: -0.03em;
-            transition: opacity 0.4s ease, transform 0.4s ease;
+            transition: opacity 0.5s ease, transform 0.6s var(--ease-out-expo);
+        }
+        .testimonial-section blockquote .quote-mark-inline {
+            color: var(--gold);
+            opacity: 0.3;
+            font-size: 0.8em;
         }
         .testimonial-section .author {
             font-size: 10px;
@@ -1986,19 +2192,34 @@
             font-size: 16px;
             cursor: pointer;
             color: var(--grey);
-            transition: all 0.3s ease;
+            transition: all 0.4s var(--ease-out-expo);
             padding: 4px 8px;
+            position: relative;
+        }
+        .testimonial-nav button::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 1px;
+            background: var(--gold);
+            transition: all 0.4s var(--ease-out-expo);
         }
         .testimonial-nav button:hover {
             color: var(--ink);
             transform: translateX(-2px);
+        }
+        .testimonial-nav button:hover::after {
+            width: 100%;
+            left: 0;
         }
         .testimonial-nav button:last-child:hover {
             transform: translateX(2px);
         }
         .testimonial-nav .current {
             font-size: 10px;
-            font-family: "DM Mono", monospace;
+            font-family: var(--font-mono);
             color: var(--grey);
         }
 
@@ -2019,6 +2240,8 @@
             min-height: 340px;
             overflow: hidden;
             position: relative;
+            border-radius: 4px;
+            box-shadow: var(--shadow-lux);
         }
         .location-dynamic .location-map-wrap iframe {
             width: 100%;
@@ -2053,11 +2276,17 @@
         }
         .location-dynamic .location-info .distances-grid .item {
             text-align: center;
+            padding: 8px 0;
+            border-bottom: 2px solid transparent;
+            transition: border-color 0.3s;
+        }
+        .location-dynamic .location-info .distances-grid .item:hover {
+            border-color: var(--gold);
         }
         .location-dynamic .location-info .distances-grid .item b {
             display: block;
             font-size: 22px;
-            font-family: "Playfair Display", Georgia, serif;
+            font-family: var(--font-serif);
             color: var(--gold);
             font-weight: 500;
         }
@@ -2091,19 +2320,22 @@
             color: var(--ink);
             border-bottom: 1px solid var(--light-grey);
             padding-bottom: 4px;
-            transition: all 0.4s var(--ease-out-expo);
+            transition: all 0.5s var(--ease-out-expo);
         }
         .text-link:hover {
             color: var(--gold);
             border-color: var(--gold);
         }
         .text-link .arrow {
-            transition: transform 0.4s var(--ease-out-expo);
+            transition: transform 0.5s var(--ease-out-expo);
         }
         .text-link:hover .arrow {
             transform: translate(4px, -2px);
         }
 
+        /* ============================================================ */
+        /*  FACILITIES — CUSTOM SVG ICONS                              */
+        /* ============================================================ */
         .facilities-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -2115,8 +2347,21 @@
             background: #fff;
             padding: 32px 24px;
             text-align: center;
-            transition: all 0.5s var(--ease-out-expo);
+            transition: all 0.6s var(--ease-out-expo);
             will-change: transform;
+            position: relative;
+            overflow: hidden;
+        }
+        .facility-item::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(184, 148, 75, 0.02), transparent);
+            opacity: 0;
+            transition: opacity 0.6s ease;
+        }
+        .facility-item:hover::before {
+            opacity: 1;
         }
         .facility-item:hover {
             background: var(--cream);
@@ -2132,7 +2377,7 @@
             font-weight: 600;
             letter-spacing: 0.04em;
             margin-bottom: 2px;
-            font-family: "DM Sans", sans-serif;
+            font-family: var(--font-sans);
         }
         .facility-item p {
             font-size: 11px;
@@ -2149,6 +2394,9 @@
             margin-top: 4px;
         }
 
+        /* ============================================================ */
+        /*  POLICIES                                                    */
+        /* ============================================================ */
         .policies-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -2159,8 +2407,20 @@
             padding: 32px 28px;
             background: #fff;
             border: 0;
-            transition: all 0.5s var(--ease-out-expo);
+            transition: all 0.6s var(--ease-out-expo);
             will-change: transform;
+            position: relative;
+        }
+        .policy-block::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-top: 2px solid var(--gold);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+        .policy-block:hover::before {
+            opacity: 1;
         }
         .policy-block:hover {
             transform: translateY(-4px);
@@ -2173,7 +2433,7 @@
             color: var(--gold);
             font-weight: 600;
             margin-bottom: 10px;
-            font-family: "DM Sans", sans-serif;
+            font-family: var(--font-sans);
         }
         .policy-block p {
             font-size: 13px;
@@ -2191,6 +2451,9 @@
             opacity: 0.6;
         }
 
+        /* ============================================================ */
+        /*  FAQ / CONTACT — ENHANCED                                   */
+        /* ============================================================ */
         .faq-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -2221,6 +2484,9 @@
         .faq-list details:last-child {
             border-bottom: 0;
         }
+        .faq-list details[open] {
+            border-color: var(--gold);
+        }
         .faq-list summary {
             font-weight: 500;
             cursor: pointer;
@@ -2241,8 +2507,9 @@
         .faq-list summary .plus {
             font-size: 22px;
             color: var(--gold);
-            transition: transform 0.5s var(--ease-out-expo);
+            transition: transform 0.6s var(--ease-out-expo);
             flex-shrink: 0;
+            font-weight: 300;
         }
         .faq-list details[open] summary .plus {
             transform: rotate(45deg);
@@ -2253,6 +2520,93 @@
             padding-top: 10px;
             margin: 0;
             line-height: 1.7;
+            padding-right: 20px;
+        }
+
+        .faq-grid .right {
+            background: var(--deep);
+            color: #fff;
+            padding: 60px 50px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .faq-grid .right::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse at 50% 50%, rgba(184, 148, 75, 0.04) 0%, transparent 70%);
+            pointer-events: none;
+        }
+        .faq-grid .right .eyebrow {
+            color: rgba(255, 255, 255, 0.3);
+        }
+        .faq-grid .right h2 {
+            color: #fff;
+            font-size: clamp(34px, 4vw, 56px);
+            position: relative;
+            z-index: 1;
+        }
+        .faq-grid .right h2 em {
+            font-style: italic;
+            color: var(--gold);
+        }
+        .faq-grid .right p {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 15px;
+            line-height: 1.8;
+            margin: 16px 0 24px;
+            max-width: 400px;
+            position: relative;
+            z-index: 1;
+        }
+        .faq-grid .right .contact-links {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 28px;
+            position: relative;
+            z-index: 1;
+        }
+        .faq-grid .right .contact-links a {
+            color: rgba(255, 255, 255, 0.6);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+            padding-bottom: 10px;
+            transition: all 0.4s var(--ease-out-expo);
+            display: flex;
+            flex-direction: column;
+        }
+        .faq-grid .right .contact-links a:hover {
+            color: #fff;
+            border-color: rgba(255, 255, 255, 0.15);
+            transform: translateX(4px);
+        }
+        .faq-grid .right .contact-links a .label {
+            font-size: 8px;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.2);
+            font-weight: 500;
+        }
+        .faq-grid .right .contact-note {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.2);
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 1;
+        }
+        .faq-grid .right .btn-primary {
+            background: var(--gold);
+            color: var(--ink);
+            width: 100%;
+            justify-content: center;
+            position: relative;
+            z-index: 1;
+        }
+        .faq-grid .right .btn-primary:hover {
+            box-shadow: 0 8px 32px rgba(184, 148, 75, 0.25);
         }
 
         .contact-section {
@@ -2341,6 +2695,9 @@
             margin-bottom: 24px;
         }
 
+        /* ============================================================ */
+        /*  STATS — ANIMATED                                           */
+        /* ============================================================ */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -2353,7 +2710,7 @@
         .stats-grid .stat {
             padding: 16px 0;
             border-right: 1px solid rgba(0, 0, 0, 0.04);
-            transition: all 0.5s var(--ease-out-expo);
+            transition: all 0.6s var(--ease-out-expo);
         }
         .stats-grid .stat:hover {
             transform: translateY(-4px);
@@ -2364,8 +2721,9 @@
         .stats-grid .stat b {
             display: block;
             font-size: 38px;
-            font-family: "Playfair Display", Georgia, serif;
+            font-family: var(--font-serif);
             font-weight: 500;
+            color: var(--gold);
         }
         .stats-grid .stat span {
             font-size: 9px;
@@ -2375,6 +2733,9 @@
             font-weight: 500;
         }
 
+        /* ============================================================ */
+        /*  TRUST — LOGOS                                              */
+        /* ============================================================ */
         .trust-grid {
             display: flex;
             justify-content: center;
@@ -2383,8 +2744,9 @@
             padding: 60px 5vw;
             max-width: 1200px;
             margin: 0 auto;
+            align-items: center;
         }
-        .trust-grid span {
+        .trust-grid .trust-item {
             font-size: 9px;
             letter-spacing: 0.12em;
             text-transform: uppercase;
@@ -2392,13 +2754,20 @@
             text-align: center;
             line-height: 1.6;
             font-weight: 500;
-            opacity: 0.6;
-            transition: opacity 0.4s ease;
+            opacity: 0.5;
+            transition: all 0.5s var(--ease-out-expo);
+            padding: 8px 12px;
+            border: 1px solid transparent;
         }
-        .trust-grid span:hover {
+        .trust-grid .trust-item:hover {
             opacity: 1;
+            border-color: var(--light-grey);
+            transform: translateY(-2px);
         }
 
+        /* ============================================================ */
+        /*  JOURNAL                                                    */
+        /* ============================================================ */
         .journal-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -2408,7 +2777,7 @@
         .journal-grid article {
             border-top: 1px solid var(--light-grey);
             padding-top: 20px;
-            transition: all 0.5s var(--ease-out-expo);
+            transition: all 0.6s var(--ease-out-expo);
         }
         .journal-grid article:hover {
             transform: translateY(-4px);
@@ -2440,6 +2809,9 @@
             border-color: var(--gold);
         }
 
+        /* ============================================================ */
+        /*  WHATSAPP FLOAT                                             */
+        /* ============================================================ */
         .whatsapp-float {
             position: fixed;
             bottom: 28px;
@@ -2455,7 +2827,7 @@
             justify-content: center;
             text-decoration: none;
             box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.5);
-            transition: all 0.5s var(--ease-out-expo);
+            transition: all 0.6s var(--ease-out-expo);
             border: 0;
             animation: whatsappPulse 2.5s ease-in-out infinite;
         }
@@ -2482,11 +2854,23 @@
             }
         }
 
+        /* ============================================================ */
+        /*  FOOTER — ENHANCED                                          */
+        /* ============================================================ */
         footer {
             background: var(--deep);
             color: rgba(255, 255, 255, 0.7);
             padding: 60px 5vw 30px;
             width: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+        footer::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse at 50% 0%, rgba(184, 148, 75, 0.03) 0%, transparent 70%);
+            pointer-events: none;
         }
         .footer-grid {
             display: grid;
@@ -2494,17 +2878,36 @@
             gap: 40px;
             max-width: 1400px;
             margin: 0 auto;
+            position: relative;
+            z-index: 1;
         }
         .footer-grid .brand {
             color: #fff;
             font-size: 18px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .footer-grid .brand .gold-dot {
+            display: inline-block;
+            width: 4px;
+            height: 4px;
+            background: var(--gold);
+            border-radius: 50%;
+            opacity: 0.6;
         }
         .footer-grid .brand .location {
             opacity: 0.4;
             font-size: 7px;
+            font-weight: 400;
+            font-family: var(--font-sans);
+            letter-spacing: 0.15em;
         }
         .footer-grid .brand .divider {
             opacity: 0.2;
+            width: 1px;
+            height: 18px;
+            background: currentColor;
         }
         .footer-grid p {
             font-size: 13px;
@@ -2525,17 +2928,17 @@
             text-transform: uppercase;
             color: rgba(255, 255, 255, 0.3);
             font-weight: 500;
-            font-family: "DM Sans", sans-serif;
+            font-family: var(--font-sans);
             margin-bottom: 12px;
         }
-        .footer-grid a {
+        .footer-grid .footer-links a {
             display: block;
             font-size: 12px;
             padding: 4px 0;
             color: rgba(255, 255, 255, 0.5);
-            transition: all 0.3s ease;
+            transition: all 0.4s var(--ease-out-expo);
         }
-        .footer-grid a:hover {
+        .footer-grid .footer-links a:hover {
             color: #fff;
             transform: translateX(4px);
         }
@@ -2555,7 +2958,7 @@
             outline: 0;
             width: 100%;
             font-size: 12px;
-            font-family: "DM Sans", sans-serif;
+            font-family: var(--font-sans);
         }
         .footer-grid .subscribe input::placeholder {
             color: rgba(255, 255, 255, 0.3);
@@ -2567,7 +2970,7 @@
             font-size: 18px;
             cursor: pointer;
             padding: 4px 8px;
-            transition: all 0.3s ease;
+            transition: all 0.4s var(--ease-out-expo);
         }
         .footer-grid .subscribe button:hover {
             color: #fff;
@@ -2588,8 +2991,38 @@
             max-width: 1400px;
             margin-left: auto;
             margin-right: auto;
+            position: relative;
+            z-index: 1;
+        }
+        .footer-bottom .back-to-top {
+            background: none;
+            border: 0;
+            color: rgba(255, 255, 255, 0.3);
+            font-size: 9px;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            cursor: pointer;
+            font-family: var(--font-sans);
+            transition: all 0.4s var(--ease-out-expo);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .footer-bottom .back-to-top:hover {
+            color: #fff;
+            transform: translateY(-2px);
+        }
+        .footer-bottom .back-to-top .arrow-up {
+            font-size: 16px;
+            transition: transform 0.4s var(--ease-out-expo);
+        }
+        .footer-bottom .back-to-top:hover .arrow-up {
+            transform: translateY(-2px);
         }
 
+        /* ============================================================ */
+        /*  BOOKING DIALOG                                             */
+        /* ============================================================ */
         dialog {
             padding: 0;
             border: 0;
@@ -2674,7 +3107,7 @@
             padding: 8px 0;
             color: var(--ink);
             font-size: 14px;
-            font-family: "DM Sans", sans-serif;
+            font-family: var(--font-sans);
             outline: 0;
             min-height: 40px;
             transition: border-color 0.3s ease;
@@ -2702,8 +3135,8 @@
             text-transform: uppercase;
             font-weight: 500;
             cursor: pointer;
-            transition: all 0.5s var(--ease-out-expo);
-            font-family: "DM Sans", sans-serif;
+            transition: all 0.6s var(--ease-out-expo);
+            font-family: var(--font-sans);
             min-height: 50px;
             margin-top: 4px;
             border-radius: 0;
@@ -2830,6 +3263,16 @@
             .faq-grid .right {
                 padding: 40px 5vw;
             }
+            .contact-section {
+                grid-template-columns: 1fr;
+            }
+            .contact-section .dark,
+            .contact-section .light {
+                padding: 50px 5vw;
+            }
+            .contact-section .dark {
+                order: -1;
+            }
         }
 
         @media(max-width: 768px) {
@@ -2904,6 +3347,9 @@
                 bottom: 16px;
                 padding: 0 4vw;
             }
+            .hero-rays .ray {
+                display: none;
+            }
 
             .booking-bar-wrapper {
                 top: 60px;
@@ -2927,6 +3373,10 @@
                 border-bottom: 0;
                 padding: 6px 12px;
                 grid-column: 1 / -1;
+                background: var(--olive);
+            }
+            .booking-bar>div:last-child:hover {
+                background: var(--olive-light);
             }
             .booking-bar input,
             .booking-bar select {
@@ -2942,6 +3392,12 @@
                 padding: 10px 14px;
                 font-size: 9px;
                 min-height: 40px;
+            }
+            .booking-bar .best-rate {
+                top: -8px;
+                right: 12px;
+                font-size: 6px;
+                padding: 2px 12px;
             }
 
             .rooms-grid-artistic {
@@ -2971,15 +3427,12 @@
             .intro-grid,
             .quote-section,
             .dining-section,
-            .signature-section,
-            .contact-section {
+            .signature-section {
                 grid-template-columns: 1fr;
             }
             .quote-section .text,
             .dining-section .text,
-            .signature-section .text,
-            .contact-section .dark,
-            .contact-section .light {
+            .signature-section .text {
                 padding: 50px 5vw;
             }
             .quote-section .image,
@@ -3131,10 +3584,11 @@
             }
 
             .trust-grid {
-                gap: 4vw;
+                gap: 3vw;
             }
-            .trust-grid span {
+            .trust-grid .trust-item {
                 font-size: 7px;
+                padding: 6px 8px;
             }
 
             .section {
@@ -3185,6 +3639,12 @@
 
             .cursor-dot {
                 display: none;
+            }
+
+            .footer-bottom {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
             }
         }
 
@@ -3300,6 +3760,7 @@
     <header class="nav" id="mainNav">
         <a class="brand" href="#home">
             AMROUSS<span class="divider"></span>DAR
+            <span class="gold-dot"></span>
             <span class="location">AZROU · MOROCCO</span>
         </a>
         <nav class="nav-links" id="navLinks">
@@ -3345,14 +3806,29 @@
     </header>
 
     <!-- ============================================================ -->
-    <!--  HERO — CINEMATIC                                            -->
+    <!--  HERO — CINEMATIC WITH VOLUMETRIC LIGHT & PARTICLES          -->
     <!-- ============================================================ -->
     <section class="hero" id="home">
         <div class="hero-bg" id="heroBg"></div>
         <div class="hero-overlay"></div>
+        <div class="hero-rays">
+            <span class="ray"></span>
+            <span class="ray"></span>
+            <span class="ray"></span>
+            <span class="ray"></span>
+            <span class="ray"></span>
+            <span class="ray"></span>
+        </div>
+        <div class="hero-particles">
+            <span></span><span></span><span></span><span></span>
+            <span></span><span></span><span></span><span></span>
+        </div>
         <div class="hero-content">
             <p class="eyebrow light" data-i18n="heroOverline">6 KM FROM AZROU · MIDDLE ATLAS</p>
-            <h1>Amrouss<br><em>touristic</em> DarMaroc</h1>
+            <h1>
+                <span class="word">Amrouss</span><br>
+                <span class="word"><em>touristic</em> DarMaroc</span>
+            </h1>
             <p class="subhead" data-i18n="heroCopy">Six minutes beyond the city, a rare kind of quiet begins: cedar air, mountain light and nothing competing for your attention.</p>
         </div>
         <div class="hero-meta">
@@ -3362,7 +3838,7 @@
     </section>
 
     <!-- ============================================================ -->
-    <!--  BOOKING BAR — ENHANCED                                      -->
+    <!--  BOOKING BAR — REFINED                                      -->
     <!-- ============================================================ -->
     <div class="booking-bar-wrapper" id="bookingBarWrapper">
         <div class="booking-bar">
@@ -3398,6 +3874,7 @@
     <section class="intro reveal-item" id="story">
         <p class="eyebrow">A HOUSE IN THE ATLAS</p>
         <h2>Not just outside the city.<br><em>Outside its hurry.</em></h2>
+        <span class="deco-line"></span>
         <div class="intro-grid">
             <p>At the meeting point of cedar woodlands and red-earth villages, Amrouss touristic DarMaroc is a rare sanctuary for guests who seek deep sleep, clean air and luxury with no unnecessary noise.</p>
             <a href="#about" class="text-link">The story of our quiet <span class="arrow">→</span></a>
@@ -3633,7 +4110,8 @@
         <div class="image"></div>
         <div class="text">
             <p class="eyebrow">A DIFFERENT RHYTHM</p>
-            <blockquote>“The real luxury is that nothing asks you to hurry.”</blockquote>
+            <div class="quote-mark">"</div>
+            <blockquote>The real luxury is that nothing asks you to hurry.</blockquote>
             <p class="attribution">— ELENA V., LISBON</p>
         </div>
     </section>
@@ -3817,7 +4295,7 @@
     <!-- ============================================================ -->
     <section class="testimonial-section">
         <p class="eyebrow">WORDS FROM THE DAR</p>
-        <blockquote data-review>“A beautiful antidote to the everyday. The air, the service, the silence — perfection.”</blockquote>
+        <blockquote data-review><span class="quote-mark-inline">“</span>A beautiful antidote to the everyday. The air, the service, the silence — perfection.<span class="quote-mark-inline">”</span></blockquote>
         <p class="author" data-review-author>JULIEN &amp; CLARA · PARIS</p>
         <div class="testimonial-nav">
             <button data-review-prev>←</button>
@@ -3847,24 +4325,24 @@
     </section>
 
     <!-- ============================================================ -->
-    <!--  STATS — ENHANCED                                            -->
+    <!--  STATS — ANIMATED                                            -->
     <!-- ============================================================ -->
     <div class="stats-grid">
-        <div class="stat"><b>9.4</b><span>Breakfast Rating</span></div>
-        <div class="stat"><b>24/7</b><span>Front Desk</span></div>
-        <div class="stat"><b>98%</b><span>Guest Satisfaction</span></div>
-        <div class="stat"><b>4</b><span>Languages Spoken</span></div>
+        <div class="stat"><b data-count="9.4">9.4</b><span>Breakfast Rating</span></div>
+        <div class="stat"><b data-count="24">24</b><span>Hour Front Desk</span></div>
+        <div class="stat"><b data-count="98">98</b><span>% Guest Satisfaction</span></div>
+        <div class="stat"><b data-count="4">4</b><span>Languages Spoken</span></div>
     </div>
 
     <!-- ============================================================ -->
-    <!--  TRUST — ENHANCED                                            -->
+    <!--  TRUST — LOGOS                                               -->
     <!-- ============================================================ -->
     <div class="trust-grid">
-        <span>TRAVEL + LEISURE</span>
-        <span>CONDE NAST TRAVELLER</span>
-        <span>♜ GREEN KEY</span>
-        <span>MICHELIN GUIDE</span>
-        <span>SMALL LUXURY HOTELS</span>
+        <span class="trust-item">TRAVEL + LEISURE</span>
+        <span class="trust-item">CONDE NAST TRAVELLER</span>
+        <span class="trust-item">♜ GREEN KEY</span>
+        <span class="trust-item">MICHELIN GUIDE</span>
+        <span class="trust-item">SMALL LUXURY HOTELS</span>
     </div>
 
     <!-- ============================================================ -->
@@ -3906,17 +4384,17 @@
                 <details><summary>How far is the property from Azrou center?<span class="plus">+</span></summary><p>Amrouss touristic DarMaroc is 6 km from the center of Azrou.</p></details>
             </div>
         </div>
-        <div class="right" style="background:var(--deep);color:#fff;padding:60px 50px;display:flex;flex-direction:column;justify-content:center;">
-            <p class="eyebrow light" style="color:rgba(255,255,255,0.3);">SPEAK WITH OUR TEAM</p>
-            <h2 style="color:#fff;font-size:clamp(34px,4vw,56px);">We are here<br /><em style="font-style:italic;color:var(--gold);">when you are ready.</em></h2>
-            <p style="color:rgba(255,255,255,0.5);font-size:15px;line-height:1.8;margin:16px 0 24px;max-width:400px;">For stays, celebrations, transfers or a question only a local can answer.</p>
-            <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:28px;">
-                <a href="tel:+212630485646" style="color:rgba(255,255,255,0.6);border-bottom:1px solid rgba(255,255,255,0.04);padding-bottom:10px;transition:all .3s ease;display:flex;flex-direction:column;"><span style="font-size:8px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,0.2);font-weight:500;">Call us</span> +212 (0) 630 485 646</a>
-                <a href="mailto:hello@amroussdar.ma" style="color:rgba(255,255,255,0.6);border-bottom:1px solid rgba(255,255,255,0.04);padding-bottom:10px;transition:all .3s ease;display:flex;flex-direction:column;"><span style="font-size:8px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,0.2);font-weight:500;">Email</span> hello@amroussdar.ma</a>
-                <a href="https://wa.me/212630485646" target="_blank" rel="noopener" style="color:rgba(255,255,255,0.6);border-bottom:1px solid rgba(255,255,255,0.04);padding-bottom:10px;transition:all .3s ease;display:flex;flex-direction:column;"><span style="font-size:8px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,0.2);font-weight:500;">WhatsApp</span> Message the Dar →</a>
+        <div class="right">
+            <p class="eyebrow light">SPEAK WITH OUR TEAM</p>
+            <h2>We are here<br /><em>when you are ready.</em></h2>
+            <p>For stays, celebrations, transfers or a question only a local can answer.</p>
+            <div class="contact-links">
+                <a href="tel:+212630485646"><span class="label">Call us</span> +212 (0) 630 485 646</a>
+                <a href="mailto:hello@amroussdar.ma"><span class="label">Email</span> hello@amroussdar.ma</a>
+                <a href="https://wa.me/212630485646" target="_blank" rel="noopener"><span class="label">WhatsApp</span> Message the Dar →</a>
             </div>
-            <p style="font-size:12px;color:rgba(255,255,255,0.2);margin-bottom:20px;">After booking, all property details including telephone and address are provided in your confirmation.</p>
-            <button class="btn-primary" data-open-booking style="background:var(--gold);color:var(--ink);width:100%;justify-content:center;">Start a reservation <span class="arrow">→</span></button>
+            <p class="contact-note">After booking, all property details including telephone and address are provided in your confirmation.</p>
+            <button class="btn-primary" data-open-booking>Start a reservation <span class="arrow">→</span></button>
         </div>
         <style>
             @media(max-width:768px) {
@@ -3956,17 +4434,21 @@
     <footer>
         <div class="footer-grid">
             <div>
-                <div class="brand">AMROUSS<span class="divider"></span>DAR <span class="location">AZROU · MOROCCO</span></div>
+                <div class="brand">
+                    AMROUSS<span class="divider"></span>DAR
+                    <span class="gold-dot"></span>
+                    <span class="location">AZROU · MOROCCO</span>
+                </div>
                 <p>For reservations and enquiries,<br /><a href="mailto:hello@amroussdar.ma">hello@amroussdar.ma</a><br />+212 (0) 630 485 646</p>
             </div>
-            <div>
+            <div class="footer-links">
                 <h4>Explore</h4>
                 <a href="#stay">Rooms</a>
                 <a href="#dining">Dining</a>
                 <a href="#experiences">Experiences</a>
                 <a href="#facilities">Facilities</a>
             </div>
-            <div>
+            <div class="footer-links">
                 <h4>The Dar</h4>
                 <a href="#contact">Contact</a>
                 <a href="#policies">Policies</a>
@@ -3974,9 +4456,11 @@
             </div>
             <div>
                 <h4>Stay Close</h4>
-                <a href="#instagram">Instagram</a>
-                <a href="#facebook">Facebook</a>
-                <label style="display:block;font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,255,255,0.2);margin:12px 0 6px;">Monthly notes from the quiet</label>
+                <div class="footer-links">
+                    <a href="#instagram">Instagram</a>
+                    <a href="#facebook">Facebook</a>
+                </div>
+                <label style="display:block;font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,255,255,0.2);margin:12px 0 6px;font-family:var(--font-sans);">Monthly notes from the quiet</label>
                 <div class="subscribe">
                     <input placeholder="Your email address" />
                     <button aria-label="Subscribe">→</button>
@@ -3986,6 +4470,10 @@
         <div class="footer-bottom">
             <span>© 2026 AMROUSS TOURISTIC DARMAROC</span>
             <span>LICENSE: 53000HT0844</span>
+            <button class="back-to-top" id="backToTop">
+                <span>Back to top</span>
+                <span class="arrow-up">↑</span>
+            </button>
         </div>
     </footer>
 
@@ -4359,7 +4847,6 @@
                 ease: "power1.inOut",
                 onUpdate: () => {
                     camera.lookAt(0, 1.2, 0);
-                    // Update loading progress
                     progress = 0.3 + (7 - (camera.position.z - 6)) / 12;
                     if (progress > 0.9) progress = 0.9;
                     loadingBar.style.width = Math.round(progress * 100) + '%';
@@ -4369,7 +4856,6 @@
 
             // Phase 3: Doors Open (7s - 9s)
             tl.call(() => {
-                // Animate doors open
                 gsap.to(doors[0].rotation, {
                     y: -1.2,
                     duration: 1.2,
@@ -4380,13 +4866,11 @@
                     duration: 1.2,
                     ease: "back.out(1.2)"
                 });
-                // Interior light turns on
                 gsap.to(interiorLight, {
                     intensity: 2.5,
                     duration: 0.8,
                     ease: "power2.out"
                 });
-                // Golden light spill
                 const spillMat = new THREE.MeshStandardMaterial({
                     color: 0xffaa44,
                     transparent: true,
@@ -4435,7 +4919,6 @@
 
             // Phase 5: Transition (13s - 15s)
             tl.call(() => {
-                // Fade out overlay
                 exitIntro();
             }, null, "+=1.5");
 
@@ -4475,21 +4958,15 @@
                 if (!introActive) return;
                 requestAnimationFrame(animateIntro);
                 time += 0.01;
-
-                // Particle drift
                 particles.rotation.y = time * 0.008;
-
-                // Logo subtle pulse
                 if (logoMesh) {
                     logoMesh.position.y = 2.2 + Math.sin(time * 0.5) * 0.05;
                 }
-
                 renderer.render(scene, camera);
             }
 
             animateIntro();
 
-            // Safety timeout
             setTimeout(() => {
                 if (!isSkipped) {
                     tl.progress(1);
@@ -4497,7 +4974,6 @@
                 }
             }, 16000);
 
-            // Expose for cleanup
             window.__introCleanup = function() {
                 renderer.dispose();
                 scene = null;
@@ -4517,7 +4993,6 @@
             if (gsapInitialized) return;
             gsapInitialized = true;
 
-            // --- Lenis ---
             lenis = new Lenis({
                 duration: 1.2,
                 easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
@@ -4539,9 +5014,9 @@
             }
             requestAnimationFrame(raf);
 
-            // --- GSAP + ScrollTrigger ---
             gsap.registerPlugin(ScrollTrigger);
 
+            // Hero parallax
             gsap.to('#heroBg', {
                 scale: 1.25,
                 y: '10%',
@@ -4554,6 +5029,20 @@
                 }
             });
 
+            // Hero rays parallax
+            gsap.to('.hero-rays', {
+                opacity: 0,
+                y: 40,
+                ease: 'none',
+                scrollTrigger: {
+                    trigger: '.hero',
+                    start: 'top top',
+                    end: 'bottom top',
+                    scrub: 1.5,
+                }
+            });
+
+            // Reveal items
             document.querySelectorAll('.reveal-item').forEach((el) => {
                 gsap.fromTo(el, {
                     opacity: 0,
@@ -4571,6 +5060,7 @@
                 });
             });
 
+            // Room cards with stagger
             gsap.fromTo('.room-art-card', {
                 opacity: 0,
                 y: 40,
@@ -4589,6 +5079,7 @@
                 }
             });
 
+            // Feature grid
             gsap.fromTo('.feature', {
                 opacity: 0,
                 y: 50,
@@ -4605,6 +5096,7 @@
                 }
             });
 
+            // Experience cards
             gsap.fromTo('.exp-card', {
                 opacity: 0,
                 y: 40,
@@ -4623,6 +5115,7 @@
                 }
             });
 
+            // Gallery tiles
             gsap.fromTo('.gallery-tile', {
                 opacity: 0,
                 scale: 0.92,
@@ -4639,22 +5132,30 @@
                 }
             });
 
-            gsap.fromTo('.stat b', {
-                opacity: 0,
-                y: 20,
-            }, {
-                opacity: 1,
-                y: 0,
-                duration: 0.8,
-                ease: 'power3.out',
-                stagger: 0.08,
-                scrollTrigger: {
-                    trigger: '.stats-grid',
-                    start: 'top 85%',
-                    toggleActions: 'play none none reverse',
-                }
+            // Stats count-up
+            document.querySelectorAll('.stat b').forEach(el => {
+                const target = parseFloat(el.dataset.count) || parseFloat(el.textContent);
+                gsap.fromTo(el, {
+                    textContent: 0
+                }, {
+                    textContent: target,
+                    duration: 2,
+                    ease: 'power2.out',
+                    snap: { textContent: 1 },
+                    scrollTrigger: {
+                        trigger: el.closest('.stat'),
+                        start: 'top 90%',
+                        toggleActions: 'play none none reverse',
+                    },
+                    onUpdate: function() {
+                        if (target % 1 !== 0) {
+                            el.textContent = parseFloat(this.targets()[0].textContent).toFixed(1);
+                        }
+                    }
+                });
             });
 
+            // Facility items
             gsap.fromTo('.facility-item', {
                 opacity: 0,
                 y: 30,
@@ -4671,6 +5172,7 @@
                 }
             });
 
+            // Policy blocks
             gsap.fromTo('.policy-block', {
                 opacity: 0,
                 y: 30,
@@ -4687,6 +5189,7 @@
                 }
             });
 
+            // Journal articles
             gsap.fromTo('.journal-grid article', {
                 opacity: 0,
                 y: 30,
@@ -4699,6 +5202,22 @@
                 scrollTrigger: {
                     trigger: '.journal-grid',
                     start: 'top 85%',
+                    toggleActions: 'play none none reverse',
+                }
+            });
+
+            // Footer
+            gsap.fromTo('footer', {
+                opacity: 0,
+                y: 40,
+            }, {
+                opacity: 1,
+                y: 0,
+                duration: 1,
+                ease: 'power3.out',
+                scrollTrigger: {
+                    trigger: 'footer',
+                    start: 'top 90%',
                     toggleActions: 'play none none reverse',
                 }
             });
@@ -5053,7 +5572,20 @@
 
 
         // ============================================================ //
-        //  7. ROOM MODAL                                               //
+        //  7. BACK TO TOP                                              //
+        // ============================================================ //
+
+        document.getElementById('backToTop').addEventListener('click', () => {
+            if (lenis) {
+                lenis.scrollTo(0, { duration: 1.2 });
+            } else {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        });
+
+
+        // ============================================================ //
+        //  8. ROOM MODAL                                               //
         // ============================================================ //
 
         const roomModal = document.getElementById('roomModal');
@@ -5276,7 +5808,7 @@
 
 
         // ============================================================ //
-        //  8. REVIEWS                                                  //
+        //  9. REVIEWS                                                  //
         // ============================================================ //
 
         const reviews = [
@@ -5292,7 +5824,8 @@
             text.style.opacity = 0;
             text.style.transform = 'translateY(10px)';
             setTimeout(() => {
-                text.textContent = reviews[reviewIdx][0];
+                text.innerHTML = reviews[reviewIdx][0].replace(/“|”/g, '').trim();
+                text.innerHTML = `<span class="quote-mark-inline">“</span>${text.innerHTML}<span class="quote-mark-inline">”</span>`;
                 document.querySelector('[data-review-author]').textContent = reviews[reviewIdx][1];
                 document.querySelector('[data-review-current]').textContent = `0${reviewIdx + 1}`;
                 text.style.opacity = 1;
@@ -5304,7 +5837,7 @@
 
 
         // ============================================================ //
-        //  9. GALLERY FILTERS                                          //
+        //  10. GALLERY FILTERS                                         //
         // ============================================================ //
 
         document.querySelectorAll('.gallery-filters button').forEach(btn => {
@@ -5314,7 +5847,7 @@
                 const filter = this.dataset.filter;
                 document.querySelectorAll('.gallery-tile').forEach(tile => {
                     tile.style.display = (filter === 'all' || tile.dataset.gallery === filter) ? 'flex' :
-                    'none';
+                        'none';
                 });
                 ScrollTrigger.refresh();
             });
