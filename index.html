@@ -1227,14 +1227,12 @@
             position: relative;
         }
 
-        /* Room carousel container */
         .room-carousel-container {
             position: relative;
             margin-top: 50px;
             overflow: hidden;
         }
 
-        /* Featured room display */
         .room-featured {
             position: relative;
             display: grid;
@@ -1355,7 +1353,6 @@
             min-height: 44px;
         }
 
-        /* Thumbnail navigation */
         .room-thumbnails {
             display: flex;
             gap: 12px;
@@ -1423,21 +1420,6 @@
             -webkit-backdrop-filter: blur(4px);
         }
 
-        /* Room transition overlay */
-        .room-transition-overlay {
-            position: absolute;
-            inset: 0;
-            z-index: 10;
-            pointer-events: none;
-            background: var(--paper);
-            opacity: 0;
-            transition: opacity 0.4s ease;
-        }
-        .room-transition-overlay.active {
-            opacity: 1;
-        }
-
-        /* Responsive rooms */
         @media (max-width: 1024px) {
             .room-featured {
                 grid-template-columns: 1fr;
