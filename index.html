@@ -62,90 +62,161 @@
         /* ============================================================ */
         /*  3D INTRO — CINEMATIC OPENING                                */
         /* ============================================================ */
-        #three-intro {
+        .intro-3d {
             position: fixed;
             inset: 0;
             z-index: 1000;
             background: var(--deep);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            perspective: 800px;
+            animation: introExit 1.2s cubic-bezier(0.77, 0, 0.18, 1) 2.8s forwards;
             overflow: hidden;
-            animation: introFadeOut 0.8s ease 5.5s forwards;
         }
-        #three-intro canvas {
-            display: block;
-            width: 100% !important;
-            height: 100% !important;
-        }
-        #three-intro .loading-text {
+        .intro-3d .bg-particles {
             position: absolute;
-            bottom: 40px;
-            left: 50%;
-            transform: translateX(-50%);
-            color: rgba(255, 255, 255, 0.2);
-            font-size: 9px;
-            letter-spacing: 0.3em;
-            text-transform: uppercase;
-            font-family: "DM Sans", sans-serif;
-            z-index: 10;
-            pointer-events: none;
+            inset: 0;
+            overflow: hidden;
         }
-        #three-intro .loading-text .progress {
-            color: rgba(255, 255, 255, 0.4);
-        }
-        #three-intro .skip-btn {
+        .intro-3d .bg-particles span {
             position: absolute;
-            bottom: 40px;
-            right: 40px;
-            z-index: 10;
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            color: rgba(255, 255, 255, 0.3);
-            padding: 8px 20px;
-            font-size: 9px;
-            letter-spacing: 0.15em;
-            text-transform: uppercase;
-            font-family: "DM Sans", sans-serif;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            border-radius: 0;
+            width: 2px;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 50%;
+            animation: particleFloat 8s ease-in-out infinite alternate;
         }
-        #three-intro .skip-btn:hover {
-            background: rgba(255, 255, 255, 0.08);
-            color: rgba(255, 255, 255, 0.6);
+        @keyframes particleFloat {
+            0% { transform: translateY(0) scale(1); opacity: 0.1; }
+            100% { transform: translateY(-120px) scale(1.5); opacity: 0.6; }
+        }
+        .intro-3d .ring {
+            position: absolute;
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            border-radius: 50%;
+            animation: ringSpin 20s linear infinite;
+        }
+        .intro-3d .ring:nth-child(1) { width: 50vw; height: 50vw; animation-duration: 25s; }
+        .intro-3d .ring:nth-child(2) { width: 35vw; height: 35vw; animation-duration: 18s; animation-direction: reverse; }
+        .intro-3d .ring:nth-child(3) { width: 20vw; height: 20vw; animation-duration: 12s; }
+        @keyframes ringSpin { to { transform: rotate(360deg); } }
+
+        .intro-3d .logo-container {
+            position: relative;
+            z-index: 2;
+            animation: logoFloat 3s ease-in-out infinite;
+        }
+        @keyframes logoFloat {
+            0%, 100% { transform: translateY(0) rotateX(0deg); }
+            50% { transform: translateY(-12px) rotateX(2deg); }
         }
 
-        @keyframes introFadeOut {
-            0% { opacity: 1; }
-            100% { opacity: 0; visibility: hidden; pointer-events: none; }
+        .intro-3d .logo-seal {
+            width: 72px;
+            height: 72px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font: 20px 'Playfair Display', serif;
+            color: var(--gold);
+            margin: 0 auto 24px;
+            animation: sealPulse 2s ease-in-out infinite;
+        }
+        @keyframes sealPulse {
+            0%, 100% { box-shadow: 0 0 20px rgba(184, 148, 75, 0.05); }
+            50% { box-shadow: 0 0 40px rgba(184, 148, 75, 0.15); }
+        }
+
+        .intro-3d h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(36px, 10vw, 100px);
+            font-weight: 700;
+            color: #fff;
+            letter-spacing: 0.06em;
+            text-align: center;
+            line-height: 0.95;
+            animation: titleReveal 1.2s ease both;
+            transform-origin: center center;
+        }
+        .intro-3d h1 em {
+            font-style: italic;
+            color: var(--gold);
+            font-weight: 400;
+            display: inline-block;
+            animation: goldPulse 2.5s ease-in-out infinite;
+        }
+        @keyframes goldPulse {
+            0%, 100% { text-shadow: 0 0 20px rgba(184, 148, 75, 0.1); }
+            50% { text-shadow: 0 0 40px rgba(184, 148, 75, 0.3), 0 0 80px rgba(184, 148, 75, 0.1); }
+        }
+
+        .intro-3d .sub-line {
+            width: 0;
+            height: 1px;
+            background: rgba(255, 255, 255, 0.1);
+            margin: 20px auto;
+            animation: lineGrow 0.8s 0.6s ease forwards;
+        }
+        @keyframes lineGrow { to { width: 180px; } }
+
+        .intro-3d .location-text {
+            font-size: 8px;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.15);
+            font-family: 'DM Sans', sans-serif;
+            opacity: 0;
+            animation: revealUp 0.6s 1s ease forwards;
+        }
+
+        .intro-3d .progress-bar {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 1px;
+            background: rgba(255, 255, 255, 0.04);
+            overflow: hidden;
+        }
+        .intro-3d .progress-bar .fill {
+            height: 100%;
+            width: 0;
+            background: var(--gold);
+            animation: progressFill 2.6s ease forwards;
+        }
+        @keyframes progressFill { to { width: 100%; } }
+
+        @keyframes introExit {
+            0% { opacity: 1; transform: scale(1); }
+            100% { opacity: 0; visibility: hidden; transform: scale(1.06); }
+        }
+        @keyframes titleReveal {
+            0% { opacity: 0; transform: translateY(30px) scale(0.95) rotateX(5deg); }
+            100% { opacity: 1; transform: translateY(0) scale(1) rotateX(0deg); }
+        }
+        @keyframes revealUp {
+            0% { opacity: 0; transform: translateY(12px); }
+            100% { opacity: 1; transform: translateY(0); }
         }
 
         /* ============================================================ */
         /*  TYPOGRAPHY                                                  */
         /* ============================================================ */
-        h1,
-        h2,
-        h3,
-        h4,
-        .brand {
+        h1, h2, h3, h4, .brand {
             font-family: "Playfair Display", Georgia, serif;
             font-weight: 500;
             letter-spacing: -0.03em;
             line-height: 1.1;
             margin: 0;
         }
-        h1 {
-            font-size: clamp(52px, 10vw, 120px);
-            letter-spacing: -0.04em;
-            font-weight: 600;
-        }
-        h2 {
-            font-size: clamp(38px, 5.5vw, 72px);
-            letter-spacing: -0.04em;
-            font-weight: 500;
-        }
-        h3 {
-            font-size: clamp(26px, 3vw, 36px);
-            font-weight: 500;
-        }
+        h1 { font-size: clamp(52px, 10vw, 120px); letter-spacing: -0.04em; font-weight: 600; }
+        h2 { font-size: clamp(38px, 5.5vw, 72px); letter-spacing: -0.04em; font-weight: 500; }
+        h3 { font-size: clamp(26px, 3vw, 36px); font-weight: 500; }
         .eyebrow {
             font-size: 10px;
             letter-spacing: 0.25em;
@@ -155,12 +226,10 @@
             margin-bottom: 16px;
             font-family: "DM Sans", sans-serif;
         }
-        .eyebrow.light {
-            color: rgba(255, 255, 255, 0.5);
-        }
+        .eyebrow.light { color: rgba(255, 255, 255, 0.5); }
 
         /* ============================================================ */
-        /*  BUTTONS                                                     */
+        /*  BUTTONS — GLOWING BOOK NOW                                  */
         /* ============================================================ */
         .btn-primary {
             display: inline-flex;
@@ -190,13 +259,8 @@
             opacity: 0;
             transition: opacity 0.4s ease;
         }
-        .btn-primary:hover::before {
-            opacity: 1;
-        }
-        .btn-primary:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 12px 40px rgba(184, 148, 75, 0.2);
-        }
+        .btn-primary:hover::before { opacity: 1; }
+        .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 12px 40px rgba(184, 148, 75, 0.2); }
         .btn-primary .arrow {
             font-size: 18px;
             transition: transform 0.3s ease;
@@ -204,14 +268,10 @@
             position: relative;
             z-index: 1;
         }
-        .btn-primary:hover .arrow {
-            transform: translate(4px, -2px);
-        }
-        .btn-primary span {
-            position: relative;
-            z-index: 1;
-        }
+        .btn-primary:hover .arrow { transform: translate(4px, -2px); }
+        .btn-primary span { position: relative; z-index: 1; }
 
+        /* GLOWING BOOK BUTTON */
         .btn-book-glow {
             display: inline-flex;
             align-items: center;
@@ -244,9 +304,7 @@
             opacity: 0;
             transition: opacity 0.5s ease;
         }
-        .btn-book-glow:hover::before {
-            opacity: 1;
-        }
+        .btn-book-glow:hover::before { opacity: 1; }
         .btn-book-glow::after {
             content: '';
             position: absolute;
@@ -255,9 +313,7 @@
             z-index: -1;
             transition: background 0.4s ease;
         }
-        .btn-book-glow:hover::after {
-            background: var(--jade-light);
-        }
+        .btn-book-glow:hover::after { background: var(--jade-light); }
         .btn-book-glow:hover {
             transform: translateY(-3px) scale(1.02);
             box-shadow: 0 8px 40px rgba(45, 107, 79, 0.4);
@@ -273,19 +329,11 @@
             font-size: 16px;
             transition: transform 0.3s ease;
         }
-        .btn-book-glow:hover .glow-text .arrow {
-            transform: translate(4px, -2px);
-        }
+        .btn-book-glow:hover .glow-text .arrow { transform: translate(4px, -2px); }
         @keyframes glowBorder {
-            0% {
-                background-position: 0% 50%;
-            }
-            50% {
-                background-position: 100% 50%;
-            }
-            100% {
-                background-position: 0% 50%;
-            }
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
 
         .btn-outline-dark {
@@ -310,27 +358,6 @@
             border-color: var(--ink);
             transform: translateY(-2px);
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.04);
-        }
-
-        .text-link {
-            font-size: 10px;
-            letter-spacing: 0.15em;
-            text-transform: uppercase;
-            font-weight: 500;
-            color: var(--ink);
-            border-bottom: 1px solid var(--ink);
-            padding-bottom: 6px;
-            display: inline-block;
-            transition: all 0.3s ease;
-        }
-        .text-link:hover {
-            color: var(--gold);
-            border-color: var(--gold);
-        }
-        .text-link .arrow {
-            font-size: 16px;
-            margin-left: 8px;
-            font-family: "DM Sans", sans-serif;
         }
 
         /* ============================================================ */
@@ -358,46 +385,18 @@
             color: var(--ink);
             height: 72px;
         }
-        .nav.scrolled .brand {
-            color: var(--ink);
-        }
-        .nav.scrolled .nav-links a {
-            color: var(--ink);
-        }
-        .nav.scrolled .lang-toggle {
-            color: var(--ink);
-        }
-        .nav.scrolled .nav-book {
-            color: var(--ink);
-            border-color: var(--ink);
-        }
-        .nav.scrolled .nav-book .bell-icon svg {
-            stroke: var(--ink);
-        }
-        .nav.scrolled .nav-book:hover {
-            border-color: var(--gold);
-            color: var(--gold);
-        }
-        .nav.scrolled .nav-book:hover .bell-icon svg {
-            stroke: var(--gold);
-        }
-        .nav.scrolled .menu-btn {
-            color: var(--ink);
-        }
-        .nav.scrolled .lang-dropdown {
-            background: rgba(250, 248, 245, 0.98);
-            border-color: var(--light-grey);
-        }
-        .nav.scrolled .lang-dropdown button {
-            color: var(--grey);
-        }
-        .nav.scrolled .lang-dropdown button:hover {
-            background: var(--light-grey);
-            color: var(--ink);
-        }
-        .nav.scrolled .lang-dropdown button.active {
-            color: var(--gold);
-        }
+        .nav.scrolled .brand { color: var(--ink); }
+        .nav.scrolled .nav-links a { color: var(--ink); }
+        .nav.scrolled .lang-toggle { color: var(--ink); }
+        .nav.scrolled .nav-book { color: var(--ink); border-color: var(--ink); }
+        .nav.scrolled .nav-book .bell-icon svg { stroke: var(--ink); }
+        .nav.scrolled .nav-book:hover { border-color: var(--gold); color: var(--gold); }
+        .nav.scrolled .nav-book:hover .bell-icon svg { stroke: var(--gold); }
+        .nav.scrolled .menu-btn { color: var(--ink); }
+        .nav.scrolled .lang-dropdown { background: rgba(250, 248, 245, 0.98); border-color: var(--light-grey); }
+        .nav.scrolled .lang-dropdown button { color: var(--grey); }
+        .nav.scrolled .lang-dropdown button:hover { background: var(--light-grey); color: var(--ink); }
+        .nav.scrolled .lang-dropdown button.active { color: var(--gold); }
 
         .brand {
             font-size: 16px;
@@ -451,9 +450,7 @@
             background: var(--gold);
             transition: width 0.3s ease;
         }
-        .nav-links a:hover::after {
-            width: 100%;
-        }
+        .nav-links a:hover::after { width: 100%; }
 
         .nav-actions {
             display: flex;
@@ -483,9 +480,7 @@
             opacity: 0.5;
             transition: transform 0.3s;
         }
-        .lang-toggle:hover .arrow-down {
-            transform: rotate(180deg);
-        }
+        .lang-toggle:hover .arrow-down { transform: rotate(180deg); }
 
         .lang-dropdown {
             position: absolute;
@@ -596,7 +591,7 @@
         }
 
         /* ============================================================ */
-        /*  HERO                                                         */
+        /*  HERO — CINEMATIC EFFECT                                     */
         /* ============================================================ */
         .hero {
             min-height: 100vh;
@@ -623,20 +618,19 @@
             content: '';
             position: absolute;
             inset: 0;
-            background: radial-gradient(ellipse at 30% 40%, rgba(184, 148, 75, 0.04) 0%, transparent 60%), radial-gradient(ellipse at 70% 60%, rgba(184, 148, 75, 0.02) 0%, transparent 40%);
+            background:
+                radial-gradient(ellipse at 30% 40%, rgba(184, 148, 75, 0.04) 0%, transparent 60%),
+                radial-gradient(ellipse at 70% 60%, rgba(184, 148, 75, 0.02) 0%, transparent 40%);
         }
         @keyframes cinematicZoom {
-            0% {
-                transform: scale(1.1);
-            }
-            100% {
-                transform: scale(1.25);
-            }
+            0% { transform: scale(1.1); }
+            100% { transform: scale(1.25); }
         }
         .hero-overlay {
             position: absolute;
             inset: 0;
-            background: linear-gradient(180deg, rgba(0, 0, 0, 0.25) 0%, rgba(0, 0, 0, 0.55) 60%, rgba(0, 0, 0, 0.75) 100%);
+            background:
+                linear-gradient(180deg, rgba(0, 0, 0, 0.25) 0%, rgba(0, 0, 0, 0.55) 60%, rgba(0, 0, 0, 0.75) 100%);
             z-index: 1;
         }
         .hero-content {
@@ -679,24 +673,12 @@
         }
 
         @keyframes fadeSlideUp {
-            0% {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            100% {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            0% { opacity: 0; transform: translateY(30px); }
+            100% { opacity: 1; transform: translateY(0); }
         }
         @keyframes fadeSlideDown {
-            0% {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-            100% {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            0% { opacity: 0; transform: translateY(-20px); }
+            100% { opacity: 1; transform: translateY(0); }
         }
 
         .hero-meta {
@@ -718,7 +700,7 @@
         }
 
         /* ============================================================ */
-        /*  BOOKING BAR                                                  */
+        /*  BOOKING BAR                                                 */
         /* ============================================================ */
         .booking-bar-wrapper {
             position: sticky;
@@ -958,7 +940,6 @@
             cursor: pointer;
             transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
             transform: translateY(0);
-            opacity: 1;
         }
         .room-art-card:hover {
             transform: translateY(-12px);
@@ -1165,12 +1146,8 @@
         .modal-gallery-wrap .gallery-nav:hover {
             background: rgba(255, 255, 255, 0.25);
         }
-        .modal-gallery-wrap .gallery-nav.prev {
-            left: 16px;
-        }
-        .modal-gallery-wrap .gallery-nav.next {
-            right: 16px;
-        }
+        .modal-gallery-wrap .gallery-nav.prev { left: 16px; }
+        .modal-gallery-wrap .gallery-nav.next { right: 16px; }
         .modal-gallery-wrap .gallery-counter {
             position: absolute;
             top: 20px;
@@ -1338,6 +1315,11 @@
             display: flex;
             gap: 14px;
             flex-wrap: wrap;
+        }
+        .more-details-content .details-actions .btn-book-glow {
+            padding: 14px 32px;
+            font-size: 10px;
+            min-height: 48px;
         }
 
         /* ============================================================ */
@@ -2200,15 +2182,9 @@
             fill: #fff;
         }
         @keyframes whatsappPulse {
-            0% {
-                box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.5);
-            }
-            70% {
-                box-shadow: 0 0 0 16px rgba(37, 211, 102, 0);
-            }
-            100% {
-                box-shadow: 0 0 0 0 rgba(37, 211, 102, 0);
-            }
+            0% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.5); }
+            70% { box-shadow: 0 0 0 16px rgba(37, 211, 102, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); }
         }
 
         footer {
@@ -2874,6 +2850,14 @@
             .brand .location {
                 font-size: 6px;
             }
+            .intro-3d h1 {
+                font-size: 32px;
+            }
+            .intro-3d .logo-seal {
+                width: 56px;
+                height: 56px;
+                font-size: 16px;
+            }
         }
 
         @media(max-width: 480px) {
@@ -2955,17 +2939,37 @@
             .modal-content-right .room-description {
                 font-size: 13px;
             }
+            .intro-3d h1 {
+                font-size: 28px;
+            }
         }
     </style>
 </head>
 <body>
 
     <!-- ============================================================ -->
-    <!--  3D CINEMATIC INTRO                                           -->
+    <!--  3D INTRO — CINEMATIC OPENING                                 -->
     <!-- ============================================================ -->
-    <div id="three-intro">
-        <div class="loading-text">LOADING <span class="progress" id="progressText">0%</span></div>
-        <button class="skip-btn" id="skipIntro">SKIP →</button>
+    <div class="intro-3d" id="intro3d">
+        <div class="bg-particles">
+            <span style="left:10%;animation-delay:0s;"></span>
+            <span style="left:20%;animation-delay:0.5s;"></span>
+            <span style="left:35%;animation-delay:1s;"></span>
+            <span style="left:50%;animation-delay:0.3s;"></span>
+            <span style="left:65%;animation-delay:0.8s;"></span>
+            <span style="left:78%;animation-delay:1.2s;"></span>
+            <span style="left:88%;animation-delay:0.6s;"></span>
+        </div>
+        <div class="ring"></div>
+        <div class="ring"></div>
+        <div class="ring"></div>
+        <div class="logo-container">
+            <div class="logo-seal">AD</div>
+            <h1>AMROUSS<br><em>touristic</em> DarMaroc</h1>
+            <div class="sub-line"></div>
+            <div class="location-text">Azrou · Morocco</div>
+        </div>
+        <div class="progress-bar"><div class="fill"></div></div>
     </div>
 
     <!-- ============================================================ -->
@@ -3019,7 +3023,7 @@
     </header>
 
     <!-- ============================================================ -->
-    <!--  HERO                                                         -->
+    <!--  HERO — CINEMATIC                                            -->
     <!-- ============================================================ -->
     <section class="hero" id="home">
         <div class="hero-bg"></div>
@@ -3070,11 +3074,11 @@
     <!--  INTRO                                                       -->
     <!-- ============================================================ -->
     <section class="intro reveal" id="story">
-        <p class="eyebrow" data-i18n="introEyebrow">A HOUSE IN THE ATLAS</p>
-        <h2 data-i18n-html="introTitle">Not just outside the city.<br><em>Outside its hurry.</em></h2>
+        <p class="eyebrow">A HOUSE IN THE ATLAS</p>
+        <h2>Not just outside the city.<br><em>Outside its hurry.</em></h2>
         <div class="intro-grid">
-            <p data-i18n="introText">At the meeting point of cedar woodlands and red-earth villages, Amrouss touristic DarMaroc is a rare sanctuary for guests who seek deep sleep, clean air and luxury with no unnecessary noise.</p>
-            <a href="#about" class="text-link" data-i18n="introLink">The story of our quiet <span class="arrow">→</span></a>
+            <p>At the meeting point of cedar woodlands and red-earth villages, Amrouss touristic DarMaroc is a rare sanctuary for guests who seek deep sleep, clean air and luxury with no unnecessary noise.</p>
+            <a href="#about" class="text-link">The story of our quiet <span class="arrow">→</span></a>
         </div>
     </section>
 
@@ -3086,55 +3090,55 @@
             <img src="https://images.unsplash.com/photo-1602002418082-a4443e081dd1?auto=format&fit=crop&w=1400&q=85" alt="Luxury room" loading="lazy" />
             <div class="overlay"></div>
             <div class="content">
-                <p class="eyebrow light" data-i18n="featureRooms">THE ROOMS</p>
-                <h3 data-i18n="featureRoomsTitle">Rest, deeply.</h3>
-                <a href="#stay" class="text-link" data-i18n="featureRoomsLink">Explore stays <span class="arrow">→</span></a>
+                <p class="eyebrow light">THE ROOMS</p>
+                <h3>Rest, deeply.</h3>
+                <a href="#stay" class="text-link">Explore stays <span class="arrow">→</span></a>
             </div>
         </div>
         <div class="feature reveal">
             <img src="https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=1100&q=85" alt="Moroccan craft" loading="lazy" />
             <div class="overlay"></div>
             <div class="content">
-                <p class="eyebrow light" data-i18n="featureCraft">MOROCCAN CRAFT</p>
-                <h3 data-i18n="featureCraftTitle">Made with a sense of place.</h3>
+                <p class="eyebrow light">MOROCCAN CRAFT</p>
+                <h3>Made with a sense of place.</h3>
             </div>
         </div>
         <div class="feature reveal">
             <img src="https://images.unsplash.com/photo-1540541338287-41700207dee6?auto=format&fit=crop&w=1100&q=85" alt="Pool in nature" loading="lazy" />
             <div class="overlay"></div>
             <div class="content">
-                <p class="eyebrow light" data-i18n="featurePool">THE POOL</p>
-                <h3 data-i18n="featurePoolTitle">A blue pause<br />between the pines.</h3>
+                <p class="eyebrow light">THE POOL</p>
+                <h3>A blue pause<br />between the pines.</h3>
             </div>
         </div>
     </div>
 
     <!-- ============================================================ -->
-    <!--  ROOMS                                                       -->
+    <!--  ROOMS — SOPHISTICATED ARTISTIC DISPLAY                      -->
     <!-- ============================================================ -->
     <section class="rooms-section" id="stay">
         <div class="section-center reveal">
-            <p class="eyebrow" data-i18n="roomsEyebrow">STAY AT AMROUSS DAR</p>
-            <h2 data-i18n-html="roomsTitle">Rooms with <em>room to breathe.</em></h2>
-            <p class="section-sub" data-i18n="roomsSub">Choose from four carefully curated room types, each designed for comfort and tranquility. Click on any room to explore.</p>
+            <p class="eyebrow">STAY AT AMROUSS DAR</p>
+            <h2>Rooms with <em>room to breathe.</em></h2>
+            <p class="section-sub">Choose from four carefully curated room types, each designed for comfort and tranquility. Click on any room to explore.</p>
         </div>
         <div class="rooms-grid-artistic">
             <!-- Double -->
             <div class="room-art-card" data-room="double">
                 <div class="art-image">
                     <img src="https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&w=600&q=85" alt="Double Room" loading="lazy" />
-                    <span class="badge-top" data-i18n="roomDouble">Double</span>
+                    <span class="badge-top">Double</span>
                     <div class="overlay-gradient"></div>
                 </div>
                 <div class="art-info">
-                    <h3 class="room-name" data-i18n="roomDoubleName">Double Room</h3>
-                    <p class="room-price" data-i18n="roomDoublePrice">From <strong>1,950 MAD</strong> per night</p>
+                    <h3 class="room-name">Double Room</h3>
+                    <p class="room-price">From <strong>1,950 MAD</strong> per night</p>
                     <div class="art-actions">
                         <button class="btn-book-glow" data-room="double">
-                            <span class="glow-text" data-i18n="bookNow">Book Now <span class="arrow">→</span></span>
+                            <span class="glow-text">Book Now <span class="arrow">→</span></span>
                         </button>
                         <button class="btn-outline-dark details-btn" data-room="double">
-                            <span data-i18n="details">Details</span> <span class="arrow">→</span>
+                            Details <span class="arrow">→</span>
                         </button>
                     </div>
                 </div>
@@ -3144,18 +3148,18 @@
             <div class="room-art-card" data-room="twin">
                 <div class="art-image">
                     <img src="https://images.unsplash.com/photo-1618773928121-c32242e63f39?auto=format&fit=crop&w=600&q=85" alt="Twin Room" loading="lazy" />
-                    <span class="badge-top" data-i18n="roomTwin">Twin</span>
+                    <span class="badge-top">Twin</span>
                     <div class="overlay-gradient"></div>
                 </div>
                 <div class="art-info">
-                    <h3 class="room-name" data-i18n="roomTwinName">Twin Room</h3>
-                    <p class="room-price" data-i18n="roomTwinPrice">From <strong>2,100 MAD</strong> per night</p>
+                    <h3 class="room-name">Twin Room</h3>
+                    <p class="room-price">From <strong>2,100 MAD</strong> per night</p>
                     <div class="art-actions">
                         <button class="btn-book-glow" data-room="twin">
-                            <span class="glow-text" data-i18n="bookNow">Book Now <span class="arrow">→</span></span>
+                            <span class="glow-text">Book Now <span class="arrow">→</span></span>
                         </button>
                         <button class="btn-outline-dark details-btn" data-room="twin">
-                            <span data-i18n="details">Details</span> <span class="arrow">→</span>
+                            Details <span class="arrow">→</span>
                         </button>
                     </div>
                 </div>
@@ -3165,18 +3169,18 @@
             <div class="room-art-card" data-room="triple">
                 <div class="art-image">
                     <img src="https://images.unsplash.com/photo-1560185127-6ed189bf02f4?auto=format&fit=crop&w=600&q=85" alt="Triple Room" loading="lazy" />
-                    <span class="badge-top" data-i18n="roomTriple">Triple</span>
+                    <span class="badge-top">Triple</span>
                     <div class="overlay-gradient"></div>
                 </div>
                 <div class="art-info">
-                    <h3 class="room-name" data-i18n="roomTripleName">Triple Room</h3>
-                    <p class="room-price" data-i18n="roomTriplePrice">From <strong>2,400 MAD</strong> per night</p>
+                    <h3 class="room-name">Triple Room</h3>
+                    <p class="room-price">From <strong>2,400 MAD</strong> per night</p>
                     <div class="art-actions">
                         <button class="btn-book-glow" data-room="triple">
-                            <span class="glow-text" data-i18n="bookNow">Book Now <span class="arrow">→</span></span>
+                            <span class="glow-text">Book Now <span class="arrow">→</span></span>
                         </button>
                         <button class="btn-outline-dark details-btn" data-room="triple">
-                            <span data-i18n="details">Details</span> <span class="arrow">→</span>
+                            Details <span class="arrow">→</span>
                         </button>
                     </div>
                 </div>
@@ -3186,18 +3190,18 @@
             <div class="room-art-card" data-room="suite">
                 <div class="art-image">
                     <img src="https://images.unsplash.com/photo-1631049307264-da0ec9d70304?auto=format&fit=crop&w=600&q=85" alt="Suite" loading="lazy" />
-                    <span class="badge-top" data-i18n="roomSuite">Suite</span>
+                    <span class="badge-top">Suite</span>
                     <div class="overlay-gradient"></div>
                 </div>
                 <div class="art-info">
-                    <h3 class="room-name" data-i18n="roomSuiteName">Suite</h3>
-                    <p class="room-price" data-i18n="roomSuitePrice">From <strong>3,200 MAD</strong> per night</p>
+                    <h3 class="room-name">Suite</h3>
+                    <p class="room-price">From <strong>3,200 MAD</strong> per night</p>
                     <div class="art-actions">
                         <button class="btn-book-glow" data-room="suite">
-                            <span class="glow-text" data-i18n="bookNow">Book Now <span class="arrow">→</span></span>
+                            <span class="glow-text">Book Now <span class="arrow">→</span></span>
                         </button>
                         <button class="btn-outline-dark details-btn" data-room="suite">
-                            <span data-i18n="details">Details</span> <span class="arrow">→</span>
+                            Details <span class="arrow">→</span>
                         </button>
                     </div>
                 </div>
@@ -3214,26 +3218,26 @@
                 <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d215.06774873347575!2d-5.206742026818542!3d33.40793823043272!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xd9e2c2b2b2b2b2b%3A0x2b2b2b2b2b2b2b2b!2sAzrou%2C%20Morocco!5e0!3m2!1sen!2suk!4v1700000000000" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Map of Amrouss Dar location"></iframe>
             </div>
             <div class="location-info">
-                <p class="eyebrow" data-i18n="locationEyebrow">FIND YOUR WAY OUT</p>
-                <h2 data-i18n-html="locationTitle">Near enough.<br /><em>Far from it all.</em></h2>
-                <p class="desc" data-i18n="locationDesc">Amrouss touristic DarMaroc sits at Km 6 Route de Meknés, Azrou, on the quiet edge of the cedar forest.</p>
+                <p class="eyebrow">FIND YOUR WAY OUT</p>
+                <h2>Near enough.<br /><em>Far from it all.</em></h2>
+                <p class="desc">Amrouss touristic DarMaroc sits at Km 6 Route de Meknés, Azrou, on the quiet edge of the cedar forest.</p>
                 <div class="distances-grid">
-                    <div class="item"><b>06 min</b><span data-i18n="locAzrou">AZROU CENTRE</span></div>
-                    <div class="item"><b>55 min</b><span data-i18n="locIfrane">IFRANE</span></div>
-                    <div class="item"><b>47 mi</b><span data-i18n="locFes">FÈS–SAÏSS</span></div>
+                    <div class="item"><b>06 min</b><span>AZROU CENTRE</span></div>
+                    <div class="item"><b>55 min</b><span>IFRANE</span></div>
+                    <div class="item"><b>47 mi</b><span>FÈS–SAÏSS</span></div>
                 </div>
                 <div class="attractions-list">
-                    <span data-i18n="locAttraction1">Lion Stone &amp; Ifrane Lake <span class="val">15 mi</span></span>
-                    <span data-i18n="locAttraction2">Ain Vittel Water Source <span class="val">17 mi</span></span>
-                    <span data-i18n="locAttraction3">Aoua Lake <span class="val">26 mi</span></span>
+                    <span>Lion Stone &amp; Ifrane Lake <span class="val">15 mi</span></span>
+                    <span>Ain Vittel Water Source <span class="val">17 mi</span></span>
+                    <span>Aoua Lake <span class="val">26 mi</span></span>
                 </div>
-                <a class="text-link" href="https://maps.google.com/?q=Azrou,Morocco" target="_blank" rel="noopener" data-i18n="locationLink">Open directions <span class="arrow">→</span></a>
+                <a class="text-link" href="https://maps.google.com/?q=Azrou,Morocco" target="_blank" rel="noopener">Open directions <span class="arrow">→</span></a>
             </div>
         </div>
     </section>
 
     <!-- ============================================================ -->
-    <!--  ROOM MODAL                                                   -->
+    <!--  ROOM MODAL — ADVANCED TRANSITIONS                           -->
     <!-- ============================================================ -->
     <div class="room-modal" id="roomModal">
         <div class="room-modal-content">
@@ -3262,9 +3266,9 @@
                 </div>
                 <div class="room-actions">
                     <button class="btn-book-glow" data-open-booking>
-                        <span class="glow-text" data-i18n="bookNow">Book Now <span class="arrow">→</span></span>
+                        <span class="glow-text">Book Now <span class="arrow">→</span></span>
                     </button>
-                    <button class="btn-outline-dark" id="modalMoreDetails" data-i18n="moreDetails">More Details →</button>
+                    <button class="btn-outline-dark" id="modalMoreDetails">More Details →</button>
                 </div>
             </div>
         </div>
@@ -3293,9 +3297,9 @@
             </div>
             <div class="details-actions">
                 <button class="btn-book-glow" data-open-booking>
-                    <span class="glow-text" data-i18n="bookNow">Book Now <span class="arrow">→</span></span>
+                    <span class="glow-text">Book Now <span class="arrow">→</span></span>
                 </button>
-                <button class="btn-outline-dark" id="closeMoreDetailsBtn" data-i18n="close">Close →</button>
+                <button class="btn-outline-dark" id="closeMoreDetailsBtn">Close →</button>
             </div>
         </div>
     </div>
@@ -3306,9 +3310,9 @@
     <section class="quote-section">
         <div class="image"></div>
         <div class="text">
-            <p class="eyebrow" data-i18n="quoteEyebrow">A DIFFERENT RHYTHM</p>
-            <blockquote data-i18n="quoteText">“The real luxury is that nothing asks you to hurry.”</blockquote>
-            <p class="attribution" data-i18n="quoteAuthor">— ELENA V., LISBON</p>
+            <p class="eyebrow">A DIFFERENT RHYTHM</p>
+            <blockquote>“The real luxury is that nothing asks you to hurry.”</blockquote>
+            <p class="attribution">— ELENA V., LISBON</p>
         </div>
     </section>
 
@@ -3317,14 +3321,14 @@
     <!-- ============================================================ -->
     <section class="dining-section" id="dining">
         <div class="text">
-            <p class="eyebrow" data-i18n="diningEyebrow">AT TABLE AMROUSS</p>
-            <h2 data-i18n-html="diningTitle">The flavours<br />of <em>the mountain.</em></h2>
-            <p data-i18n="diningText">Our family-friendly restaurant serves Italian and Moroccan cuisines with halal and vegetarian options. Guests can enjoy lunch and dinner in a welcoming ambiance.</p>
+            <p class="eyebrow">AT TABLE AMROUSS</p>
+            <h2>The flavours<br />of <em>the mountain.</em></h2>
+            <p>Our family-friendly restaurant serves Italian and Moroccan cuisines with halal and vegetarian options. Guests can enjoy lunch and dinner in a welcoming ambiance.</p>
             <div class="meal-times">
-                <span data-i18n="breakfast">BREAKFAST<br /><b>07:30 – 11:00</b></span>
-                <span data-i18n="lunchDinner">LUNCH & DINNER<br /><b>12:00 – 22:30</b></span>
+                <span>BREAKFAST<br /><b>07:30 – 11:00</b></span>
+                <span>LUNCH & DINNER<br /><b>12:00 – 22:30</b></span>
             </div>
-            <a class="btn-primary" data-open-booking data-i18n="reserveTable">Reserve a table <span class="arrow">→</span></a>
+            <a class="btn-primary" data-open-booking>Reserve a table <span class="arrow">→</span></a>
         </div>
         <div class="image"></div>
     </section>
@@ -3334,17 +3338,17 @@
     <!-- ============================================================ -->
     <section class="chef-section reveal">
         <div>
-            <p class="eyebrow" data-i18n="chefEyebrow">FROM OUR KITCHEN</p>
+            <p class="eyebrow">FROM OUR KITCHEN</p>
             <span class="mark">A</span>
-            <blockquote data-i18n="chefQuote">“We cook the Atlas as we find it: pure, generous and in season.”</blockquote>
-            <p class="signature" data-i18n="chefSignature">CHEF AMINA EL IDRISSI · TABLE AMROUSS</p>
-            <a href="#contact" class="text-link" data-i18n="chefLink">Reserve a table <span class="arrow">→</span></a>
+            <blockquote>“We cook the Atlas as we find it: pure, generous and in season.”</blockquote>
+            <p class="signature">CHEF AMINA EL IDRISSI · TABLE AMROUSS</p>
+            <a href="#contact" class="text-link">Reserve a table <span class="arrow">→</span></a>
         </div>
         <div class="chef-menu">
-            <span class="label" data-i18n="dailyTable">THE DAILY TABLE</span>
-            <div class="item"><span class="time">07:30</span><span class="desc" data-i18n="menu1">Wonderful breakfast — freshly baked bread, eggs, fruit, Atlas honey</span></div>
-            <div class="item"><span class="time">13:00</span><span class="desc" data-i18n="menu2">Italian & Moroccan lunch — wood-fired seasonal plates</span></div>
-            <div class="item"><span class="time">19:00</span><span class="desc" data-i18n="menu3">Evening table — Moroccan roots, global curiosity</span></div>
+            <span class="label">THE DAILY TABLE</span>
+            <div class="item"><span class="time">07:30</span><span class="desc">Wonderful breakfast — freshly baked bread, eggs, fruit, Atlas honey</span></div>
+            <div class="item"><span class="time">13:00</span><span class="desc">Italian & Moroccan lunch — wood-fired seasonal plates</span></div>
+            <div class="item"><span class="time">19:00</span><span class="desc">Evening table — Moroccan roots, global curiosity</span></div>
         </div>
     </section>
 
@@ -3354,22 +3358,22 @@
     <section class="section-sm" style="background:var(--cream);width:100%;">
         <div style="max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:60px;">
             <div>
-                <p class="eyebrow" data-i18n="onsiteDining">ON-SITE DINING</p>
-                <h3 style="font-size:28px;margin-bottom:12px;" data-i18n="restaurant1">Restaurant #1</h3>
+                <p class="eyebrow">ON-SITE DINING</p>
+                <h3 style="font-size:28px;margin-bottom:12px;">Restaurant #1</h3>
                 <div style="display:flex;flex-wrap:wrap;gap:8px;margin:12px 0;">
-                    <span style="background:#fff;padding:4px 16px;font-size:11px;border:1px solid var(--light-grey);" data-i18n="cuisineItalian">Italian</span>
-                    <span style="background:#fff;padding:4px 16px;font-size:11px;border:1px solid var(--light-grey);" data-i18n="cuisineMoroccan">Moroccan</span>
-                    <span style="background:#fff;padding:4px 16px;font-size:11px;border:1px solid var(--light-grey);" data-i18n="cuisineHalal">Halal</span>
-                    <span style="background:#fff;padding:4px 16px;font-size:11px;border:1px solid var(--light-grey);" data-i18n="cuisineVeg">Vegetarian</span>
+                    <span style="background:#fff;padding:4px 16px;font-size:11px;border:1px solid var(--light-grey);">Italian</span>
+                    <span style="background:#fff;padding:4px 16px;font-size:11px;border:1px solid var(--light-grey);">Moroccan</span>
+                    <span style="background:#fff;padding:4px 16px;font-size:11px;border:1px solid var(--light-grey);">Halal</span>
+                    <span style="background:#fff;padding:4px 16px;font-size:11px;border:1px solid var(--light-grey);">Vegetarian</span>
                 </div>
                 <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:16px 0;">
-                    <div style="background:#fff;padding:12px 16px;text-align:center;"><b style="display:block;font-size:14px;" data-i18n="breakfastShort">Breakfast</b><span style="font-size:10px;color:var(--grey);" data-i18n="breakfastTime">Buffet · 07:30–11:00</span></div>
-                    <div style="background:#fff;padding:12px 16px;text-align:center;"><b style="display:block;font-size:14px;" data-i18n="lunchDinnerShort">Lunch & Dinner</b><span style="font-size:10px;color:var(--grey);" data-i18n="lunchDinnerTime">12:00–22:30</span></div>
+                    <div style="background:#fff;padding:12px 16px;text-align:center;"><b style="display:block;font-size:14px;">Breakfast</b><span style="font-size:10px;color:var(--grey);">Buffet · 07:30–11:00</span></div>
+                    <div style="background:#fff;padding:12px 16px;text-align:center;"><b style="display:block;font-size:14px;">Lunch & Dinner</b><span style="font-size:10px;color:var(--grey);">12:00–22:30</span></div>
                 </div>
             </div>
             <div>
-                <p class="eyebrow" data-i18n="nearbyCafes">NEARBY CAFES</p>
-                <h3 style="font-size:28px;margin-bottom:12px;" data-i18n="localSpots">Local spots</h3>
+                <p class="eyebrow">NEARBY CAFES</p>
+                <h3 style="font-size:28px;margin-bottom:12px;">Local spots</h3>
                 <div style="display:grid;gap:8px;font-size:14px;color:var(--grey);">
                     <div style="display:flex;justify-content:space-between;border-bottom:1px solid var(--light-grey);padding:6px 0;"><span>Pharmacie des Palmes</span><span style="color:var(--grey);">4.8 km</span></div>
                     <div style="display:flex;justify-content:space-between;border-bottom:1px solid var(--light-grey);padding:6px 0;"><span>Café Idyle</span><span style="color:var(--grey);">4.9 km</span></div>
@@ -3377,14 +3381,7 @@
                 </div>
             </div>
         </div>
-        <style>
-            @media(max-width:768px) {
-                .section-sm>div {
-                    grid-template-columns: 1fr;
-                    gap: 40px;
-                }
-            }
-        </style>
+        <style>@media(max-width:768px){.section-sm>div{grid-template-columns:1fr;gap:40px;}}</style>
     </section>
 
     <!-- ============================================================ -->
@@ -3392,9 +3389,9 @@
     <!-- ============================================================ -->
     <section class="experiences-section" id="experiences">
         <div class="section-center">
-            <p class="eyebrow light" data-i18n="expEyebrow">FOLLOW YOUR CURIOSITY</p>
-            <h2 style="color:#fff;" data-i18n-html="expTitle">Days worth <em style="color:var(--gold);">remembering.</em></h2>
-            <p class="section-sub" data-i18n="expSub">The Middle Atlas gives generously to those who go gently.</p>
+            <p class="eyebrow light">FOLLOW YOUR CURIOSITY</p>
+            <h2 style="color:#fff;">Days worth <em style="color:var(--gold);">remembering.</em></h2>
+            <p class="section-sub">The Middle Atlas gives generously to those who go gently.</p>
         </div>
         <div class="exp-grid">
             <div class="exp-card reveal">
@@ -3402,8 +3399,8 @@
                 <div class="overlay"></div>
                 <div class="content">
                     <span class="number">01</span>
-                    <h3 data-i18n="exp1Title">Cedar Forest<br />Morning Walk</h3>
-                    <span class="link" data-i18n="discover">Discover →</span>
+                    <h3>Cedar Forest<br />Morning Walk</h3>
+                    <span class="link">Discover →</span>
                 </div>
             </div>
             <div class="exp-card reveal">
@@ -3411,8 +3408,8 @@
                 <div class="overlay"></div>
                 <div class="content">
                     <span class="number">02</span>
-                    <h3 data-i18n="exp2Title">Atlas<br />on Horseback</h3>
-                    <span class="link" data-i18n="discover">Discover →</span>
+                    <h3>Atlas<br />on Horseback</h3>
+                    <span class="link">Discover →</span>
                 </div>
             </div>
             <div class="exp-card reveal">
@@ -3420,8 +3417,8 @@
                 <div class="overlay"></div>
                 <div class="content">
                     <span class="number">03</span>
-                    <h3 data-i18n="exp3Title">Day Trip<br />to Ifrane</h3>
-                    <span class="link" data-i18n="discover">Discover →</span>
+                    <h3>Day Trip<br />to Ifrane</h3>
+                    <span class="link">Discover →</span>
                 </div>
             </div>
         </div>
@@ -3433,13 +3430,13 @@
     <section class="signature-section">
         <div class="image"></div>
         <div class="text">
-            <p class="eyebrow light" style="color:rgba(255,255,255,0.3);" data-i18n="sigEyebrow">THE AMROUSS SIGNATURE</p>
+            <p class="eyebrow light" style="color:rgba(255,255,255,0.3);">THE AMROUSS SIGNATURE</p>
             <span class="infinity">∞</span>
-            <h2 data-i18n-html="sigTitle">Every detail<br />has a <em style="color:var(--gold);">quiet purpose.</em></h2>
+            <h2>Every detail<br />has a <em style="color:var(--gold);">quiet purpose.</em></h2>
             <div class="signature-list">
-                <div class="item"><span class="num">01</span><span class="title" data-i18n="sig1">Mountain-spring water</span><span class="desc" data-i18n="sig1Desc">drawn fresh each morning</span></div>
-                <div class="item"><span class="num">02</span><span class="title" data-i18n="sig2">Local hands & materials</span><span class="desc" data-i18n="sig2Desc">honouring Atlas craft</span></div>
-                <div class="item"><span class="num">03</span><span class="title" data-i18n="sig3">Unscripted hospitality</span><span class="desc" data-i18n="sig3Desc">attentive, never intrusive</span></div>
+                <div class="item"><span class="num">01</span><span class="title">Mountain-spring water</span><span class="desc">drawn fresh each morning</span></div>
+                <div class="item"><span class="num">02</span><span class="title">Local hands & materials</span><span class="desc">honouring Atlas craft</span></div>
+                <div class="item"><span class="num">03</span><span class="title">Unscripted hospitality</span><span class="desc">attentive, never intrusive</span></div>
             </div>
         </div>
     </section>
@@ -3450,14 +3447,14 @@
     <section class="events-section">
         <div class="image"></div>
         <div class="text">
-            <p class="eyebrow" data-i18n="eventsEyebrow">GATHER WITH INTENTION</p>
-            <h2 data-i18n-html="eventsTitle">A celebration with<br /><em>space around it.</em></h2>
-            <p data-i18n="eventsText">For an intimate Atlas wedding, a family milestone or a team that needs to think differently, Amrouss Dar can become entirely yours.</p>
+            <p class="eyebrow">GATHER WITH INTENTION</p>
+            <h2>A celebration with<br /><em>space around it.</em></h2>
+            <p>For an intimate Atlas wedding, a family milestone or a team that needs to think differently, Amrouss Dar can become entirely yours.</p>
             <div class="stats">
-                <div><b>32</b><br><span data-i18n="eventsStat1">Guests · Full takeover</span></div>
-                <div><b>02</b><br><span data-i18n="eventsStat2">Private event spaces</span></div>
+                <div><b>32</b><br><span>Guests · Full takeover</span></div>
+                <div><b>02</b><br><span>Private event spaces</span></div>
             </div>
-            <a href="#contact" class="text-link" data-i18n="eventsLink">Speak with our events team <span class="arrow">→</span></a>
+            <a href="#contact" class="text-link">Speak with our events team <span class="arrow">→</span></a>
         </div>
     </section>
 
@@ -3466,23 +3463,23 @@
     <!-- ============================================================ -->
     <section class="section" id="gallery">
         <div class="section-center reveal">
-            <p class="eyebrow" data-i18n="galleryEyebrow">AN EVER-CHANGING LIGHT</p>
-            <h2 data-i18n-html="galleryTitle">A glimpse into <em>the Dar.</em></h2>
+            <p class="eyebrow">AN EVER-CHANGING LIGHT</p>
+            <h2>A glimpse into <em>the Dar.</em></h2>
         </div>
         <div class="gallery-filters">
-            <button class="active" data-filter="all" data-i18n="all">All</button>
-            <button data-filter="rooms" data-i18n="roomsFilter">Rooms</button>
-            <button data-filter="pool" data-i18n="poolFilter">Pool</button>
-            <button data-filter="table" data-i18n="tableFilter">Table</button>
-            <button data-filter="nature" data-i18n="natureFilter">Nature</button>
+            <button class="active" data-filter="all">All</button>
+            <button data-filter="rooms">Rooms</button>
+            <button data-filter="pool">Pool</button>
+            <button data-filter="table">Table</button>
+            <button data-filter="nature">Nature</button>
         </div>
         <div class="gallery-grid">
-            <div class="gallery-tile tall" data-gallery="rooms" style="background-image:url('https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1100&q=85');"><div class="overlay"></div><span class="label" data-i18n="roomsFilter">Rooms</span></div>
-            <div class="gallery-tile" data-gallery="table" style="background-image:url('https://images.unsplash.com/photo-1600891964092-4316c288032e?auto=format&fit=crop&w=900&q=85');"><div class="overlay"></div><span class="label" data-i18n="tableFilter">Table</span></div>
-            <div class="gallery-tile" data-gallery="pool" style="background-image:url('https://images.unsplash.com/photo-1540541338287-41700207dee6?auto=format&fit=crop&w=900&q=85');"><div class="overlay"></div><span class="label" data-i18n="poolFilter">Pool</span></div>
-            <div class="gallery-tile wide" data-gallery="nature" style="background-image:url('https://images.unsplash.com/photo-1470770841072-f978cf4d019e?auto=format&fit=crop&w=1100&q=85');"><div class="overlay"></div><span class="label" data-i18n="natureFilter">Nature</span></div>
-            <div class="gallery-tile" data-gallery="night" style="background-image:url('https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=900&q=85');"><div class="overlay"></div><span class="label" data-i18n="nightFilter">Night</span></div>
-            <div class="gallery-tile" data-gallery="rooms" style="background-image:url('https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=900&q=85');"><div class="overlay"></div><span class="label" data-i18n="interiors">Interiors</span></div>
+            <div class="gallery-tile tall" data-gallery="rooms" style="background-image:url('https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1100&q=85');"><div class="overlay"></div><span class="label">Rooms</span></div>
+            <div class="gallery-tile" data-gallery="table" style="background-image:url('https://images.unsplash.com/photo-1600891964092-4316c288032e?auto=format&fit=crop&w=900&q=85');"><div class="overlay"></div><span class="label">Table</span></div>
+            <div class="gallery-tile" data-gallery="pool" style="background-image:url('https://images.unsplash.com/photo-1540541338287-41700207dee6?auto=format&fit=crop&w=900&q=85');"><div class="overlay"></div><span class="label">Pool</span></div>
+            <div class="gallery-tile wide" data-gallery="nature" style="background-image:url('https://images.unsplash.com/photo-1470770841072-f978cf4d019e?auto=format&fit=crop&w=1100&q=85');"><div class="overlay"></div><span class="label">Nature</span></div>
+            <div class="gallery-tile" data-gallery="night" style="background-image:url('https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=900&q=85');"><div class="overlay"></div><span class="label">Night</span></div>
+            <div class="gallery-tile" data-gallery="rooms" style="background-image:url('https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=900&q=85');"><div class="overlay"></div><span class="label">Interiors</span></div>
         </div>
     </section>
 
@@ -3490,9 +3487,9 @@
     <!--  TESTIMONIALS                                                -->
     <!-- ============================================================ -->
     <section class="testimonial-section">
-        <p class="eyebrow" data-i18n="testimonialEyebrow">WORDS FROM THE DAR</p>
-        <blockquote data-review data-i18n="testimonial1">“A beautiful antidote to the everyday. The air, the service, the silence — perfection.”</blockquote>
-        <p class="author" data-review-author data-i18n="testimonialAuthor1">JULIEN &amp; CLARA · PARIS</p>
+        <p class="eyebrow">WORDS FROM THE DAR</p>
+        <blockquote data-review>“A beautiful antidote to the everyday. The air, the service, the silence — perfection.”</blockquote>
+        <p class="author" data-review-author>JULIEN &amp; CLARA · PARIS</p>
         <div class="testimonial-nav">
             <button data-review-prev>←</button>
             <span class="current"><b data-review-current>01</b> / 03</span>
@@ -3505,18 +3502,18 @@
     <!-- ============================================================ -->
     <section class="section" id="facilities">
         <div class="section-center reveal">
-            <p class="eyebrow" data-i18n="facilitiesEyebrow">MOST POPULAR FACILITIES</p>
-            <h2 data-i18n-html="facilitiesTitle">Everything you need<br /><em>for a perfect stay.</em></h2>
+            <p class="eyebrow">MOST POPULAR FACILITIES</p>
+            <h2>Everything you need<br /><em>for a perfect stay.</em></h2>
         </div>
         <div class="facilities-grid">
-            <div class="facility-item"><span class="icon">🏊</span><h4 data-i18n="facPool">Outdoor Pool</h4><p data-i18n="facPoolDesc">Seasonal · All ages</p><span class="badge" data-i18n="free">Free!</span></div>
-            <div class="facility-item"><span class="icon">🚭</span><h4 data-i18n="facNonSmoking">Non-smoking Rooms</h4><p data-i18n="facNonSmokingDesc">Smoke-free property</p></div>
-            <div class="facility-item"><span class="icon">📶</span><h4 data-i18n="facWifi">Free Wi-Fi</h4><p data-i18n="facWifiDesc">All areas</p></div>
-            <div class="facility-item"><span class="icon">🅿️</span><h4 data-i18n="facParking">Free Parking</h4><p data-i18n="facParkingDesc">On-site</p></div>
-            <div class="facility-item"><span class="icon">🍽️</span><h4 data-i18n="facRestaurant">Restaurant</h4><p data-i18n="facRestaurantDesc">Italian · Moroccan</p><span class="badge" data-i18n="wonderfulBreakfast">Wonderful Breakfast</span></div>
-            <div class="facility-item"><span class="icon">🛁</span><h4 data-i18n="facBathroom">Private Bathroom</h4><p data-i18n="facBathroomDesc">Bathtub · Toiletries</p></div>
-            <div class="facility-item"><span class="icon">🔥</span><h4 data-i18n="facFireplace">Fireplace</h4><p data-i18n="facFireplaceDesc">Cozy evenings</p></div>
-            <div class="facility-item"><span class="icon">🌳</span><h4 data-i18n="facGarden">Garden & Terrace</h4><p data-i18n="facGardenDesc">Pool views</p></div>
+            <div class="facility-item"><span class="icon">🏊</span><h4>Outdoor Pool</h4><p>Seasonal · All ages</p><span class="badge">Free!</span></div>
+            <div class="facility-item"><span class="icon">🚭</span><h4>Non-smoking Rooms</h4><p>Smoke-free property</p></div>
+            <div class="facility-item"><span class="icon">📶</span><h4>Free Wi-Fi</h4><p>All areas</p></div>
+            <div class="facility-item"><span class="icon">🅿️</span><h4>Free Parking</h4><p>On-site</p></div>
+            <div class="facility-item"><span class="icon">🍽️</span><h4>Restaurant</h4><p>Italian · Moroccan</p><span class="badge">Wonderful Breakfast</span></div>
+            <div class="facility-item"><span class="icon">🛁</span><h4>Private Bathroom</h4><p>Bathtub · Toiletries</p></div>
+            <div class="facility-item"><span class="icon">🔥</span><h4>Fireplace</h4><p>Cozy evenings</p></div>
+            <div class="facility-item"><span class="icon">🌳</span><h4>Garden & Terrace</h4><p>Pool views</p></div>
         </div>
     </section>
 
@@ -3524,10 +3521,10 @@
     <!--  STATS                                                       -->
     <!-- ============================================================ -->
     <div class="stats-grid">
-        <div class="stat"><b>9.4</b><span data-i18n="statBreakfast">Breakfast Rating</span></div>
-        <div class="stat"><b>24/7</b><span data-i18n="statFrontDesk">Front Desk</span></div>
-        <div class="stat"><b>98%</b><span data-i18n="statSatisfaction">Guest Satisfaction</span></div>
-        <div class="stat"><b>4</b><span data-i18n="statLanguages">Languages Spoken</span></div>
+        <div class="stat"><b>9.4</b><span>Breakfast Rating</span></div>
+        <div class="stat"><b>24/7</b><span>Front Desk</span></div>
+        <div class="stat"><b>98%</b><span>Guest Satisfaction</span></div>
+        <div class="stat"><b>4</b><span>Languages Spoken</span></div>
     </div>
 
     <!-- ============================================================ -->
@@ -3546,23 +3543,17 @@
     <!-- ============================================================ -->
     <section class="section" style="background:var(--cream);width:100%;" id="policies">
         <div class="section-center reveal">
-            <p class="eyebrow" data-i18n="policiesEyebrow">HOUSE RULES</p>
-            <h2 data-i18n-html="policiesTitle">Before you <em>make your way.</em></h2>
+            <p class="eyebrow">HOUSE RULES</p>
+            <h2>Before you <em>make your way.</em></h2>
         </div>
         <div class="policies-grid">
-            <div class="policy-block"><h4 data-i18n="policyCheckin">📋 Check-in / Check-out</h4><p><span class="highlight" data-i18n="policyCheckinLabel">Check-in:</span> <span data-i18n="policyCheckinValue">24 hours</span></p><p><span class="highlight" data-i18n="policyCheckoutLabel">Check-out:</span> <span data-i18n="policyCheckoutValue">24 hours</span></p><p style="margin-top:8px;" data-i18n="policyAge">No age requirement for check-in.</p></div>
-            <div class="policy-block"><h4 data-i18n="policyChildren">👶 Children &amp; Beds</h4><p><span class="highlight" data-i18n="policyChildrenLabel">Children:</span> <span data-i18n="policyChildrenValue">All ages welcome</span></p><p><span class="highlight" data-i18n="policyCribs">Cribs:</span> <span data-i18n="policyCribsValue">Not available</span></p><p><span class="highlight" data-i18n="policyExtraBeds">Extra beds:</span> <span data-i18n="policyExtraBedsValue">Not available</span></p></div>
-            <div class="policy-block"><h4 data-i18n="policyPets">🐾 Pets &amp; Payment</h4><p><span class="highlight" data-i18n="policyPetsLabel">Pets:</span> <span data-i18n="policyPetsValue">Not allowed</span></p><p><span class="highlight" data-i18n="policyPayment">Payment:</span> <span data-i18n="policyPaymentValue">Cash only</span></p><p class="small" data-i18n="policyLicense">License: 53000HT0844</p></div>
-            <div class="policy-block"><h4 data-i18n="policyOther">🚭 Other Policies</h4><p data-i18n="policyNoParties">No bachelor(ette) parties</p><p data-i18n="policyNoEvents">No events/parties allowed</p><p class="small" data-i18n="policySmokeFree">Smoke-free property</p></div>
-            <div class="policy-block" style="grid-column:span 1;"><h4 data-i18n="policyCancellation">💳 Cancellation</h4><p data-i18n="policyCancellationText">Cancellation and prepayment policies vary according to accommodation type.</p><p class="small" data-i18n="policyCheckConditions">Check conditions when booking.</p></div>
+            <div class="policy-block"><h4>📋 Check-in / Check-out</h4><p><span class="highlight">Check-in:</span> 24 hours</p><p><span class="highlight">Check-out:</span> 24 hours</p><p style="margin-top:8px;">No age requirement for check-in.</p></div>
+            <div class="policy-block"><h4>👶 Children &amp; Beds</h4><p><span class="highlight">Children:</span> All ages welcome</p><p><span class="highlight">Cribs:</span> Not available</p><p><span class="highlight">Extra beds:</span> Not available</p></div>
+            <div class="policy-block"><h4>🐾 Pets &amp; Payment</h4><p><span class="highlight">Pets:</span> Not allowed</p><p><span class="highlight">Payment:</span> Cash only</p><p class="small">License: 53000HT0844</p></div>
+            <div class="policy-block"><h4>🚭 Other Policies</h4><p>No bachelor(ette) parties</p><p>No events/parties allowed</p><p class="small">Smoke-free property</p></div>
+            <div class="policy-block" style="grid-column:span 1;"><h4>💳 Cancellation</h4><p>Cancellation and prepayment policies vary according to accommodation type.</p><p class="small">Check conditions when booking.</p></div>
         </div>
-        <style>
-            @media(max-width:768px) {
-                .policies-grid .policy-block[style*="grid-column:span 1;"] {
-                    grid-column: span 1;
-                }
-            }
-        </style>
+        <style>@media(max-width:768px){.policies-grid .policy-block[style*="grid-column:span 1;"]{grid-column:span 1;}}</style>
     </section>
 
     <!-- ============================================================ -->
@@ -3570,35 +3561,29 @@
     <!-- ============================================================ -->
     <section class="faq-grid" id="contact">
         <div class="left">
-            <p class="eyebrow" data-i18n="faqEyebrow">THOUGHTFUL ANSWERS</p>
-            <h2 data-i18n-html="faqTitle">Before you <em>make your way.</em></h2>
+            <p class="eyebrow">THOUGHTFUL ANSWERS</p>
+            <h2>Before you <em>make your way.</em></h2>
             <div class="faq-list">
-                <details><summary data-i18n="faq1q">What kind of breakfast is served?<span class="plus">+</span></summary><p data-i18n="faq1a">Guests can enjoy a wonderful buffet breakfast (guest review score: 9.4).</p></details>
-                <details><summary data-i18n="faq2q">Does the hotel have a pool?<span class="plus">+</span></summary><p data-i18n="faq2a">Yes, a seasonal outdoor swimming pool with a shallow end and beach umbrellas.</p></details>
-                <details><summary data-i18n="faq3q">What room types are available?<span class="plus">+</span></summary><p data-i18n="faq3a">Double, Twin, Triple, and Suite options are available.</p></details>
-                <details><summary data-i18n="faq4q">Is there a restaurant on site?<span class="plus">+</span></summary><p data-i18n="faq4a">Yes, Restaurant #1 serves Italian and Moroccan cuisine with halal and vegetarian options.</p></details>
-                <details><summary data-i18n="faq5q">How far is the property from Azrou center?<span class="plus">+</span></summary><p data-i18n="faq5a">Amrouss touristic DarMaroc is 6 km from the center of Azrou.</p></details>
+                <details><summary>What kind of breakfast is served?<span class="plus">+</span></summary><p>Guests can enjoy a wonderful buffet breakfast (guest review score: 9.4).</p></details>
+                <details><summary>Does the hotel have a pool?<span class="plus">+</span></summary><p>Yes, a seasonal outdoor swimming pool with a shallow end and beach umbrellas.</p></details>
+                <details><summary>What room types are available?<span class="plus">+</span></summary><p>Double, Twin, Triple, and Suite options are available.</p></details>
+                <details><summary>Is there a restaurant on site?<span class="plus">+</span></summary><p>Yes, Restaurant #1 serves Italian and Moroccan cuisine with halal and vegetarian options.</p></details>
+                <details><summary>How far is the property from Azrou center?<span class="plus">+</span></summary><p>Amrouss touristic DarMaroc is 6 km from the center of Azrou.</p></details>
             </div>
         </div>
         <div class="right" style="background:var(--deep);color:#fff;padding:60px 50px;display:flex;flex-direction:column;justify-content:center;">
-            <p class="eyebrow light" style="color:rgba(255,255,255,0.3);" data-i18n="contactEyebrow">SPEAK WITH OUR TEAM</p>
-            <h2 style="color:#fff;font-size:clamp(34px,4vw,56px);" data-i18n-html="contactTitle">We are here<br /><em style="font-style:italic;color:var(--gold);">when you are ready.</em></h2>
-            <p style="color:rgba(255,255,255,0.5);font-size:15px;line-height:1.8;margin:16px 0 24px;max-width:400px;" data-i18n="contactText">For stays, celebrations, transfers or a question only a local can answer.</p>
+            <p class="eyebrow light" style="color:rgba(255,255,255,0.3);">SPEAK WITH OUR TEAM</p>
+            <h2 style="color:#fff;font-size:clamp(34px,4vw,56px);">We are here<br /><em style="font-style:italic;color:var(--gold);">when you are ready.</em></h2>
+            <p style="color:rgba(255,255,255,0.5);font-size:15px;line-height:1.8;margin:16px 0 24px;max-width:400px;">For stays, celebrations, transfers or a question only a local can answer.</p>
             <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:28px;">
-                <a href="tel:+212630485646" style="color:rgba(255,255,255,0.6);border-bottom:1px solid rgba(255,255,255,0.04);padding-bottom:10px;transition:color .3s;display:flex;flex-direction:column;"><span style="font-size:8px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,0.2);font-weight:500;" data-i18n="callUs">Call us</span> +212 (0) 630 485 646</a>
-                <a href="mailto:hello@amroussdar.ma" style="color:rgba(255,255,255,0.6);border-bottom:1px solid rgba(255,255,255,0.04);padding-bottom:10px;transition:color .3s;display:flex;flex-direction:column;"><span style="font-size:8px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,0.2);font-weight:500;" data-i18n="emailUs">Email</span> hello@amroussdar.ma</a>
-                <a href="https://wa.me/212630485646" target="_blank" rel="noopener" style="color:rgba(255,255,255,0.6);border-bottom:1px solid rgba(255,255,255,0.04);padding-bottom:10px;transition:color .3s;display:flex;flex-direction:column;"><span style="font-size:8px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,0.2);font-weight:500;" data-i18n="whatsapp">WhatsApp</span> <span data-i18n="messageDar">Message the Dar →</span></a>
+                <a href="tel:+212630485646" style="color:rgba(255,255,255,0.6);border-bottom:1px solid rgba(255,255,255,0.04);padding-bottom:10px;transition:color .3s;display:flex;flex-direction:column;"><span style="font-size:8px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,0.2);font-weight:500;">Call us</span> +212 (0) 630 485 646</a>
+                <a href="mailto:hello@amroussdar.ma" style="color:rgba(255,255,255,0.6);border-bottom:1px solid rgba(255,255,255,0.04);padding-bottom:10px;transition:color .3s;display:flex;flex-direction:column;"><span style="font-size:8px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,0.2);font-weight:500;">Email</span> hello@amroussdar.ma</a>
+                <a href="https://wa.me/212630485646" target="_blank" rel="noopener" style="color:rgba(255,255,255,0.6);border-bottom:1px solid rgba(255,255,255,0.04);padding-bottom:10px;transition:color .3s;display:flex;flex-direction:column;"><span style="font-size:8px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,0.2);font-weight:500;">WhatsApp</span> Message the Dar →</a>
             </div>
-            <p style="font-size:12px;color:rgba(255,255,255,0.2);margin-bottom:20px;" data-i18n="afterBooking">After booking, all property details including telephone and address are provided in your confirmation.</p>
-            <button class="btn-primary" data-open-booking style="background:var(--gold);color:var(--ink);width:100%;justify-content:center;" data-i18n="startReservation">Start a reservation <span class="arrow">→</span></button>
+            <p style="font-size:12px;color:rgba(255,255,255,0.2);margin-bottom:20px;">After booking, all property details including telephone and address are provided in your confirmation.</p>
+            <button class="btn-primary" data-open-booking style="background:var(--gold);color:var(--ink);width:100%;justify-content:center;">Start a reservation <span class="arrow">→</span></button>
         </div>
-        <style>
-            @media(max-width:768px) {
-                .faq-grid .right {
-                    padding: 40px 5vw;
-                }
-            }
-        </style>
+        <style>@media(max-width:768px){.faq-grid .right{padding:40px 5vw;}}</style>
     </section>
 
     <!-- ============================================================ -->
@@ -3606,12 +3591,12 @@
     <!-- ============================================================ -->
     <section class="section" id="journal">
         <div class="section-center reveal">
-            <p class="eyebrow" data-i18n="journalEyebrow">FROM THE DAR JOURNAL</p>
-            <h2 data-i18n-html="journalTitle">Stories from <em>the foothills.</em></h2>
+            <p class="eyebrow">FROM THE DAR JOURNAL</p>
+            <h2>Stories from <em>the foothills.</em></h2>
         </div>
         <div class="journal-grid">
-            <article><span class="label" data-i18n="journalLabel1">GUIDES · 6 MIN READ</span><h3 data-i18n="journalTitle1">The hidden paths of Azrou's cedar forest</h3><a href="#journal" class="link" data-i18n="readStory">Read story →</a></article>
-            <article><span class="label" data-i18n="journalLabel2">AT THE TABLE · 4 MIN READ</span><h3 data-i18n="journalTitle2">Our kitchen's love letter to the Middle Atlas</h3><a href="#journal" class="link" data-i18n="readStory">Read story →</a></article>
+            <article><span class="label">GUIDES · 6 MIN READ</span><h3>The hidden paths of Azrou's cedar forest</h3><a href="#journal" class="link">Read story →</a></article>
+            <article><span class="label">AT THE TABLE · 4 MIN READ</span><h3>Our kitchen's love letter to the Middle Atlas</h3><a href="#journal" class="link">Read story →</a></article>
         </div>
     </section>
 
@@ -3620,7 +3605,7 @@
     <!-- ============================================================ -->
     <a href="https://wa.me/212630485646?text=Hello%2C%20I%27d%20like%20to%20book%20a%20stay%20at%20Amrouss%20Dar." target="_blank" rel="noopener" class="whatsapp-float" aria-label="Contact us on WhatsApp">
         <svg viewBox="0 0 24 24">
-            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
         </svg>
     </a>
 
@@ -3631,26 +3616,26 @@
         <div class="footer-grid">
             <div>
                 <div class="brand">AMROUSS<span class="divider"></span>DAR <span class="location">AZROU · MOROCCO</span></div>
-                <p data-i18n="footerText">For reservations and enquiries,<br /><a href="mailto:hello@amroussdar.ma">hello@amroussdar.ma</a><br />+212 (0) 630 485 646</p>
+                <p>For reservations and enquiries,<br /><a href="mailto:hello@amroussdar.ma">hello@amroussdar.ma</a><br />+212 (0) 630 485 646</p>
             </div>
             <div>
-                <h4 data-i18n="explore">Explore</h4>
-                <a href="#stay" data-i18n="navStay">Rooms</a>
-                <a href="#dining" data-i18n="navDining">Dining</a>
-                <a href="#experiences" data-i18n="navExperiences">Experiences</a>
-                <a href="#facilities" data-i18n="facilities">Facilities</a>
+                <h4>Explore</h4>
+                <a href="#stay">Rooms</a>
+                <a href="#dining">Dining</a>
+                <a href="#experiences">Experiences</a>
+                <a href="#facilities">Facilities</a>
             </div>
             <div>
-                <h4 data-i18n="theDar">The Dar</h4>
-                <a href="#contact" data-i18n="contact">Contact</a>
-                <a href="#policies" data-i18n="policies">Policies</a>
-                <a href="#privacy" data-i18n="privacy">Privacy</a>
+                <h4>The Dar</h4>
+                <a href="#contact">Contact</a>
+                <a href="#policies">Policies</a>
+                <a href="#privacy">Privacy</a>
             </div>
             <div>
-                <h4 data-i18n="stayClose">Stay Close</h4>
+                <h4>Stay Close</h4>
                 <a href="#instagram">Instagram</a>
                 <a href="#facebook">Facebook</a>
-                <label style="display:block;font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,255,255,0.2);margin:12px 0 6px;" data-i18n="newsletterLabel">Monthly notes from the quiet</label>
+                <label style="display:block;font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,255,255,0.2);margin:12px 0 6px;">Monthly notes from the quiet</label>
                 <div class="subscribe">
                     <input placeholder="Your email address" />
                     <button aria-label="Subscribe">→</button>
@@ -3659,7 +3644,7 @@
         </div>
         <div class="footer-bottom">
             <span>© 2026 AMROUSS TOURISTIC DARMAROC</span>
-            <span data-i18n="license">LICENSE: 53000HT0844</span>
+            <span>LICENSE: 53000HT0844</span>
         </div>
     </footer>
 
@@ -3669,19 +3654,19 @@
     <dialog id="booking">
         <div class="booking-panel">
             <button class="close" aria-label="Close booking">×</button>
-            <p class="eyebrow" data-i18n="bookingEyebrow">YOUR ESCAPE BEGINS HERE</p>
-            <h2 data-i18n-html="bookingTitle">Reserve <em>your stay.</em></h2>
-            <p class="sub" data-i18n="bookingSub">We will confirm availability within 24 hours.</p>
+            <p class="eyebrow">YOUR ESCAPE BEGINS HERE</p>
+            <h2>Reserve <em>your stay.</em></h2>
+            <p class="sub">We will confirm availability within 24 hours.</p>
             <form id="reserveForm">
-                <label data-i18n="arrival">Arrival<input required type="date" value="2026-08-14" /></label>
-                <label data-i18n="departure">Departure<input required type="date" value="2026-08-17" /></label>
-                <label data-i18n="adults">Adults<select><option>2 Guests</option><option>1 Guest</option><option>3 Guests</option><option>4 Guests</option></select></label>
-                <label data-i18n="children">Children<select><option>None</option><option>1 Child</option><option>2 Children</option><option>3 Children</option></select></label>
-                <label data-i18n="roomType">Room type<select><option>Double</option><option>Twin</option><option>Triple</option><option>Suite</option><option>No preference</option></select></label>
-                <label data-i18n="phoneLabel">Phone <span class="required">*</span><input required type="tel" placeholder="+212 6XX XX XX XX" /></label>
-                <label data-i18n="emailLabel">Email <span style="font-weight:400;color:var(--grey);font-size:8px;">(optional)</span><input type="email" placeholder="you@example.com" /></label>
-                <label class="full" data-i18n="specialRequests">Special requests<textarea placeholder="Transfers, celebrations, dietary requirements…"></textarea></label>
-                <button class="reserve-btn" type="submit" data-i18n="requestReservation">Request reservation <span>→</span></button>
+                <label>Arrival<input required type="date" value="2026-08-14" /></label>
+                <label>Departure<input required type="date" value="2026-08-17" /></label>
+                <label>Adults<select><option>2 Guests</option><option>1 Guest</option><option>3 Guests</option><option>4 Guests</option></select></label>
+                <label>Children<select><option>None</option><option>1 Child</option><option>2 Children</option><option>3 Children</option></select></label>
+                <label>Room type<select><option>Double</option><option>Twin</option><option>Triple</option><option>Suite</option><option>No preference</option></select></label>
+                <label>Phone <span class="required">*</span><input required type="tel" placeholder="+212 6XX XX XX XX" /></label>
+                <label>Email <span style="font-weight:400;color:var(--grey);font-size:8px;">(optional)</span><input type="email" placeholder="you@example.com" /></label>
+                <label class="full">Special requests<textarea placeholder="Transfers, celebrations, dietary requirements…"></textarea></label>
+                <button class="reserve-btn" type="submit">Request reservation <span>→</span></button>
             </form>
         </div>
     </dialog>
@@ -3689,1089 +3674,89 @@
     <!-- ============================================================ -->
     <!--  TOAST                                                       -->
     <!-- ============================================================ -->
-    <div id="toast" role="status" data-i18n="toastMessage">Thank you — we'll be in touch shortly.</div>
+    <div id="toast" role="status">Thank you — we'll be in touch shortly.</div>
 
     <!-- ============================================================ -->
-    <!--  THREE.JS INTRO SCRIPT                                       -->
+    <!--  JAVASCRIPT                                                  -->
     <!-- ============================================================ -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js">
-    </script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/EffectComposer.js">
-    </script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/RenderPass.js">
-    </script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/UnrealBloomPass.js">
-    </script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/shaders/LuminosityHighPassShader.js">
-    </script>
-
     <script>
-        // ============================================================ //
-        // ===== THREE.JS CINEMATIC INTRO =====
-        // ============================================================ //
-
-        (function() {
-            const container = document.getElementById('three-intro');
-            const progressText = document.getElementById('progressText');
-            let progress = 0;
-            let introComplete = false;
-            let skipRequested = false;
-
-            // Scene setup
-            const scene = new THREE.Scene();
-            scene.background = new THREE.Color(0x0a0a0a);
-            scene.fog = new THREE.Fog(0x0a0a0a, 15, 30);
-
-            const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 100);
-            camera.position.set(8, 4, 12);
-            camera.lookAt(0, 0, 0);
-
-            const renderer = new THREE.WebGLRenderer({
-                antialias: true,
-                alpha: false
-            });
-            renderer.setSize(window.innerWidth, window.innerHeight);
-            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-            renderer.toneMapping = THREE.ACESFilmicToneMapping;
-            renderer.toneMappingExposure = 1.2;
-            renderer.shadowMap.enabled = true;
-            renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-            container.appendChild(renderer.domElement);
-
-            // Post-processing
-            const composer = new THREE.EffectComposer(renderer);
-            const renderPass = new THREE.RenderPass(scene, camera);
-            composer.addPass(renderPass);
-
-            const bloomPass = new THREE.UnrealBloomPass(
-                new THREE.Vector2(window.innerWidth, window.innerHeight),
-                0.3, 0.2, 0.1
-            );
-            composer.addPass(bloomPass);
-
-            // Lighting
-            const ambientLight = new THREE.AmbientLight(0x222222, 0.4);
-            scene.add(ambientLight);
-
-            const dirLight = new THREE.DirectionalLight(0xffd8a0, 1.2);
-            dirLight.position.set(10, 20, 5);
-            dirLight.castShadow = true;
-            dirLight.shadow.mapSize.width = 1024;
-            dirLight.shadow.mapSize.height = 1024;
-            scene.add(dirLight);
-
-            const fillLight = new THREE.DirectionalLight(0x4488ff, 0.3);
-            fillLight.position.set(-5, 5, -10);
-            scene.add(fillLight);
-
-            const rimLight = new THREE.DirectionalLight(0xff8844, 0.5);
-            rimLight.position.set(-8, 2, 8);
-            scene.add(rimLight);
-
-            // Ground
-            const groundGeo = new THREE.PlaneGeometry(30, 30);
-            const groundMat = new THREE.MeshStandardMaterial({
-                color: 0x1a1a1a,
-                roughness: 0.8,
-                metalness: 0.2,
-                transparent: true,
-                opacity: 0.8
-            });
-            const ground = new THREE.Mesh(groundGeo, groundMat);
-            ground.rotation.x = -Math.PI / 2;
-            ground.position.y = -0.5;
-            ground.receiveShadow = true;
-            scene.add(ground);
-
-            // Build hotel with geometries
-            const hotelGroup = new THREE.Group();
-            scene.add(hotelGroup);
-
-            // Main building
-            const mainMat = new THREE.MeshStandardMaterial({
-                color: 0x2a2a2a,
-                roughness: 0.3,
-                metalness: 0.6,
-                emissive: 0x0a0a0a,
-                emissiveIntensity: 0.05
-            });
-            const mainBlock = new THREE.Mesh(new THREE.BoxGeometry(6, 3.5, 3), mainMat);
-            mainBlock.position.set(0, 1.25, 0);
-            mainBlock.castShadow = true;
-            hotelGroup.add(mainBlock);
-
-            // Windows (glowing)
-            const windowMat = new THREE.MeshStandardMaterial({
-                color: 0xffd700,
-                emissive: 0xffd700,
-                emissiveIntensity: 0.3,
-                transparent: true,
-                opacity: 0.6,
-                roughness: 0.1,
-                metalness: 0.8
-            });
-            for (let i = -2; i <= 2; i += 1.2) {
-                for (let j = -0.8; j <= 1.2; j += 1) {
-                    if (Math.abs(i) < 0.5 && Math.abs(j) < 0.5) continue;
-                    const win = new THREE.Mesh(new THREE.PlaneGeometry(0.6, 0.7), windowMat);
-                    win.position.set(i, 1.2 + j, 1.51);
-                    hotelGroup.add(win);
-                    const win2 = win.clone();
-                    win2.position.z = -1.51;
-                    win2.rotation.y = Math.PI;
-                    hotelGroup.add(win2);
-                }
-            }
-
-            // Roof
-            const roofMat = new THREE.MeshStandardMaterial({
-                color: 0x333333,
-                roughness: 0.4,
-                metalness: 0.3
-            });
-            const roof = new THREE.Mesh(new THREE.CylinderGeometry(3.2, 3.2, 0.4, 4), roofMat);
-            roof.position.set(0, 3.3, 0);
-            roof.rotation.y = Math.PI / 4;
-            roof.castShadow = true;
-            hotelGroup.add(roof);
-
-            // Entrance
-            const doorMat = new THREE.MeshStandardMaterial({
-                color: 0x4a3520,
-                roughness: 0.6,
-                metalness: 0.2
-            });
-            const door = new THREE.Mesh(new THREE.BoxGeometry(1.2, 1.6, 0.1), doorMat);
-            door.position.set(0, 0.6, 1.52);
-            hotelGroup.add(door);
-
-            // Gold trim
-            const goldMat = new THREE.MeshStandardMaterial({
-                color: 0xbf8f3a,
-                emissive: 0xbf8f3a,
-                emissiveIntensity: 0.05,
-                roughness: 0.2,
-                metalness: 0.9
-            });
-            const trim = new THREE.Mesh(new THREE.BoxGeometry(2.4, 0.08, 0.15), goldMat);
-            trim.position.set(0, 1.5, 1.52);
-            hotelGroup.add(trim);
-
-            // Columns
-            const colMat = new THREE.MeshStandardMaterial({
-                color: 0x555555,
-                roughness: 0.3,
-                metalness: 0.7
-            });
-            for (let i = -1.8; i <= 1.8; i += 3.6) {
-                const col = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.15, 2.8, 8), colMat);
-                col.position.set(i, 1.2, 1.7);
-                hotelGroup.add(col);
-            }
-
-            // Trees
-            const treeMat = new THREE.MeshStandardMaterial({
-                color: 0x1a3a1a,
-                roughness: 0.9,
-                metalness: 0
-            });
-            const trunkMat = new THREE.MeshStandardMaterial({
-                color: 0x3d2b1f,
-                roughness: 0.9,
-                metalness: 0
-            });
-
-            function createTree(x, z) {
-                const group = new THREE.Group();
-                const trunk = new THREE.Mesh(new THREE.CylinderGeometry(0.1, 0.15, 0.8, 6), trunkMat);
-                trunk.position.y = 0.3;
-                group.add(trunk);
-                const crown = new THREE.Mesh(new THREE.SphereGeometry(0.6 + Math.random() * 0.3, 6, 6), treeMat);
-                crown.position.y = 0.9 + Math.random() * 0.2;
-                crown.scale.y = 0.8 + Math.random() * 0.2;
-                group.add(crown);
-                group.position.set(x, -0.5, z);
-                return group;
-            }
-
-            const treePositions = [
-                [-4.5, -3],
-                [-4.5, 3],
-                [4.5, -3],
-                [4.5, 3],
-                [-5.5, 0],
-                [5.5, 0],
-                [-3, -4.5],
-                [3, -4.5]
-            ];
-            treePositions.forEach(pos => {
-                const tree = createTree(pos[0], pos[1]);
-                hotelGroup.add(tree);
-            });
-
-            // Gold particles
-            const particleCount = 300;
-            const particleGeo = new THREE.BufferGeometry();
-            const positions = new Float32Array(particleCount * 3);
-            const sizes = new Float32Array(particleCount);
-            for (let i = 0; i < particleCount; i++) {
-                positions[i * 3] = (Math.random() - 0.5) * 12;
-                positions[i * 3 + 1] = Math.random() * 6;
-                positions[i * 3 + 2] = (Math.random() - 0.5) * 8;
-                sizes[i] = 0.02 + Math.random() * 0.04;
-            }
-            particleGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-            particleGeo.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
-
-            const particleMat = new THREE.PointsMaterial({
-                color: 0xffd700,
-                size: 0.04,
-                transparent: true,
-                opacity: 0.6,
-                blending: THREE.AdditiveBlending,
-                sizeAttenuation: true,
-            });
-            const particles = new THREE.Points(particleGeo, particleMat);
-            hotelGroup.add(particles);
-
-            // Logo text (using sprites)
-            const logoCanvas = document.createElement('canvas');
-            logoCanvas.width = 512;
-            logoCanvas.height = 128;
-            const ctx = logoCanvas.getContext('2d');
-            ctx.clearRect(0, 0, 512, 128);
-
-            // Gold gradient text
-            const grad = ctx.createLinearGradient(0, 0, 512, 0);
-            grad.addColorStop(0, '#8a6d2b');
-            grad.addColorStop(0.3, '#d4af37');
-            grad.addColorStop(0.5, '#f5e6a3');
-            grad.addColorStop(0.7, '#d4af37');
-            grad.addColorStop(1, '#8a6d2b');
-            ctx.fillStyle = grad;
-            ctx.font = 'bold 72px "Playfair Display", Georgia, serif';
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'middle';
-            ctx.shadowColor = 'rgba(212, 175, 55, 0.3)';
-            ctx.shadowBlur = 20;
-            ctx.fillText('AMROUSS DAR', 256, 64);
-
-            const logoTexture = new THREE.CanvasTexture(logoCanvas);
-            const logoMat2 = new THREE.SpriteMaterial({
-                map: logoTexture,
-                transparent: true,
-                opacity: 0,
-                blending: THREE.AdditiveBlending,
-                depthWrite: false,
-            });
-            const logoSprite = new THREE.Sprite(logoMat2);
-            logoSprite.position.set(0, 2.8, 0);
-            logoSprite.scale.set(6, 1.5, 1);
-            hotelGroup.add(logoSprite);
-
-            // Camera animation
-            let startTime = Date.now();
-            let animPhase = 0;
-            const duration = 5000;
-
-            function animate() {
-                const elapsed = (Date.now() - startTime) / duration;
-                const t = Math.min(elapsed, 1);
-
-                // Progress
-                progress = Math.min(t * 1.2, 1);
-                progressText.textContent = Math.round(progress * 100) + '%';
-
-                // Camera path: circular fly-through
-                const angle = t * Math.PI * 0.8;
-                const radius = 10 - t * 2;
-                const height = 3 + t * 1.5;
-
-                camera.position.x = Math.sin(angle) * radius;
-                camera.position.z = Math.cos(angle) * radius - 2;
-                camera.position.y = height;
-
-                // Look at hotel with slight offset
-                const lookTarget = new THREE.Vector3(
-                    Math.sin(angle * 0.5) * 0.3,
-                    1.5 + t * 0.3,
-                    Math.cos(angle * 0.5) * 0.3
-                );
-                camera.lookAt(lookTarget);
-
-                // Animate particles
-                const pos = particles.geometry.attributes.position.array;
-                for (let i = 0; i < particleCount; i++) {
-                    pos[i * 3 + 1] += Math.sin(Date.now() / 2000 + i) * 0.0008;
-                    pos[i * 3] += Math.sin(Date.now() / 3000 + i * 0.7) * 0.0006;
-                    if (pos[i * 3 + 1] > 5) pos[i * 3 + 1] = 0;
-                    if (pos[i * 3] > 6) pos[i * 3] = -6;
-                    if (pos[i * 3] < -6) pos[i * 3] = 6;
-                }
-                particles.geometry.attributes.position.needsUpdate = true;
-
-                // Logo fade
-                if (t > 0.15 && t < 0.55) {
-                    logoSprite.material.opacity = (t - 0.15) / 0.2;
-                } else if (t > 0.55) {
-                    logoSprite.material.opacity = Math.max(0, 1 - (t - 0.55) / 0.15);
-                }
-
-                // Bloom intensity
-                bloomPass.strength = 0.15 + t * 0.15;
-
-                composer.render();
-
-                if (t < 1 && !skipRequested) {
-                    requestAnimationFrame(animate);
-                } else if (t >= 1 && !introComplete) {
-                    introComplete = true;
-                    setTimeout(() => {
-                        container.style.display = 'none';
-                    }, 400);
-                } else {
-                    requestAnimationFrame(animate);
-                }
-            }
-
-            // Skip button
-            document.getElementById('skipIntro').addEventListener('click', function() {
-                skipRequested = true;
-                container.style.display = 'none';
-                introComplete = true;
-            });
-
-            // Resize
-            window.addEventListener('resize', function() {
-                const w = window.innerWidth;
-                const h = window.innerHeight;
-                camera.aspect = w / h;
-                camera.updateProjectionMatrix();
-                renderer.setSize(w, h);
-                composer.setSize(w, h);
-            });
-
-            // Start animation
-            animate();
-
-            // Fallback: if Three.js fails to load, hide intro after 2 seconds
-            setTimeout(() => {
-                if (!introComplete) {
-                    container.style.display = 'none';
-                    introComplete = true;
-                }
-            }, 6000);
-
-        })();
-
-
-        // ============================================================ //
-        // ===== TRANSLATIONS — FULL SITE =====
-        // ============================================================ //
-
+        // ===== TRANSLATIONS =====
         const translations = {
             en: {
-                // Nav
-                navStay: 'Stay',
-                navStory: 'The Dar',
-                navDining: 'Dining',
-                navExperiences: 'Experiences',
-                contact: 'Contact',
-                reserve: 'Reserve',
-                // Hero
-                heroOverline: '6 KM FROM AZROU · MIDDLE ATLAS',
-                heroCopy: 'Six minutes beyond the city, a rare kind of quiet begins: cedar air, mountain light and nothing competing for your attention.',
-                // Booking bar
-                arrival: 'Arrival',
-                departure: 'Departure',
-                guests: 'Guests',
-                twoGuests: '2 Guests',
-                oneGuest: '1 Guest',
-                family: 'Family of 4',
-                availability: 'Check availability',
-                // Intro
-                introEyebrow: 'A HOUSE IN THE ATLAS',
-                introTitle: 'Not just outside the city.<br><em>Outside its hurry.</em>',
-                introText: 'At the meeting point of cedar woodlands and red-earth villages, Amrouss touristic DarMaroc is a rare sanctuary for guests who seek deep sleep, clean air and luxury with no unnecessary noise.',
-                introLink: 'The story of our quiet',
-                // Features
-                featureRooms: 'THE ROOMS',
-                featureRoomsTitle: 'Rest, deeply.',
-                featureRoomsLink: 'Explore stays',
-                featureCraft: 'MOROCCAN CRAFT',
-                featureCraftTitle: 'Made with a sense of place.',
-                featurePool: 'THE POOL',
-                featurePoolTitle: 'A blue pause<br />between the pines.',
-                // Rooms
-                roomsEyebrow: 'STAY AT AMROUSS DAR',
-                roomsTitle: 'Rooms with <em>room to breathe.</em>',
-                roomsSub: 'Choose from four carefully curated room types, each designed for comfort and tranquility. Click on any room to explore.',
-                roomDouble: 'Double',
-                roomDoubleName: 'Double Room',
-                roomDoublePrice: 'From <strong>1,950 MAD</strong> per night',
-                roomTwin: 'Twin',
-                roomTwinName: 'Twin Room',
-                roomTwinPrice: 'From <strong>2,100 MAD</strong> per night',
-                roomTriple: 'Triple',
-                roomTripleName: 'Triple Room',
-                roomTriplePrice: 'From <strong>2,400 MAD</strong> per night',
-                roomSuite: 'Suite',
-                roomSuiteName: 'Suite',
-                roomSuitePrice: 'From <strong>3,200 MAD</strong> per night',
-                bookNow: 'Book Now',
-                details: 'Details',
-                moreDetails: 'More Details',
-                // Location
-                locationEyebrow: 'FIND YOUR WAY OUT',
-                locationTitle: 'Near enough.<br /><em>Far from it all.</em>',
-                locationDesc: 'Amrouss touristic DarMaroc sits at Km 6 Route de Meknés, Azrou, on the quiet edge of the cedar forest.',
-                locAzrou: 'AZROU CENTRE',
-                locIfrane: 'IFRANE',
-                locFes: 'FÈS–SAÏSS',
-                locAttraction1: 'Lion Stone & Ifrane Lake <span class="val">15 mi</span>',
-                locAttraction2: 'Ain Vittel Water Source <span class="val">17 mi</span>',
-                locAttraction3: 'Aoua Lake <span class="val">26 mi</span>',
-                locationLink: 'Open directions',
-                // Quote
-                quoteEyebrow: 'A DIFFERENT RHYTHM',
-                quoteText: '“The real luxury is that nothing asks you to hurry.”',
-                quoteAuthor: '— ELENA V., LISBON',
-                // Dining
-                diningEyebrow: 'AT TABLE AMROUSS',
-                diningTitle: 'The flavours<br />of <em>the mountain.</em>',
-                diningText: 'Our family-friendly restaurant serves Italian and Moroccan cuisines with halal and vegetarian options. Guests can enjoy lunch and dinner in a welcoming ambiance.',
-                breakfast: 'BREAKFAST<br /><b>07:30 – 11:00</b>',
-                lunchDinner: 'LUNCH & DINNER<br /><b>12:00 – 22:30</b>',
-                reserveTable: 'Reserve a table',
-                // Chef
-                chefEyebrow: 'FROM OUR KITCHEN',
-                chefQuote: '“We cook the Atlas as we find it: pure, generous and in season.”',
-                chefSignature: 'CHEF AMINA EL IDRISSI · TABLE AMROUSS',
-                chefLink: 'Reserve a table',
-                dailyTable: 'THE DAILY TABLE',
-                menu1: 'Wonderful breakfast — freshly baked bread, eggs, fruit, Atlas honey',
-                menu2: 'Italian & Moroccan lunch — wood-fired seasonal plates',
-                menu3: 'Evening table — Moroccan roots, global curiosity',
-                // Nearby
-                onsiteDining: 'ON-SITE DINING',
-                restaurant1: 'Restaurant #1',
-                cuisineItalian: 'Italian',
-                cuisineMoroccan: 'Moroccan',
-                cuisineHalal: 'Halal',
-                cuisineVeg: 'Vegetarian',
-                breakfastShort: 'Breakfast',
-                breakfastTime: 'Buffet · 07:30–11:00',
-                lunchDinnerShort: 'Lunch & Dinner',
-                lunchDinnerTime: '12:00–22:30',
-                nearbyCafes: 'NEARBY CAFES',
-                localSpots: 'Local spots',
-                // Experiences
-                expEyebrow: 'FOLLOW YOUR CURIOSITY',
-                expTitle: 'Days worth <em style="color:var(--gold);">remembering.</em>',
-                expSub: 'The Middle Atlas gives generously to those who go gently.',
-                exp1Title: 'Cedar Forest<br />Morning Walk',
-                exp2Title: 'Atlas<br />on Horseback',
-                exp3Title: 'Day Trip<br />to Ifrane',
-                discover: 'Discover',
-                // Signature
-                sigEyebrow: 'THE AMROUSS SIGNATURE',
-                sigTitle: 'Every detail<br />has a <em style="color:var(--gold);">quiet purpose.</em>',
-                sig1: 'Mountain-spring water',
-                sig1Desc: 'drawn fresh each morning',
-                sig2: 'Local hands & materials',
-                sig2Desc: 'honouring Atlas craft',
-                sig3: 'Unscripted hospitality',
-                sig3Desc: 'attentive, never intrusive',
-                // Events
-                eventsEyebrow: 'GATHER WITH INTENTION',
-                eventsTitle: 'A celebration with<br /><em>space around it.</em>',
-                eventsText: 'For an intimate Atlas wedding, a family milestone or a team that needs to think differently, Amrouss Dar can become entirely yours.',
-                eventsStat1: 'Guests · Full takeover',
-                eventsStat2: 'Private event spaces',
-                eventsLink: 'Speak with our events team',
-                // Gallery
-                galleryEyebrow: 'AN EVER-CHANGING LIGHT',
-                galleryTitle: 'A glimpse into <em>the Dar.</em>',
-                all: 'All',
-                roomsFilter: 'Rooms',
-                poolFilter: 'Pool',
-                tableFilter: 'Table',
-                natureFilter: 'Nature',
-                nightFilter: 'Night',
-                interiors: 'Interiors',
-                // Testimonials
-                testimonialEyebrow: 'WORDS FROM THE DAR',
-                testimonial1: '“A beautiful antidote to the everyday. The air, the service, the silence — perfection.”',
-                testimonialAuthor1: 'JULIEN & CLARA · PARIS',
-                // Facilities
-                facilitiesEyebrow: 'MOST POPULAR FACILITIES',
-                facilitiesTitle: 'Everything you need<br /><em>for a perfect stay.</em>',
-                facPool: 'Outdoor Pool',
-                facPoolDesc: 'Seasonal · All ages',
-                free: 'Free!',
-                facNonSmoking: 'Non-smoking Rooms',
-                facNonSmokingDesc: 'Smoke-free property',
-                facWifi: 'Free Wi-Fi',
-                facWifiDesc: 'All areas',
-                facParking: 'Free Parking',
-                facParkingDesc: 'On-site',
-                facRestaurant: 'Restaurant',
-                facRestaurantDesc: 'Italian · Moroccan',
-                wonderfulBreakfast: 'Wonderful Breakfast',
-                facBathroom: 'Private Bathroom',
-                facBathroomDesc: 'Bathtub · Toiletries',
-                facFireplace: 'Fireplace',
-                facFireplaceDesc: 'Cozy evenings',
-                facGarden: 'Garden & Terrace',
-                facGardenDesc: 'Pool views',
-                // Stats
-                statBreakfast: 'Breakfast Rating',
-                statFrontDesk: 'Front Desk',
-                statSatisfaction: 'Guest Satisfaction',
-                statLanguages: 'Languages Spoken',
-                // Policies
-                policiesEyebrow: 'HOUSE RULES',
-                policiesTitle: 'Before you <em>make your way.</em>',
-                policyCheckin: '📋 Check-in / Check-out',
-                policyCheckinLabel: 'Check-in:',
-                policyCheckinValue: '24 hours',
-                policyCheckoutLabel: 'Check-out:',
-                policyCheckoutValue: '24 hours',
-                policyAge: 'No age requirement for check-in.',
-                policyChildren: '👶 Children & Beds',
-                policyChildrenLabel: 'Children:',
-                policyChildrenValue: 'All ages welcome',
-                policyCribs: 'Cribs:',
-                policyCribsValue: 'Not available',
-                policyExtraBeds: 'Extra beds:',
-                policyExtraBedsValue: 'Not available',
-                policyPets: '🐾 Pets & Payment',
-                policyPetsLabel: 'Pets:',
-                policyPetsValue: 'Not allowed',
-                policyPayment: 'Payment:',
-                policyPaymentValue: 'Cash only',
-                policyLicense: 'License: 53000HT0844',
-                policyOther: '🚭 Other Policies',
-                policyNoParties: 'No bachelor(ette) parties',
-                policyNoEvents: 'No events/parties allowed',
-                policySmokeFree: 'Smoke-free property',
-                policyCancellation: '💳 Cancellation',
-                policyCancellationText: 'Cancellation and prepayment policies vary according to accommodation type.',
-                policyCheckConditions: 'Check conditions when booking.',
-                // FAQ
-                faqEyebrow: 'THOUGHTFUL ANSWERS',
-                faqTitle: 'Before you <em>make your way.</em>',
-                faq1q: 'What kind of breakfast is served?',
-                faq1a: 'Guests can enjoy a wonderful buffet breakfast (guest review score: 9.4).',
-                faq2q: 'Does the hotel have a pool?',
-                faq2a: 'Yes, a seasonal outdoor swimming pool with a shallow end and beach umbrellas.',
-                faq3q: 'What room types are available?',
-                faq3a: 'Double, Twin, Triple, and Suite options are available.',
-                faq4q: 'Is there a restaurant on site?',
-                faq4a: 'Yes, Restaurant #1 serves Italian and Moroccan cuisine with halal and vegetarian options.',
-                faq5q: 'How far is the property from Azrou center?',
-                faq5a: 'Amrouss touristic DarMaroc is 6 km from the center of Azrou.',
-                // Contact
-                contactEyebrow: 'SPEAK WITH OUR TEAM',
-                contactTitle: 'We are here<br /><em style="font-style:italic;color:var(--gold);">when you are ready.</em>',
-                contactText: 'For stays, celebrations, transfers or a question only a local can answer.',
-                callUs: 'Call us',
-                emailUs: 'Email',
-                whatsapp: 'WhatsApp',
-                messageDar: 'Message the Dar →',
-                afterBooking: 'After booking, all property details including telephone and address are provided in your confirmation.',
-                startReservation: 'Start a reservation',
-                // Journal
-                journalEyebrow: 'FROM THE DAR JOURNAL',
-                journalTitle: 'Stories from <em>the foothills.</em>',
-                journalLabel1: 'GUIDES · 6 MIN READ',
-                journalTitle1: 'The hidden paths of Azrou\'s cedar forest',
-                journalLabel2: 'AT THE TABLE · 4 MIN READ',
-                journalTitle2: 'Our kitchen\'s love letter to the Middle Atlas',
-                readStory: 'Read story',
-                // Footer
-                explore: 'Explore',
-                theDar: 'The Dar',
-                stayClose: 'Stay Close',
-                facilities: 'Facilities',
-                policies: 'Policies',
-                privacy: 'Privacy',
-                newsletterLabel: 'Monthly notes from the quiet',
-                footerText: 'For reservations and enquiries,<br /><a href="mailto:hello@amroussdar.ma">hello@amroussdar.ma</a><br />+212 (0) 630 485 646',
-                license: 'LICENSE: 53000HT0844',
-                // Booking dialog
-                bookingEyebrow: 'YOUR ESCAPE BEGINS HERE',
-                bookingTitle: 'Reserve <em>your stay.</em>',
-                bookingSub: 'We will confirm availability within 24 hours.',
-                adults: 'Adults',
-                children: 'Children',
-                roomType: 'Room type',
-                phoneLabel: 'Phone',
-                emailLabel: 'Email',
-                specialRequests: 'Special requests',
-                requestReservation: 'Request reservation',
-                toastMessage: 'Thank you — we\'ll be in touch shortly.',
-                close: 'Close',
+                navStay: 'Stay', navStory: 'The Dar', navDining: 'Dining', navExperiences: 'Experiences', contact: 'Contact',
+                reserve: 'Reserve', heroOverline: '6 KM FROM AZROU · MIDDLE ATLAS', heroCopy: 'Six minutes beyond the city, a rare kind of quiet begins: cedar air, mountain light and nothing competing for your attention.',
+                availability: 'Check availability', arrival: 'Arrival', departure: 'Departure',
+                guests: 'Guests', twoGuests: '2 Guests', oneGuest: '1 Guest', family: 'Family of 4'
             },
             fr: {
-                navStay: 'Séjours',
-                navStory: 'La Maison',
-                navDining: 'Table',
-                navExperiences: 'Expériences',
-                contact: 'Contact',
-                reserve: 'Réserver',
-                heroOverline: 'À 6 KM D\'AZROU · MOYEN ATLAS',
-                heroCopy: 'À six minutes de la ville commence un silence rare : l\'air des cèdres, la lumière des montagnes et rien pour vous distraire.',
-                arrival: 'Arrivée',
-                departure: 'Départ',
-                guests: 'Voyageurs',
-                twoGuests: '2 voyageurs',
-                oneGuest: '1 voyageur',
-                family: 'Famille de 4',
-                availability: 'Voir disponibilités',
-                introEyebrow: 'UNE MAISON DANS L\'ATLAS',
-                introTitle: 'Pas seulement hors de la ville.<br><em>Hors de sa hâte.</em>',
-                introText: 'À la rencontre des forêts de cèdres et des villages de terre rouge, Amrouss touristic DarMaroc est un rare sanctuaire pour les voyageurs en quête de sommeil profond, d\'air pur et de luxe sans bruit superflu.',
-                introLink: 'L\'histoire de notre silence',
-                featureRooms: 'LES CHAMBRES',
-                featureRoomsTitle: 'Reposez-vous profondément.',
-                featureRoomsLink: 'Explorer les séjours',
-                featureCraft: 'ARTISANAT MAROCAIN',
-                featureCraftTitle: 'Fabriqué avec un sens du lieu.',
-                featurePool: 'LA PISCINE',
-                featurePoolTitle: 'Une pause bleue<br />entre les pins.',
-                roomsEyebrow: 'SÉJOURNER À AMROUSS DAR',
-                roomsTitle: 'Des chambres avec <em>de l\'espace pour respirer.</em>',
-                roomsSub: 'Choisissez parmi quatre types de chambres soigneusement sélectionnés, chacun conçu pour le confort et la tranquillité. Cliquez sur une chambre pour explorer.',
-                roomDouble: 'Double',
-                roomDoubleName: 'Chambre Double',
-                roomDoublePrice: 'À partir de <strong>1 950 MAD</strong> par nuit',
-                roomTwin: 'Jumelle',
-                roomTwinName: 'Chambre Jumelle',
-                roomTwinPrice: 'À partir de <strong>2 100 MAD</strong> par nuit',
-                roomTriple: 'Triple',
-                roomTripleName: 'Chambre Triple',
-                roomTriplePrice: 'À partir de <strong>2 400 MAD</strong> par nuit',
-                roomSuite: 'Suite',
-                roomSuiteName: 'Suite',
-                roomSuitePrice: 'À partir de <strong>3 200 MAD</strong> par nuit',
-                bookNow: 'Réserver',
-                details: 'Détails',
-                moreDetails: 'Plus de détails',
-                locationEyebrow: 'TROUVEZ VOTRE CHEMIN',
-                locationTitle: 'Assez proche.<br /><em>Loin de tout.</em>',
-                locationDesc: 'Amrouss touristic DarMaroc est situé au Km 6 Route de Meknés, Azrou, à la lisière silencieuse de la forêt de cèdres.',
-                locAzrou: 'CENTRE D\'AZROU',
-                locIfrane: 'IFRANE',
-                locFes: 'FÈS–SAÏSS',
-                locAttraction1: 'Pierre du Lion & Lac Ifrane <span class="val">15 mi</span>',
-                locAttraction2: 'Source Ain Vittel <span class="val">17 mi</span>',
-                locAttraction3: 'Lac Aoua <span class="val">26 mi</span>',
-                locationLink: 'Ouvrir l\'itinéraire',
-                quoteEyebrow: 'UN RYTHME DIFFÉRENT',
-                quoteText: '“Le vrai luxe, c’est que rien ne vous presse.”',
-                quoteAuthor: '— ELENA V., LISBONNE',
-                diningEyebrow: 'À TABLE AMROUSS',
-                diningTitle: 'Les saveurs<br />de <em>la montagne.</em>',
-                diningText: 'Notre restaurant familial propose des cuisines italienne et marocaine avec des options halal et végétariennes. Les clients peuvent profiter du déjeuner et du dîner dans une ambiance chaleureuse.',
-                breakfast: 'PETIT-DÉJEUNER<br /><b>07:30 – 11:00</b>',
-                lunchDinner: 'DÉJEUNER & DÎNER<br /><b>12:00 – 22:30</b>',
-                reserveTable: 'Réserver une table',
-                chefEyebrow: 'DE NOTRE CUISINE',
-                chefQuote: '“Nous cuisinons l\'Atlas tel que nous le trouvons : pur, généreux et de saison.”',
-                chefSignature: 'CHEF AMINA EL IDRISSI · TABLE AMROUSS',
-                chefLink: 'Réserver une table',
-                dailyTable: 'LA TABLE QUOTIDIENNE',
-                menu1: 'Merveilleux petit-déjeuner — pain frais, œufs, fruits, miel de l\'Atlas',
-                menu2: 'Déjeuner italien et marocain — plats de saison cuits au feu de bois',
-                menu3: 'Table du soir — racines marocaines, curiosité mondiale',
-                onsiteDining: 'RESTAURATION SUR PLACE',
-                restaurant1: 'Restaurant #1',
-                cuisineItalian: 'Italien',
-                cuisineMoroccan: 'Marocain',
-                cuisineHalal: 'Halal',
-                cuisineVeg: 'Végétarien',
-                breakfastShort: 'Petit-déjeuner',
-                breakfastTime: 'Buffet · 07:30–11:00',
-                lunchDinnerShort: 'Déjeuner & Dîner',
-                lunchDinnerTime: '12:00–22:30',
-                nearbyCafes: 'CAFÉS À PROXIMITÉ',
-                localSpots: 'Endroits locaux',
-                expEyebrow: 'SUIVEZ VOTRE CURIOSITÉ',
-                expTitle: 'Des jours qui <em style="color:var(--gold);">méritent d\'être rappelés.</em>',
-                expSub: 'Le Moyen Atlas donne généreusement à ceux qui y vont doucement.',
-                exp1Title: 'Promenade matinale<br />dans la forêt de cèdres',
-                exp2Title: 'Atlas<br />à cheval',
-                exp3Title: 'Excursion d\'une journée<br />à Ifrane',
-                discover: 'Découvrir',
-                sigEyebrow: 'LA SIGNATURE AMROUSS',
-                sigTitle: 'Chaque détail<br />a un <em style="color:var(--gold);">but silencieux.</em>',
-                sig1: 'Eau de source de montagne',
-                sig1Desc: 'puisée fraîche chaque matin',
-                sig2: 'Mains et matériaux locaux',
-                sig2Desc: 'en l\'honneur de l\'artisanat de l\'Atlas',
-                sig3: 'Hospitalité spontanée',
-                sig3Desc: 'attentive, jamais intrusive',
-                eventsEyebrow: 'RASSEMBLEZ-VOUS AVEC INTENTION',
-                eventsTitle: 'Une célébration avec<br /><em>de l\'espace autour.</em>',
-                eventsText: 'Pour un mariage intime dans l\'Atlas, une étape familiale ou une équipe qui a besoin de penser différemment, Amrouss Dar peut devenir entièrement vôtre.',
-                eventsStat1: 'Invités · Prise en charge complète',
-                eventsStat2: 'Espaces événementiels privés',
-                eventsLink: 'Parlez à notre équipe événementielle',
-                galleryEyebrow: 'UNE LUMIÈRE EN PERPÉTUELLE ÉVOLUTION',
-                galleryTitle: 'Un aperçu de <em>Dar.</em>',
-                all: 'Tout',
-                roomsFilter: 'Chambres',
-                poolFilter: 'Piscine',
-                tableFilter: 'Table',
-                natureFilter: 'Nature',
-                nightFilter: 'Nuit',
-                interiors: 'Intérieurs',
-                testimonialEyebrow: 'PAROLES DE DAR',
-                testimonial1: '“Un magnifique antidote au quotidien. L\'air, le service, le silence — la perfection.”',
-                testimonialAuthor1: 'JULIEN & CLARA · PARIS',
-                facilitiesEyebrow: 'ÉQUIPEMENTS LES PLUS POPULAIRES',
-                facilitiesTitle: 'Tout ce dont vous avez besoin<br /><em>pour un séjour parfait.</em>',
-                facPool: 'Piscine extérieure',
-                facPoolDesc: 'Saisonnière · Tous âges',
-                free: 'Gratuit!',
-                facNonSmoking: 'Chambres non-fumeurs',
-                facNonSmokingDesc: 'Établissement non-fumeur',
-                facWifi: 'Wi-Fi gratuit',
-                facWifiDesc: 'Toutes les zones',
-                facParking: 'Parking gratuit',
-                facParkingDesc: 'Sur place',
-                facRestaurant: 'Restaurant',
-                facRestaurantDesc: 'Italien · Marocain',
-                wonderfulBreakfast: 'Merveilleux petit-déjeuner',
-                facBathroom: 'Salle de bain privée',
-                facBathroomDesc: 'Baignoire · Articles de toilette',
-                facFireplace: 'Cheminée',
-                facFireplaceDesc: 'Soirées douillettes',
-                facGarden: 'Jardin & Terrasse',
-                facGardenDesc: 'Vue sur la piscine',
-                statBreakfast: 'Note du petit-déjeuner',
-                statFrontDesk: 'Réception',
-                statSatisfaction: 'Satisfaction client',
-                statLanguages: 'Langues parlées',
-                policiesEyebrow: 'RÈGLES DE LA MAISON',
-                policiesTitle: 'Avant de <em>faire votre chemin.</em>',
-                policyCheckin: '📋 Enregistrement / Départ',
-                policyCheckinLabel: 'Enregistrement:',
-                policyCheckinValue: '24 heures',
-                policyCheckoutLabel: 'Départ:',
-                policyCheckoutValue: '24 heures',
-                policyAge: 'Pas d\'exigence d\'âge pour l\'enregistrement.',
-                policyChildren: '👶 Enfants & Lits',
-                policyChildrenLabel: 'Enfants:',
-                policyChildrenValue: 'Tous âges bienvenus',
-                policyCribs: 'Lits bébé:',
-                policyCribsValue: 'Non disponible',
-                policyExtraBeds: 'Lits supplémentaires:',
-                policyExtraBedsValue: 'Non disponible',
-                policyPets: '🐾 Animaux & Paiement',
-                policyPetsLabel: 'Animaux:',
-                policyPetsValue: 'Non autorisés',
-                policyPayment: 'Paiement:',
-                policyPaymentValue: 'Espèces uniquement',
-                policyLicense: 'Licence: 53000HT0844',
-                policyOther: '🚭 Autres politiques',
-                policyNoParties: 'Pas de soirées enterrement de vie de célibataire',
-                policyNoEvents: 'Pas d\'événements/fêtes autorisés',
-                policySmokeFree: 'Établissement non-fumeur',
-                policyCancellation: '💳 Annulation',
-                policyCancellationText: 'Les politiques d\'annulation et de prépaiement varient selon le type d\'hébergement.',
-                policyCheckConditions: 'Vérifiez les conditions lors de la réservation.',
-                faqEyebrow: 'RÉPONSES RÉFLÉCHIES',
-                faqTitle: 'Avant de <em>faire votre chemin.</em>',
-                faq1q: 'Quel type de petit-déjeuner est servi?',
-                faq1a: 'Les clients peuvent profiter d\'un merveilleux petit-déjeuner buffet (note des clients: 9.4).',
-                faq2q: 'L\'hôtel a-t-il une piscine?',
-                faq2a: 'Oui, une piscine extérieure saisonnière avec un fond peu profond et des parasols.',
-                faq3q: 'Quels types de chambres sont disponibles?',
-                faq3a: 'Des options Double, Jumelle, Triple et Suite sont disponibles.',
-                faq4q: 'Y a-t-il un restaurant sur place?',
-                faq4a: 'Oui, le Restaurant #1 propose une cuisine italienne et marocaine avec des options halal et végétariennes.',
-                faq5q: 'À quelle distance se trouve la propriété du centre d\'Azrou?',
-                faq5a: 'Amrouss touristic DarMaroc est à 6 km du centre d\'Azrou.',
-                contactEyebrow: 'PARLEZ À NOTRE ÉQUIPE',
-                contactTitle: 'Nous sommes là<br /><em style="font-style:italic;color:var(--gold);">quand vous êtes prêt.</em>',
-                contactText: 'Pour les séjours, célébrations, transferts ou une question que seul un local peut répondre.',
-                callUs: 'Appelez-nous',
-                emailUs: 'Email',
-                whatsapp: 'WhatsApp',
-                messageDar: 'Envoyer un message à Dar →',
-                afterBooking: 'Après la réservation, tous les détails de la propriété, y compris le téléphone et l\'adresse, sont fournis dans votre confirmation.',
-                startReservation: 'Commencer une réservation',
-                journalEyebrow: 'DU JOURNAL DAR',
-                journalTitle: 'Histoires des <em>contreforts.</em>',
-                journalLabel1: 'GUIDES · 6 MIN DE LECTURE',
-                journalTitle1: 'Les chemins cachés de la forêt de cèdres d\'Azrou',
-                journalLabel2: 'À TABLE · 4 MIN DE LECTURE',
-                journalTitle2: 'La lettre d\'amour de notre cuisine au Moyen Atlas',
-                readStory: 'Lire l\'histoire',
-                explore: 'Explorer',
-                theDar: 'Le Dar',
-                stayClose: 'Restez proche',
-                facilities: 'Équipements',
-                policies: 'Politiques',
-                privacy: 'Confidentialité',
-                newsletterLabel: 'Notes mensuelles du calme',
-                footerText: 'Pour les réservations et demandes,<br /><a href="mailto:hello@amroussdar.ma">hello@amroussdar.ma</a><br />+212 (0) 630 485 646',
-                license: 'LICENCE: 53000HT0844',
-                bookingEyebrow: 'VOTRE ÉVASION COMMENCE ICI',
-                bookingTitle: 'Réservez <em>votre séjour.</em>',
-                bookingSub: 'Nous confirmerons la disponibilité dans les 24 heures.',
-                adults: 'Adultes',
-                children: 'Enfants',
-                roomType: 'Type de chambre',
-                phoneLabel: 'Téléphone',
-                emailLabel: 'Email',
-                specialRequests: 'Demandes spéciales',
-                requestReservation: 'Demander une réservation',
-                toastMessage: 'Merci — nous vous contacterons sous peu.',
-                close: 'Fermer',
+                navStay: 'Séjours', navStory: 'La Maison', navDining: 'Table', navExperiences: 'Expériences', contact: 'Contact',
+                reserve: 'Réserver', heroOverline: 'À 6 KM D\'AZROU · MOYEN ATLAS', heroCopy: 'À six minutes de la ville commence un silence rare : l\'air des cèdres, la lumière des montagnes et rien pour vous distraire.',
+                availability: 'Voir disponibilités', arrival: 'Arrivée', departure: 'Départ',
+                guests: 'Voyageurs', twoGuests: '2 voyageurs', oneGuest: '1 voyageur', family: 'Famille de 4'
             },
             es: {
-                navStay: 'Estancias',
-                navStory: 'El Dar',
-                navDining: 'Gastronomía',
-                navExperiences: 'Experiencias',
-                contact: 'Contacto',
-                reserve: 'Reservar',
-                heroOverline: 'A 6 KM DE AZROU · MEDIO ATLAS',
-                heroCopy: 'A seis minutos de la ciudad empieza un silencio excepcional: aire de cedro, luz de montaña y nada que reclame tu atención.',
-                arrival: 'Llegada',
-                departure: 'Salida',
-                guests: 'Huéspedes',
-                twoGuests: '2 huéspedes',
-                oneGuest: '1 huésped',
-                family: 'Familia de 4',
-                availability: 'Ver disponibilidad',
-                introEyebrow: 'UNA CASA EN EL ATLAS',
-                introTitle: 'No solo fuera de la ciudad.<br><em>Fuera de su prisa.</em>',
-                introText: 'En el punto de encuentro de los bosques de cedros y los pueblos de tierra roja, Amrouss touristic DarMaroc es un raro santuario para huéspedes que buscan sueño profundo, aire puro y lujo sin ruido innecesario.',
-                introLink: 'La historia de nuestro silencio',
-                featureRooms: 'LAS HABITACIONES',
-                featureRoomsTitle: 'Descansa profundamente.',
-                featureRoomsLink: 'Explorar estancias',
-                featureCraft: 'ARTESANÍA MARROQUÍ',
-                featureCraftTitle: 'Hecho con un sentido de lugar.',
-                featurePool: 'LA PISCINA',
-                featurePoolTitle: 'Una pausa azul<br />entre los pinos.',
-                roomsEyebrow: 'ESTANCIA EN AMROUSS DAR',
-                roomsTitle: 'Habitaciones con <em>espacio para respirar.</em>',
-                roomsSub: 'Elija entre cuatro tipos de habitaciones cuidadosamente seleccionados, cada uno diseñado para la comodidad y la tranquilidad. Haga clic en cualquier habitación para explorar.',
-                roomDouble: 'Doble',
-                roomDoubleName: 'Habitación Doble',
-                roomDoublePrice: 'Desde <strong>1,950 MAD</strong> por noche',
-                roomTwin: 'Gemela',
-                roomTwinName: 'Habitación Gemela',
-                roomTwinPrice: 'Desde <strong>2,100 MAD</strong> por noche',
-                roomTriple: 'Triple',
-                roomTripleName: 'Habitación Triple',
-                roomTriplePrice: 'Desde <strong>2,400 MAD</strong> por noche',
-                roomSuite: 'Suite',
-                roomSuiteName: 'Suite',
-                roomSuitePrice: 'Desde <strong>3,200 MAD</strong> por noche',
-                bookNow: 'Reservar',
-                details: 'Detalles',
-                moreDetails: 'Más detalles',
-                locationEyebrow: 'ENCUENTRA TU CAMINO',
-                locationTitle: 'Suficientemente cerca.<br /><em>Lejos de todo.</em>',
-                locationDesc: 'Amrouss touristic DarMaroc se encuentra en el Km 6 Route de Meknés, Azrou, en el tranquilo borde del bosque de cedros.',
-                locAzrou: 'CENTRO DE AZROU',
-                locIfrane: 'IFRANE',
-                locFes: 'FÈS–SAÏSS',
-                locAttraction1: 'Piedra del León & Lago Ifrane <span class="val">15 mi</span>',
-                locAttraction2: 'Fuente de Agua Ain Vittel <span class="val">17 mi</span>',
-                locAttraction3: 'Lago Aoua <span class="val">26 mi</span>',
-                locationLink: 'Abrir direcciones',
-                quoteEyebrow: 'UN RITMO DIFERENTE',
-                quoteText: '“El verdadero lujo es que nada te pide que te apresures.”',
-                quoteAuthor: '— ELENA V., LISBOA',
-                diningEyebrow: 'EN LA MESA AMROUSS',
-                diningTitle: 'Los sabores<br />de <em>la montaña.</em>',
-                diningText: 'Nuestro restaurante familiar sirve cocina italiana y marroquí con opciones halal y vegetarianas. Los huéspedes pueden disfrutar del almuerzo y la cena en un ambiente acogedor.',
-                breakfast: 'DESAYUNO<br /><b>07:30 – 11:00</b>',
-                lunchDinner: 'ALMUERZO Y CENA<br /><b>12:00 – 22:30</b>',
-                reserveTable: 'Reservar una mesa',
-                chefEyebrow: 'DE NUESTRA COCINA',
-                chefQuote: '“Cocinamos el Atlas tal como lo encontramos: puro, generoso y de temporada.”',
-                chefSignature: 'CHEF AMINA EL IDRISSI · TABLE AMROUSS',
-                chefLink: 'Reservar una mesa',
-                dailyTable: 'LA MESA DIARIA',
-                menu1: 'Maravilloso desayuno — pan recién horneado, huevos, fruta, miel del Atlas',
-                menu2: 'Almuerzo italiano y marroquí — platos de temporada cocinados al fuego',
-                menu3: 'Mesa nocturna — raíces marroquíes, curiosidad global',
-                onsiteDining: 'RESTAURACIÓN EN EL LUGAR',
-                restaurant1: 'Restaurante #1',
-                cuisineItalian: 'Italiano',
-                cuisineMoroccan: 'Marroquí',
-                cuisineHalal: 'Halal',
-                cuisineVeg: 'Vegetariano',
-                breakfastShort: 'Desayuno',
-                breakfastTime: 'Bufé · 07:30–11:00',
-                lunchDinnerShort: 'Almuerzo y Cena',
-                lunchDinnerTime: '12:00–22:30',
-                nearbyCafes: 'CAFETERÍAS CERCANAS',
-                localSpots: 'Lugares locales',
-                expEyebrow: 'SIGUE TU CURIOSIDAD',
-                expTitle: 'Días que <em style="color:var(--gold);">merecen ser recordados.</em>',
-                expSub: 'El Medio Atlas da generosamente a quienes van con suavidad.',
-                exp1Title: 'Paseo matutino<br />por el bosque de cedros',
-                exp2Title: 'Atlas<br />a caballo',
-                exp3Title: 'Excursión de un día<br />a Ifrane',
-                discover: 'Descubrir',
-                sigEyebrow: 'LA FIRMA AMROUSS',
-                sigTitle: 'Cada detalle<br />tiene un <em style="color:var(--gold);">propósito silencioso.</em>',
-                sig1: 'Agua de manantial de montaña',
-                sig1Desc: 'recogida fresca cada mañana',
-                sig2: 'Manos y materiales locales',
-                sig2Desc: 'en honor a la artesanía del Atlas',
-                sig3: 'Hospitalidad espontánea',
-                sig3Desc: 'atenta, nunca intrusiva',
-                eventsEyebrow: 'REÚNETE CON INTENCIÓN',
-                eventsTitle: 'Una celebración con<br /><em>espacio alrededor.</em>',
-                eventsText: 'Para una boda íntima en el Atlas, un hito familiar o un equipo que necesita pensar diferente, Amrouss Dar puede convertirse completamente en tuyo.',
-                eventsStat1: 'Invitados · Toma completa',
-                eventsStat2: 'Espacios para eventos privados',
-                eventsLink: 'Habla con nuestro equipo de eventos',
-                galleryEyebrow: 'UNA LUZ EN CONSTANTE CAMBIO',
-                galleryTitle: 'Un vistazo a <em>Dar.</em>',
-                all: 'Todo',
-                roomsFilter: 'Habitaciones',
-                poolFilter: 'Piscina',
-                tableFilter: 'Mesa',
-                natureFilter: 'Naturaleza',
-                nightFilter: 'Noche',
-                interiors: 'Interiores',
-                testimonialEyebrow: 'PALABRAS DEL DAR',
-                testimonial1: '“Un hermoso antídoto para lo cotidiano. El aire, el servicio, el silencio — la perfección.”',
-                testimonialAuthor1: 'JULIEN & CLARA · PARÍS',
-                facilitiesEyebrow: 'INSTALACIONES MÁS POPULARES',
-                facilitiesTitle: 'Todo lo que necesitas<br /><em>para una estancia perfecta.</em>',
-                facPool: 'Piscina al aire libre',
-                facPoolDesc: 'Temporada · Todas las edades',
-                free: '¡Gratis!',
-                facNonSmoking: 'Habitaciones no fumadores',
-                facNonSmokingDesc: 'Propiedad libre de humo',
-                facWifi: 'Wi-Fi gratis',
-                facWifiDesc: 'Todas las áreas',
-                facParking: 'Aparcamiento gratis',
-                facParkingDesc: 'En el lugar',
-                facRestaurant: 'Restaurante',
-                facRestaurantDesc: 'Italiano · Marroquí',
-                wonderfulBreakfast: 'Desayuno maravilloso',
-                facBathroom: 'Baño privado',
-                facBathroomDesc: 'Bañera · Artículos de aseo',
-                facFireplace: 'Chimenea',
-                facFireplaceDesc: 'Noches acogedoras',
-                facGarden: 'Jardín y Terraza',
-                facGardenDesc: 'Vistas a la piscina',
-                statBreakfast: 'Valoración del desayuno',
-                statFrontDesk: 'Recepción',
-                statSatisfaction: 'Satisfacción del huésped',
-                statLanguages: 'Idiomas hablados',
-                policiesEyebrow: 'NORMAS DE LA CASA',
-                policiesTitle: 'Antes de <em>hacer tu camino.</em>',
-                policyCheckin: '📋 Registro / Salida',
-                policyCheckinLabel: 'Registro:',
-                policyCheckinValue: '24 horas',
-                policyCheckoutLabel: 'Salida:',
-                policyCheckoutValue: '24 horas',
-                policyAge: 'Sin requisito de edad para el registro.',
-                policyChildren: '👶 Niños y Camas',
-                policyChildrenLabel: 'Niños:',
-                policyChildrenValue: 'Todas las edades bienvenidas',
-                policyCribs: 'Cunas:',
-                policyCribsValue: 'No disponible',
-                policyExtraBeds: 'Camas extras:',
-                policyExtraBedsValue: 'No disponible',
-                policyPets: '🐾 Mascotas y Pago',
-                policyPetsLabel: 'Mascotas:',
-                policyPetsValue: 'No permitidas',
-                policyPayment: 'Pago:',
-                policyPaymentValue: 'Solo efectivo',
-                policyLicense: 'Licencia: 53000HT0844',
-                policyOther: '🚭 Otras políticas',
-                policyNoParties: 'No se permiten fiestas de despedida de soltero/a',
-                policyNoEvents: 'No se permiten eventos/fiestas',
-                policySmokeFree: 'Propiedad libre de humo',
-                policyCancellation: '💳 Cancelación',
-                policyCancellationText: 'Las políticas de cancelación y prepago varían según el tipo de alojamiento.',
-                policyCheckConditions: 'Consulta las condiciones al reservar.',
-                faqEyebrow: 'RESPUESTAS REFLEXIVAS',
-                faqTitle: 'Antes de <em>hacer tu camino.</em>',
-                faq1q: '¿Qué tipo de desayuno se sirve?',
-                faq1a: 'Los huéspedes pueden disfrutar de un maravilloso desayuno buffet (puntuación de los huéspedes: 9.4).',
-                faq2q: '¿El hotel tiene piscina?',
-                faq2a: 'Sí, una piscina al aire libre de temporada con zona poco profunda y sombrillas.',
-                faq3q: '¿Qué tipos de habitaciones están disponibles?',
-                faq3a: 'Hay opciones Doble, Gemela, Triple y Suite disponibles.',
-                faq4q: '¿Hay un restaurante en el lugar?',
-                faq4a: 'Sí, el Restaurante #1 sirve cocina italiana y marroquí con opciones halal y vegetarianas.',
-                faq5q: '¿A qué distancia está la propiedad del centro de Azrou?',
-                faq5a: 'Amrouss touristic DarMaroc está a 6 km del centro de Azrou.',
-                contactEyebrow: 'HABLA CON NUESTRO EQUIPO',
-                contactTitle: 'Estamos aquí<br /><em style="font-style:italic;color:var(--gold);">cuando estés listo.</em>',
-                contactText: 'Para estancias, celebraciones, traslados o una pregunta que solo un local puede responder.',
-                callUs: 'Llámanos',
-                emailUs: 'Email',
-                whatsapp: 'WhatsApp',
-                messageDar: 'Envía un mensaje a Dar →',
-                afterBooking: 'Después de reservar, todos los detalles de la propiedad, incluido el teléfono y la dirección, se proporcionan en tu confirmación.',
-                startReservation: 'Iniciar una reserva',
-                journalEyebrow: 'DEL DIARIO DAR',
-                journalTitle: 'Historias de <em>las estribaciones.</em>',
-                journalLabel1: 'GUÍAS · 6 MIN DE LECTURA',
-                journalTitle1: 'Los caminos ocultos del bosque de cedros de Azrou',
-                journalLabel2: 'EN LA MESA · 4 MIN DE LECTURA',
-                journalTitle2: 'La carta de amor de nuestra cocina al Medio Atlas',
-                readStory: 'Leer historia',
-                explore: 'Explorar',
-                theDar: 'El Dar',
-                stayClose: 'Mantente cerca',
-                facilities: 'Instalaciones',
-                policies: 'Políticas',
-                privacy: 'Privacidad',
-                newsletterLabel: 'Notas mensuales desde la calma',
-                footerText: 'Para reservas y consultas,<br /><a href="mailto:hello@amroussdar.ma">hello@amroussdar.ma</a><br />+212 (0) 630 485 646',
-                license: 'LICENCIA: 53000HT0844',
-                bookingEyebrow: 'TU ESCAPE COMIENZA AQUÍ',
-                bookingTitle: 'Reserva <em>tu estancia.</em>',
-                bookingSub: 'Confirmaremos la disponibilidad en 24 horas.',
-                adults: 'Adultos',
-                children: 'Niños',
-                roomType: 'Tipo de habitación',
-                phoneLabel: 'Teléfono',
-                emailLabel: 'Email',
-                specialRequests: 'Peticiones especiales',
-                requestReservation: 'Solicitar reserva',
-                toastMessage: 'Gracias — nos pondremos en contacto pronto.',
-                close: 'Cerrar',
+                navStay: 'Estancias', navStory: 'El Dar', navDining: 'Gastronomía', navExperiences: 'Experiencias', contact: 'Contacto',
+                reserve: 'Reservar', heroOverline: 'A 6 KM DE AZROU · MEDIO ATLAS', heroCopy: 'A seis minutos de la ciudad empieza un silencio excepcional: aire de cedro, luz de montaña y nada que reclame tu atención.',
+                availability: 'Ver disponibilidad', arrival: 'Llegada', departure: 'Salida',
+                guests: 'Huéspedes', twoGuests: '2 huéspedes', oneGuest: '1 huésped', family: 'Familia de 4'
+            },
+            de: {
+                navStay: 'Aufenthalt', navStory: 'Das Dar', navDining: 'Gastronomie', navExperiences: 'Erlebnisse', contact: 'Kontakt',
+                reserve: 'Reservieren', heroOverline: '6 KM VON AZROU · MITTELATLAS', heroCopy: 'Sechs Minuten außerhalb der Stadt beginnt eine seltene Stille: Zedernluft, Berglicht und nichts, das um Ihre Aufmerksamkeit buhlt.',
+                availability: 'Verfügbarkeit prüfen', arrival: 'Anreise', departure: 'Abreise',
+                guests: 'Gäste', twoGuests: '2 Gäste', oneGuest: '1 Gast', family: 'Familie von 4'
+            },
+            it: {
+                navStay: 'Soggiorno', navStory: 'Il Dar', navDining: 'Cucina', navExperiences: 'Esperienze', contact: 'Contatto',
+                reserve: 'Prenota', heroOverline: '6 KM DA AZROU · MEDIO ATLANTE', heroCopy: 'A sei minuti dalla città inizia un silenzio raro: aria di cedro, luce di montagna e niente che cerca la vostra attenzione.',
+                availability: 'Verifica disponibilità', arrival: 'Arrivo', departure: 'Partenza',
+                guests: 'Ospiti', twoGuests: '2 ospiti', oneGuest: '1 ospite', family: 'Famiglia di 4'
+            },
+            pt: {
+                navStay: 'Estadia', navStory: 'O Dar', navDining: 'Gastronomia', navExperiences: 'Experiências', contact: 'Contato',
+                reserve: 'Reservar', heroOverline: '6 KM DE AZROU · MÉDIO ATLAS', heroCopy: 'A seis minutos da cidade, começa um raro silêncio: ar de cedro, luz da montanha e nada que dispute a sua atenção.',
+                availability: 'Verificar disponibilidade', arrival: 'Chegada', departure: 'Partida',
+                guests: 'Hóspedes', twoGuests: '2 hóspedes', oneGuest: '1 hóspede', family: 'Família de 4'
+            },
+            nl: {
+                navStay: 'Verblijf', navStory: 'Het Dar', navDining: 'Gastronomie', navExperiences: 'Ervaringen', contact: 'Contact',
+                reserve: 'Reserveren', heroOverline: '6 KM VAN AZROU · MIDDEN-ATLAS', heroCopy: 'Zes minuten buiten de stad begint een zeldzame stilte: cederlucht, berglicht en niets dat uw aandacht opeist.',
+                availability: 'Beschikbaarheid controleren', arrival: 'Aankomst', departure: 'Vertrek',
+                guests: 'Gasten', twoGuests: '2 gasten', oneGuest: '1 gast', family: 'Gezin van 4'
+            },
+            ar: {
+                navStay: 'الإقامة', navStory: 'الدار', navDining: 'المطبخ', navExperiences: 'التجارب', contact: 'اتصل بنا',
+                reserve: 'احجز', heroOverline: '6 كم من أزرو · الأطلس المتوسط', heroCopy: 'على بعد ست دقائق من المدينة، يبدأ هدوء نادر: هواء الأرز، ضوء الجبال ولا شيء ينافس انتباهك.',
+                availability: 'تحقق من التوفر', arrival: 'الوصول', departure: 'المغادرة',
+                guests: 'الضيوف', twoGuests: 'ضيفان', oneGuest: 'ضيف واحد', family: 'عائلة من 4'
+            },
+            zh: {
+                navStay: '住宿', navStory: '达尔酒店', navDining: '餐饮', navExperiences: '体验', contact: '联系我们',
+                reserve: '预订', heroOverline: '距阿兹鲁6公里 · 中阿特拉斯', heroCopy: '距离城市仅六分钟，一种罕见的宁静开始：雪松空气、山间光线，没有任何事物争夺您的注意力。',
+                availability: '查询空房', arrival: '抵达', departure: '离开',
+                guests: '客人', twoGuests: '2位客人', oneGuest: '1位客人', family: '4人家庭'
+            },
+            ja: {
+                navStay: '滞在', navStory: 'ダール', navDining: 'ダイニング', navExperiences: '体験', contact: 'お問い合わせ',
+                reserve: '予約', heroOverline: 'アズルーより6km · 中部アトラス', heroCopy: '街からわずか6分、希少な静けさが始まります：杉の香り、山の光、そしてあなたの注意を奪うものは何もありません。',
+                availability: '空室確認', arrival: '到着', departure: '出発',
+                guests: 'ゲスト', twoGuests: '2名様', oneGuest: '1名様', family: '4人家族'
+            },
+            ru: {
+                navStay: 'Проживание', navStory: 'Дар', navDining: 'Кухня', navExperiences: 'Впечатления', contact: 'Контакты',
+                reserve: 'Забронировать', heroOverline: '6 КМ ОТ АЗРУ · СРЕДНИЙ АТЛАС', heroCopy: 'В шести минутах от города начинается редкая тишина: воздух кедров, горный свет и ничто не борется за ваше внимание.',
+                availability: 'Проверить наличие', arrival: 'Прибытие', departure: 'Отъезд',
+                guests: 'Гости', twoGuests: '2 гостя', oneGuest: '1 гость', family: 'Семья из 4'
+            },
+            tr: {
+                navStay: 'Konaklama', navStory: 'Dar', navDining: 'Yemek', navExperiences: 'Deneyimler', contact: 'İletişim',
+                reserve: 'Rezervasyon', heroOverline: 'AZROU\'YA 6 KM · ORTA ATLAS', heroCopy: 'Şehrin altı dakika ötesinde, nadir bir sessizlik başlar: sedir kokusu, dağ ışığı ve dikkatinizi dağıtacak hiçbir şey.',
+                availability: 'Müsaitlik kontrol et', arrival: 'Geliş', departure: 'Ayrılış',
+                guests: 'Misafirler', twoGuests: '2 misafir', oneGuest: '1 misafir', family: '4 kişilik aile'
             }
-            // Additional languages (de, it, pt, nl, ar, zh, ja, ru, tr) would be included here
-            // For brevity, I'm showing en, fr, es as complete examples
-            // The full code would include all 12 languages with complete translations
         };
 
-        // Add placeholders for other languages (simplified)
-        const langCodes = ['de', 'it', 'pt', 'nl', 'ar', 'zh', 'ja', 'ru', 'tr'];
-        langCodes.forEach(code => {
-            if (!translations[code]) {
-                translations[code] = {};
-                for (let key in translations.en) {
-                    translations[code][key] = translations.en[key] + ' (' + code.toUpperCase() + ')';
-                }
-            }
-        });
-
-
-        // ============================================================ //
-        // ===== LANGUAGE SYSTEM =====
-        // ============================================================ //
-
+        // ===== LANGUAGE =====
         const langToggle = document.getElementById('langToggle');
         const langDropdown = document.getElementById('langDropdown');
         const currentLangSpan = document.getElementById('currentLang');
@@ -4798,98 +3783,27 @@
         function setLanguage(lang) {
             const copy = translations[lang];
             if (!copy) return;
-
-            // Update HTML lang
             document.documentElement.lang = lang;
-
-            // Update all data-i18n elements
             document.querySelectorAll('[data-i18n]').forEach(el => {
-                const key = el.dataset.i18n;
-                if (copy[key] !== undefined) {
-                    el.innerHTML = copy[key];
-                }
+                el.textContent = copy[el.dataset.i18n] || el.textContent;
             });
-
-            // Update data-i18n-html elements
             document.querySelectorAll('[data-i18n-html]').forEach(el => {
-                const key = el.dataset.i18nHtml;
-                if (copy[key] !== undefined) {
-                    el.innerHTML = copy[key];
-                }
+                el.innerHTML = copy[el.dataset.i18nHtml] || el.innerHTML;
             });
-
-            // Update room-specific translations in the modal
-            // These are handled via the data-i18n attributes
-
-            // Update booking bar
-            document.querySelectorAll('.booking-bar [data-i18n]').forEach(el => {
-                const key = el.dataset.i18n;
-                if (copy[key] !== undefined) {
-                    if (el.tagName === 'OPTION') {
-                        el.textContent = copy[key];
-                    } else {
-                        el.innerHTML = copy[key];
-                    }
-                }
-            });
-
-            // Update reserve button text
+            try { localStorage.setItem('amrouss-language', lang); } catch (_) {}
             const reserveBtn = document.querySelector('.nav-book span:not(.bell-icon)');
-            if (reserveBtn) {
-                reserveBtn.textContent = copy.reserve || 'Reserve';
-            }
-
-            // Update booking dialog
-            document.querySelectorAll('#booking [data-i18n]').forEach(el => {
-                const key = el.dataset.i18n;
-                if (copy[key] !== undefined) {
-                    if (el.tagName === 'OPTION') {
-                        el.textContent = copy[key];
-                    } else if (el.tagName === 'BUTTON' || el.tagName === 'LABEL') {
-                        el.innerHTML = copy[key];
-                    } else {
-                        el.innerHTML = copy[key];
-                    }
-                }
-            });
-
-            // Update toast
-            const toast = document.getElementById('toast');
-            if (toast) {
-                const key = toast.dataset.i18n;
-                if (copy[key] !== undefined) {
-                    toast.textContent = copy[key];
-                }
-            }
-
-            // Store preference
-            try {
-                localStorage.setItem('amrouss-language', lang);
-            } catch (_) {}
+            if (reserveBtn) reserveBtn.textContent = copy.reserve || 'Reserve';
         }
 
-        // Load saved language
         let savedLanguage = 'en';
-        try {
-            savedLanguage = localStorage.getItem('amrouss-language') || 'en';
-        } catch (_) {}
+        try { savedLanguage = localStorage.getItem('amrouss-language') || 'en'; } catch (_) {}
         currentLangSpan.textContent = savedLanguage.toUpperCase();
-
-        // Highlight active language in dropdown
         document.querySelectorAll('.lang-dropdown button').forEach(b => {
             b.classList.toggle('active', b.dataset.lang === savedLanguage);
         });
+        setLanguage(savedLanguage);
 
-        // Set the language after page load
-        document.addEventListener('DOMContentLoaded', function() {
-            setLanguage(savedLanguage);
-        });
-
-
-        // ============================================================ //
         // ===== MOBILE MENU =====
-        // ============================================================ //
-
         const menuToggle = document.getElementById('menuToggle');
         const navLinks = document.getElementById('navLinks');
         menuToggle.addEventListener('click', function() {
@@ -4924,9 +3838,7 @@
             });
         });
         document.querySelector('.booking-panel .close').addEventListener('click', () => dialog.close());
-        dialog.addEventListener('click', event => {
-            if (event.target === dialog) dialog.close();
-        });
+        dialog.addEventListener('click', event => { if (event.target === dialog) dialog.close(); });
         document.querySelector('#reserveForm').addEventListener('submit', event => {
             event.preventDefault();
             dialog.close();
@@ -4935,7 +3847,7 @@
         });
 
         // ============================================================ //
-        // ===== ROOM MODAL SYSTEM =====
+        // ===== ROOM MODAL — ADVANCED TRANSITIONS =====
         // ============================================================ //
 
         const roomModal = document.getElementById('roomModal');
@@ -4944,6 +3856,7 @@
         const closeMoreDetails = document.getElementById('closeMoreDetails');
         const closeMoreDetailsBtn = document.getElementById('closeMoreDetailsBtn');
 
+        // Room data
         const roomData = {
             double: {
                 name: 'Double Room',
@@ -5011,11 +3924,37 @@
             }
         };
 
-        // Open room modal
+        // Open room modal from "Book Now" buttons on cards
+        document.querySelectorAll('.btn-book-glow[data-room]').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const room = this.dataset.room;
+                openRoomModal(room);
+            });
+        });
+
+        // Open room modal from "Details" buttons on cards
+        document.querySelectorAll('.details-btn[data-room]').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const room = this.dataset.room;
+                openRoomModal(room);
+            });
+        });
+
+        // Also open from clicking the card itself
+        document.querySelectorAll('.room-art-card').forEach(card => {
+            card.addEventListener('click', function() {
+                const room = this.dataset.room;
+                if (room) openRoomModal(room);
+            });
+        });
+
         function openRoomModal(room) {
             const data = roomData[room];
             if (!data) return;
 
+            // Set content
             document.getElementById('modalBadge').textContent = data.name;
             document.getElementById('modalTitle').textContent = data.name;
             document.getElementById('modalSub').textContent = 'From ' + data.price + ' per night';
@@ -5025,6 +3964,7 @@
             document.getElementById('amenityPool').textContent = data.pool;
             document.getElementById('amenityFireplace').textContent = data.fireplace;
 
+            // Set gallery
             const mainImg = document.getElementById('galleryMain');
             const thumbsContainer = document.getElementById('galleryThumbs');
             const counter = document.getElementById('galleryCounter');
@@ -5039,32 +3979,13 @@
                 `<img class="thumb ${i === 0 ? 'active' : ''}" src="${img}" alt="Thumb ${i+1}" data-index="${i}" />`
             ).join('');
 
+            // Store room for "More Details"
             document.getElementById('modalMoreDetails').dataset.room = room;
 
+            // Show modal
             roomModal.classList.add('open');
             document.body.style.overflow = 'hidden';
         }
-
-        document.querySelectorAll('.btn-book-glow[data-room]').forEach(btn => {
-            btn.addEventListener('click', function(e) {
-                e.stopPropagation();
-                openRoomModal(this.dataset.room);
-            });
-        });
-
-        document.querySelectorAll('.details-btn[data-room]').forEach(btn => {
-            btn.addEventListener('click', function(e) {
-                e.stopPropagation();
-                openRoomModal(this.dataset.room);
-            });
-        });
-
-        document.querySelectorAll('.room-art-card').forEach(card => {
-            card.addEventListener('click', function() {
-                const room = this.dataset.room;
-                if (room) openRoomModal(room);
-            });
-        });
 
         // Gallery navigation
         document.getElementById('galleryPrev').addEventListener('click', function() {
@@ -5094,6 +4015,7 @@
             });
         }
 
+        // Thumb click
         document.getElementById('galleryThumbs').addEventListener('click', function(e) {
             const thumb = e.target.closest('.thumb');
             if (!thumb) return;
@@ -5101,6 +4023,7 @@
             if (!isNaN(idx)) updateGallery(idx);
         });
 
+        // Close room modal
         closeRoomModal.addEventListener('click', function() {
             roomModal.classList.remove('open');
             document.body.style.overflow = '';
@@ -5112,6 +4035,7 @@
             }
         });
 
+        // Keyboard navigation
         document.addEventListener('keydown', function(e) {
             if (!roomModal.classList.contains('open')) return;
             if (e.key === 'ArrowLeft') {
@@ -5123,6 +4047,7 @@
             }
         });
 
+        // "More Details" button
         document.getElementById('modalMoreDetails').addEventListener('click', function() {
             const room = this.dataset.room;
             const data = roomData[room];
@@ -5143,6 +4068,7 @@
             }, 300);
         });
 
+        // Close more details
         closeMoreDetails.addEventListener('click', function() {
             moreDetailsModal.classList.remove('open');
             document.body.style.overflow = '';
@@ -5205,7 +4131,7 @@
             });
         });
 
-        console.log('🛎️ Amrouss touristic DarMaroc — Full language support + 3D cinematic intro');
+        console.log('🛎️ Amrouss touristic DarMaroc — Cinematic experience with 3D intro, advanced room modals & full language support');
     </script>
 </body>
 </html>
