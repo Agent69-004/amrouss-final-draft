@@ -4161,10 +4161,10 @@
                         <span class="amenity-tag"><strong>Fireplace:</strong> <span id="fFireplace">No</span></span>
                     </div>
                     <div class="room-actions">
-                        <button class="btn-book-glow" id="featuredBookBtn" data-room="double">
+                        <button class="btn-book-glow" id="featuredBookBtn">
                             <span class="glow-text">Book Now <span class="arrow">→</span></span>
                         </button>
-                        <button class="btn-outline-dark" id="featuredDetailsBtn" data-room="double">
+                        <button class="btn-outline-dark" id="featuredDetailsBtn">
                             Details <span class="arrow">→</span>
                         </button>
                     </div>
@@ -5002,20 +5002,18 @@
                 });
             });
 
-            // Featured book and details buttons
+            // Featured book and details buttons - use data attributes with current room
             document.getElementById('featuredBookBtn').addEventListener('click', function(e) {
                 e.stopPropagation();
-                const room = this.dataset.room || currentRoom;
-                openRoomModal(room);
+                openRoomModal(currentRoom);
             });
             document.getElementById('featuredDetailsBtn').addEventListener('click', function(e) {
                 e.stopPropagation();
-                const room = this.dataset.room || currentRoom;
-                openRoomModal(room);
+                openRoomModal(currentRoom);
             });
 
             // Set initial room
-            updateFeaturedRoom('double', true);
+            updateFeaturedRoom('double');
         }
 
         function switchRoom(roomKey) {
@@ -5042,24 +5040,12 @@
             const bed = document.getElementById('fBed');
             const pool = document.getElementById('fPool');
             const fireplace = document.getElementById('fFireplace');
-            const bookBtn = document.getElementById('featuredBookBtn');
-            const detailsBtn = document.getElementById('featuredDetailsBtn');
 
-            // Store current image for crossfade
-            const currentSrc = img.src;
-
-            // Animate: fade out current content (except image which crossfades)
-            const tl = gsap.timeline({
-                onComplete: () => {
-                    isTransitioning = false;
-                }
-            });
-
-            // Image crossfade with scale
-            tl.to(img, {
+            // Crossfade image
+            gsap.to(img, {
                 opacity: 0,
                 scale: 1.02,
-                duration: 0.5,
+                duration: 0.4,
                 ease: 'power2.inOut',
                 onComplete: () => {
                     img.src = data.images[0];
@@ -5067,7 +5053,7 @@
                         gsap.to(img, {
                             opacity: 1,
                             scale: 1,
-                            duration: 0.7,
+                            duration: 0.6,
                             ease: 'power2.out'
                         });
                     };
@@ -5075,24 +5061,25 @@
                         gsap.to(img, {
                             opacity: 1,
                             scale: 1,
-                            duration: 0.7,
+                            duration: 0.6,
                             ease: 'power2.out'
                         });
                     }
                 }
             });
 
-            // Text elements: slide out and in with stagger
+            // Slide text out, update, slide in
             const textElements = [name, eyebrow, price, desc];
-            const amenities = [size, bed, pool, fireplace];
+            const amenityEls = [size, bed, pool, fireplace];
 
-            tl.to(textElements, {
+            gsap.to(textElements, {
                 y: -20,
                 opacity: 0,
-                duration: 0.4,
-                stagger: 0.05,
+                duration: 0.3,
+                stagger: 0.04,
                 ease: 'power2.in',
                 onComplete: () => {
+                    // Update content
                     name.textContent = data.name;
                     eyebrow.textContent = data.name;
                     price.innerHTML = 'From <strong>' + data.price + '</strong> per night';
@@ -5102,9 +5089,8 @@
                     bed.textContent = data.bed;
                     pool.textContent = data.pool;
                     fireplace.textContent = data.fireplace;
-                    bookBtn.dataset.room = roomKey;
-                    detailsBtn.dataset.room = roomKey;
 
+                    // Slide in
                     gsap.to(textElements, {
                         y: 0,
                         opacity: 1,
@@ -5113,42 +5099,48 @@
                         ease: 'power2.out',
                         delay: 0.1
                     });
-                    gsap.to(amenities, {
+                    gsap.to(amenityEls, {
                         opacity: 1,
-                        duration: 0.4,
-                        stagger: 0.04,
+                        duration: 0.3,
+                        stagger: 0.03,
                         ease: 'power2.out',
-                        delay: 0.2
+                        delay: 0.15
                     });
                 }
             });
 
-            tl.to(amenities, {
+            // Fade amenities out and in
+            gsap.to(amenityEls, {
                 opacity: 0,
-                duration: 0.3,
-                stagger: 0.03,
+                duration: 0.2,
+                stagger: 0.02,
                 ease: 'power2.in'
             }, 0);
 
-            tl.to(bookBtn, {
+            // Buttons subtle pulse
+            gsap.to('#featuredBookBtn', {
                 scale: 0.96,
-                duration: 0.15,
+                duration: 0.12,
                 ease: 'power2.inOut',
                 yoyo: true,
                 repeat: 1
-            }, 0.3);
-            tl.to(detailsBtn, {
+            }, 0.2);
+            gsap.to('#featuredDetailsBtn', {
                 scale: 0.96,
-                duration: 0.15,
+                duration: 0.12,
                 ease: 'power2.inOut',
                 yoyo: true,
                 repeat: 1
-            }, 0.35);
+            }, 0.25);
 
             currentRoom = roomKey;
+
+            setTimeout(() => {
+                isTransitioning = false;
+            }, 800);
         }
 
-        function updateFeaturedRoom(roomKey, instant) {
+        function updateFeaturedRoom(roomKey) {
             const data = roomData[roomKey];
             if (!data) return;
 
@@ -5162,8 +5154,6 @@
             document.getElementById('fBed').textContent = data.bed;
             document.getElementById('fPool').textContent = data.pool;
             document.getElementById('fFireplace').textContent = data.fireplace;
-            document.getElementById('featuredBookBtn').dataset.room = roomKey;
-            document.getElementById('featuredDetailsBtn').dataset.room = roomKey;
 
             document.querySelectorAll('.room-thumb').forEach(th => {
                 th.classList.toggle('active', th.dataset.room === roomKey);
