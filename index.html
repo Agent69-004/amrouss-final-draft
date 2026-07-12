@@ -905,7 +905,7 @@
             margin: 0 auto;
             background: #fff;
             display: grid;
-            grid-template-columns: 1fr 1fr 1fr 1.2fr;
+            grid-template-columns: 1fr 1fr 1fr 1.3fr;
             gap: 0;
             box-shadow: var(--shadow-lux);
             border: 0;
@@ -936,8 +936,10 @@
         }
         .booking-bar>div:last-child {
             border-right: 0;
-            padding: 8px 20px;
+            padding: 0;
             background: var(--olive);
+            flex: 1;
+            min-width: 0;
         }
         .booking-bar>div:last-child:hover {
             background: var(--olive-light);
@@ -976,21 +978,22 @@
         }
         .booking-bar .btn-olive {
             width: 100%;
-            padding: 14px 20px;
-            font-size: 10px;
+            height: 100%;
+            min-height: 64px;
+            padding: 0 24px;
+            font-size: 11px;
             letter-spacing: 0.15em;
             text-transform: uppercase;
-            font-weight: 500;
+            font-weight: 600;
             border: none;
             cursor: pointer;
             transition: all 0.6s var(--ease-out-expo);
             font-family: var(--font-sans);
-            min-height: 48px;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
-            background: transparent;
+            gap: 12px;
+            background: var(--olive);
             color: #fff;
             border-radius: 0;
             position: relative;
@@ -1008,21 +1011,21 @@
             opacity: 1;
         }
         .booking-bar .btn-olive:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 32px rgba(85, 107, 47, 0.25);
+            transform: translateY(-1px);
+            box-shadow: 0 8px 32px rgba(85, 107, 47, 0.3);
         }
         .booking-bar .btn-olive span {
             position: relative;
             z-index: 1;
         }
         .booking-bar .btn-olive .arrow {
-            font-size: 18px;
+            font-size: 20px;
             transition: transform 0.5s var(--ease-out-expo);
             position: relative;
             z-index: 1;
         }
         .booking-bar .btn-olive:hover .arrow {
-            transform: translate(4px, -2px);
+            transform: translate(6px, -2px);
         }
         .booking-bar .best-rate {
             position: absolute;
@@ -3570,9 +3573,10 @@
             }
             .booking-bar>div:last-child {
                 border-bottom: 0;
-                padding: 6px 12px;
+                padding: 0;
                 grid-column: 1 / -1;
                 background: var(--olive);
+                min-height: 52px;
             }
             .booking-bar>div:last-child:hover {
                 background: var(--olive-light);
@@ -3588,9 +3592,13 @@
                 margin-bottom: 2px;
             }
             .booking-bar .btn-olive {
-                padding: 10px 14px;
-                font-size: 9px;
-                min-height: 40px;
+                min-height: 52px;
+                padding: 0 16px;
+                font-size: 10px;
+                background: var(--olive);
+            }
+            .booking-bar .btn-olive:hover {
+                background: var(--olive-light);
             }
             .booking-bar .best-rate {
                 top: -8px;
@@ -3946,6 +3954,14 @@
                 width: 32px;
                 height: 32px;
                 font-size: 14px;
+            }
+            .booking-bar .btn-olive {
+                font-size: 9px;
+                min-height: 46px;
+                padding: 0 12px;
+            }
+            .booking-bar .btn-olive .arrow {
+                font-size: 16px;
             }
         }
     </style>
