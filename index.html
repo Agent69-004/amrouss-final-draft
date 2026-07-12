@@ -879,7 +879,7 @@
         }
 
         /* ============================================================ */
-        /*  BOOKING BAR — ALWAYS VISIBLE, ANIMATED                     */
+        /*  BOOKING BAR — ALWAYS VISIBLE WITH ANIMATED BUTTON           */
         /* ============================================================ */
         .booking-bar-wrapper {
             position: sticky;
@@ -2137,6 +2137,9 @@
             color: var(--grey);
         }
 
+        /* ============================================================ */
+        /*  GALLERY — LUXURY FULLSCREEN READY                          */
+        /* ============================================================ */
         .gallery-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -2207,6 +2210,125 @@
         }
         .gallery-filters button:hover {
             color: var(--ink);
+        }
+
+        /* Fullscreen gallery overlay */
+        .gallery-fullscreen {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 300;
+            background: rgba(0, 0, 0, 0.92);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            align-items: center;
+            justify-content: center;
+            padding: 40px 5vw;
+            opacity: 0;
+            transition: opacity 0.7s var(--ease-out-expo);
+            cursor: pointer;
+        }
+        .gallery-fullscreen.open {
+            display: flex;
+            opacity: 1;
+        }
+        .gallery-fullscreen .fs-content {
+            position: relative;
+            max-width: 1200px;
+            width: 100%;
+            max-height: 90vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: default;
+        }
+        .gallery-fullscreen .fs-content img {
+            max-width: 100%;
+            max-height: 85vh;
+            object-fit: contain;
+            opacity: 0;
+            transform: scale(0.95);
+            transition: opacity 0.6s ease, transform 0.6s var(--ease-out-expo);
+            box-shadow: 0 20px 80px rgba(0, 0, 0, 0.5);
+        }
+        .gallery-fullscreen .fs-content img.loaded {
+            opacity: 1;
+            transform: scale(1);
+        }
+        .gallery-fullscreen .fs-close {
+            position: absolute;
+            top: -40px;
+            right: 0;
+            background: none;
+            border: 0;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 32px;
+            cursor: pointer;
+            transition: all 0.4s var(--ease-out-expo);
+            padding: 8px;
+            line-height: 1;
+        }
+        .gallery-fullscreen .fs-close:hover {
+            color: #fff;
+            transform: rotate(90deg);
+        }
+        .gallery-fullscreen .fs-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.05);
+            border: 0;
+            color: rgba(255, 255, 255, 0.4);
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            font-size: 24px;
+            cursor: pointer;
+            transition: all 0.4s var(--ease-out-expo);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .gallery-fullscreen .fs-nav:hover {
+            background: rgba(255, 255, 255, 0.12);
+            color: #fff;
+        }
+        .gallery-fullscreen .fs-nav.prev {
+            left: -70px;
+        }
+        .gallery-fullscreen .fs-nav.next {
+            right: -70px;
+        }
+        .gallery-fullscreen .fs-counter {
+            position: absolute;
+            bottom: -40px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 11px;
+            letter-spacing: 0.12em;
+            color: rgba(255, 255, 255, 0.3);
+            font-family: var(--font-mono);
+        }
+        @media (max-width: 768px) {
+            .gallery-fullscreen .fs-nav {
+                width: 40px;
+                height: 40px;
+                font-size: 18px;
+            }
+            .gallery-fullscreen .fs-nav.prev {
+                left: 10px;
+            }
+            .gallery-fullscreen .fs-nav.next {
+                right: 10px;
+            }
+            .gallery-fullscreen .fs-close {
+                top: 10px;
+                right: 10px;
+                font-size: 24px;
+            }
+            .gallery-fullscreen .fs-counter {
+                bottom: -30px;
+            }
         }
 
         .testimonial-section {
@@ -3344,6 +3466,12 @@
             .contact-section .dark {
                 order: -1;
             }
+            .gallery-fullscreen .fs-nav.prev {
+                left: 10px;
+            }
+            .gallery-fullscreen .fs-nav.next {
+                right: 10px;
+            }
         }
 
         @media(max-width: 768px) {
@@ -3719,6 +3847,17 @@
                 align-items: center;
                 text-align: center;
             }
+            .gallery-fullscreen .fs-nav {
+                width: 36px;
+                height: 36px;
+                font-size: 16px;
+            }
+            .gallery-fullscreen .fs-nav.prev {
+                left: 6px;
+            }
+            .gallery-fullscreen .fs-nav.next {
+                right: 6px;
+            }
         }
 
         @media(max-width: 480px) {
@@ -3802,6 +3941,11 @@
             }
             .booking-panel h2 {
                 font-size: 28px;
+            }
+            .gallery-fullscreen .fs-nav {
+                width: 32px;
+                height: 32px;
+                font-size: 14px;
             }
         }
     </style>
@@ -4264,7 +4408,7 @@
     </section>
 
     <!-- ============================================================ -->
-    <!--  GALLERY — ENHANCED                                          -->
+    <!--  GALLERY — LUXURY FULLSCREEN READY                           -->
     <!-- ============================================================ -->
     <section class="section" id="gallery">
         <div class="section-center reveal-item">
@@ -4287,6 +4431,17 @@
             <div class="gallery-tile" data-gallery="rooms" style="background-image:url('https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=900&q=85');"><div class="overlay"></div><span class="label">Interiors</span></div>
         </div>
     </section>
+
+    <!-- Gallery Fullscreen Overlay -->
+    <div class="gallery-fullscreen" id="galleryFullscreen">
+        <div class="fs-content">
+            <button class="fs-close" id="fsClose">✕</button>
+            <button class="fs-nav prev" id="fsPrev">‹</button>
+            <button class="fs-nav next" id="fsNext">›</button>
+            <img id="fsImage" src="" alt="Gallery fullscreen" />
+            <span class="fs-counter" id="fsCounter">1 / 1</span>
+        </div>
+    </div>
 
     <!-- ============================================================ -->
     <!--  TESTIMONIALS — ENHANCED                                     -->
@@ -4733,6 +4888,8 @@
 
             // --- Room carousel animations ---
             initRoomCarousel();
+            // --- Gallery fullscreen ---
+            initGalleryFullscreen();
         })();
 
 
@@ -4859,7 +5016,6 @@
             if (!data) { isTransitioning = false; return; }
 
             // Animate the transition
-            const featured = document.getElementById('featuredRoom');
             const img = document.getElementById('featuredImage');
             const name = document.getElementById('featuredName');
             const price = document.getElementById('featuredPrice');
@@ -4899,7 +5055,6 @@
                             ease: 'power2.out'
                         });
                     };
-                    // If image already loaded
                     if (img.complete) {
                         gsap.to(img, {
                             opacity: 1,
@@ -4922,7 +5077,6 @@
                 stagger: 0.05,
                 ease: 'power2.in',
                 onComplete: () => {
-                    // Update content
                     name.textContent = data.name;
                     eyebrow.textContent = data.name;
                     price.innerHTML = 'From <strong>' + data.price + '</strong> per night';
@@ -4935,7 +5089,6 @@
                     bookBtn.dataset.room = roomKey;
                     detailsBtn.dataset.room = roomKey;
 
-                    // Animate in
                     gsap.to(textElements, {
                         y: 0,
                         opacity: 1,
@@ -4954,7 +5107,6 @@
                 }
             });
 
-            // Amenities fade
             tl.to(amenities, {
                 opacity: 0,
                 duration: 0.3,
@@ -4962,7 +5114,6 @@
                 ease: 'power2.in'
             }, 0);
 
-            // Buttons subtle pulse
             tl.to(bookBtn, {
                 scale: 0.96,
                 duration: 0.15,
@@ -5007,7 +5158,114 @@
 
 
         // ============================================================ //
-        //  3. CUSTOM CURSOR                                           //
+        //  3. GALLERY FULLSCREEN                                      //
+        // ============================================================ //
+
+        let galleryItems = [];
+        let currentGalleryIndex = 0;
+        let fsOpen = false;
+
+        function initGalleryFullscreen() {
+            const tiles = document.querySelectorAll('.gallery-tile');
+            const fs = document.getElementById('galleryFullscreen');
+            const fsImg = document.getElementById('fsImage');
+            const fsCounter = document.getElementById('fsCounter');
+            const fsClose = document.getElementById('fsClose');
+            const fsPrev = document.getElementById('fsPrev');
+            const fsNext = document.getElementById('fsNext');
+
+            // Build gallery items from tiles
+            tiles.forEach((tile, index) => {
+                const bg = tile.style.backgroundImage;
+                const url = bg.replace(/^url\(["']?/, '').replace(/["']?\)$/, '');
+                if (url) {
+                    galleryItems.push({
+                        url: url,
+                        label: tile.querySelector('.label')?.textContent || 'Image'
+                    });
+                }
+                tile.addEventListener('click', () => {
+                    openGallery(index);
+                });
+            });
+
+            fsClose.addEventListener('click', closeGallery);
+            fs.addEventListener('click', (e) => {
+                if (e.target === fs) closeGallery();
+            });
+            fsPrev.addEventListener('click', (e) => { e.stopPropagation();
+                navigateGallery(-1); });
+            fsNext.addEventListener('click', (e) => { e.stopPropagation();
+                navigateGallery(1); });
+
+            document.addEventListener('keydown', (e) => {
+                if (!fsOpen) return;
+                if (e.key === 'Escape') closeGallery();
+                if (e.key === 'ArrowLeft') navigateGallery(-1);
+                if (e.key === 'ArrowRight') navigateGallery(1);
+            });
+
+            // Touch support
+            let touchStartX = 0;
+            fs.addEventListener('touchstart', (e) => {
+                touchStartX = e.changedTouches[0].screenX;
+            });
+            fs.addEventListener('touchend', (e) => {
+                const diff = touchStartX - e.changedTouches[0].screenX;
+                if (Math.abs(diff) > 50) {
+                    navigateGallery(diff > 0 ? 1 : -1);
+                }
+            });
+        }
+
+        function openGallery(index) {
+            if (!galleryItems.length || fsOpen) return;
+            fsOpen = true;
+            currentGalleryIndex = Math.min(Math.max(index, 0), galleryItems.length - 1);
+            const fs = document.getElementById('galleryFullscreen');
+            const fsImg = document.getElementById('fsImage');
+            const fsCounter = document.getElementById('fsCounter');
+
+            fs.classList.add('open');
+            fsImg.classList.remove('loaded');
+
+            const img = new Image();
+            img.onload = () => {
+                fsImg.src = galleryItems[currentGalleryIndex].url;
+                fsImg.classList.add('loaded');
+                fsCounter.textContent = (currentGalleryIndex + 1) + ' / ' + galleryItems.length;
+            };
+            img.src = galleryItems[currentGalleryIndex].url;
+            document.body.style.overflow = 'hidden';
+            if (lenis) lenis.stop();
+        }
+
+        function closeGallery() {
+            fsOpen = false;
+            document.getElementById('galleryFullscreen').classList.remove('open');
+            document.body.style.overflow = '';
+            if (lenis) lenis.start();
+        }
+
+        function navigateGallery(direction) {
+            if (!galleryItems.length) return;
+            currentGalleryIndex = (currentGalleryIndex + direction + galleryItems.length) % galleryItems.length;
+            const fsImg = document.getElementById('fsImage');
+            const fsCounter = document.getElementById('fsCounter');
+
+            fsImg.classList.remove('loaded');
+            const img = new Image();
+            img.onload = () => {
+                fsImg.src = galleryItems[currentGalleryIndex].url;
+                fsImg.classList.add('loaded');
+                fsCounter.textContent = (currentGalleryIndex + 1) + ' / ' + galleryItems.length;
+            };
+            img.src = galleryItems[currentGalleryIndex].url;
+        }
+
+
+        // ============================================================ //
+        //  4. CUSTOM CURSOR                                           //
         // ============================================================ //
 
         (function() {
@@ -5050,7 +5308,7 @@
 
 
         // ============================================================ //
-        //  4. COMPLETE TRANSLATIONS — FULL MULTILINGUAL               //
+        //  5. COMPLETE TRANSLATIONS — FULL MULTILINGUAL               //
         // ============================================================ //
 
         const translations = {
@@ -5070,7 +5328,6 @@
                 twoGuests: '2 Guests',
                 oneGuest: '1 Guest',
                 family: 'Family of 4',
-                // Room names and descriptions
                 roomDouble: 'Double Room',
                 roomTwin: 'Twin Room',
                 roomTriple: 'Triple Room',
@@ -5079,23 +5336,19 @@
                 roomTwinDesc: 'This air-conditioned twin room features a flat-screen TV, a private bathroom with bath, and a wardrobe. The room includes free toiletries and heating.',
                 roomTripleDesc: 'This spacious air-conditioned triple room features a flat-screen TV, a private bathroom with bath, and a wardrobe. The room includes free toiletries and heating.',
                 roomSuiteDesc: 'The private pool and fireplace are the special features of this suite. This air-conditioned suite consists of 1 living room, 1 separate bedroom and 1 bathroom with a bath.',
-                // Modal
                 bookNow: 'Book Now',
                 details: 'Details',
                 moreDetails: 'More Details',
                 close: 'Close',
-                // Footer
                 explore: 'Explore',
                 theDar: 'The Dar',
                 stayClose: 'Stay Close',
                 backToTop: 'Back to top',
-                // Contact
                 callUs: 'Call us',
                 email: 'Email',
                 whatsapp: 'WhatsApp',
                 messageDar: 'Message the Dar →',
                 startReservation: 'Start a reservation',
-                // FAQ
                 faqBreakfast: 'What kind of breakfast is served?',
                 faqBreakfastAns: 'Guests can enjoy a wonderful buffet breakfast (guest review score: 9.4).',
                 faqPool: 'Does the hotel have a pool?',
@@ -5106,21 +5359,17 @@
                 faqRestaurantAns: 'Yes, Restaurant #1 serves Italian and Moroccan cuisine with halal and vegetarian options.',
                 faqDistance: 'How far is the property from Azrou center?',
                 faqDistanceAns: 'Amrouss touristic DarMaroc is 6 km from the center of Azrou.',
-                // Toast
                 toastThankYou: 'Thank you — we\'ll be in touch shortly.',
-                // Gallery
                 galleryAll: 'All',
                 galleryRooms: 'Rooms',
                 galleryPool: 'Pool',
                 galleryTable: 'Table',
                 galleryNature: 'Nature',
-                // Policies
                 policiesCheckIn: 'Check-in / Check-out',
                 policiesChildren: 'Children & Beds',
                 policiesPets: 'Pets & Payment',
                 policiesOther: 'Other Policies',
                 policiesCancellation: 'Cancellation',
-                // Booking form
                 bookingTitle: 'Reserve your stay.',
                 bookingSub: 'We will confirm availability within 24 hours.',
                 bookingAdults: 'Adults',
@@ -5909,16 +6158,13 @@
             const copy = translations[lang];
             if (!copy) return;
             document.documentElement.lang = lang;
-            // Text content
             document.querySelectorAll('[data-i18n]').forEach(el => {
                 el.textContent = copy[el.dataset.i18n] || el.textContent;
             });
-            // HTML content
             document.querySelectorAll('[data-i18n-html]').forEach(el => {
                 el.innerHTML = copy[el.dataset.i18nHtml] || el.innerHTML;
             });
 
-            // Dynamic room content
             const roomKeys = ['double', 'twin', 'triple', 'suite'];
             roomKeys.forEach(key => {
                 const data = roomData[key];
@@ -5930,14 +6176,8 @@
                 if (copy[descKey]) {
                     data.description = copy[descKey];
                 }
-                // Update modal if open
-                const modalTitle = document.getElementById('modalTitle');
-                if (modalTitle && modalTitle.textContent === data.name) {
-                    // Update modal content if it matches
-                }
             });
 
-            // Update featured room if data changed
             if (currentRoom) {
                 const data = roomData[currentRoom];
                 if (data) {
@@ -5948,7 +6188,6 @@
                 }
             }
 
-            // Update modal if open
             const modalTitleEl = document.getElementById('modalTitle');
             const modalBadgeEl = document.getElementById('modalBadge');
             const modalDescEl = document.getElementById('modalDesc');
@@ -5961,11 +6200,6 @@
                 }
             }
 
-            // Update booking form labels
-            const formLabels = document.querySelectorAll('.booking-panel label');
-            // Simple label updates
-
-            // Toast
             const toast = document.getElementById('toast');
             if (copy.toastThankYou) {
                 toast.textContent = copy.toastThankYou;
@@ -5987,7 +6221,7 @@
 
 
         // ============================================================ //
-        //  5. MOBILE MENU                                              //
+        //  6. MOBILE MENU                                              //
         // ============================================================ //
 
         const menuToggle = document.getElementById('menuToggle');
@@ -6005,7 +6239,7 @@
 
 
         // ============================================================ //
-        //  6. DIALOG & TOAST                                           //
+        //  7. DIALOG & TOAST                                           //
         // ============================================================ //
 
         const dialog = document.querySelector('#booking');
@@ -6029,7 +6263,7 @@
 
 
         // ============================================================ //
-        //  7. BACK TO TOP                                              //
+        //  8. BACK TO TOP                                              //
         // ============================================================ //
 
         document.getElementById('backToTop').addEventListener('click', () => {
@@ -6042,7 +6276,7 @@
 
 
         // ============================================================ //
-        //  8. ROOM MODAL                                               //
+        //  9. ROOM MODAL                                               //
         // ============================================================ //
 
         const roomModal = document.getElementById('roomModal');
@@ -6081,7 +6315,6 @@
             document.getElementById('modalMoreDetails').dataset.room = room;
             roomModal.classList.add('open');
             document.body.style.overflow = 'hidden';
-
             if (lenis) lenis.stop();
         }
 
@@ -6095,7 +6328,6 @@
             });
         });
 
-        // Gallery navigation
         document.getElementById('galleryPrev').addEventListener('click', function() {
             const images = window._currentImages;
             if (!images) return;
@@ -6190,7 +6422,7 @@
 
 
         // ============================================================ //
-        //  9. REVIEWS                                                  //
+        //  10. REVIEWS                                                  //
         // ============================================================ //
 
         const reviews = [
@@ -6219,7 +6451,7 @@
 
 
         // ============================================================ //
-        //  10. GALLERY FILTERS                                         //
+        //  11. GALLERY FILTERS                                         //
         // ============================================================ //
 
         document.querySelectorAll('.gallery-filters button').forEach(btn => {
