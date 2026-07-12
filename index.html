@@ -5011,7 +5011,7 @@
             const data = roomData[roomKey];
             if (!data) { isTransitioning = false; return; }
 
-            // Animate the transition
+            // DOM elements
             const img = document.getElementById('featuredImage');
             const name = document.getElementById('featuredName');
             const price = document.getElementById('featuredPrice');
@@ -5023,15 +5023,17 @@
             const pool = document.getElementById('fPool');
             const fireplace = document.getElementById('fFireplace');
 
-            // Crossfade image
+            // 1. Fade image out and update
             gsap.to(img, {
                 opacity: 0,
                 scale: 1.02,
                 duration: 0.4,
                 ease: 'power2.inOut',
-                onComplete: () => {
+                onComplete: function() {
                     img.src = data.images[0];
-                    img.onload = () => {
+                    // Once image is loaded, fade it back in
+                    const onLoad = function() {
+                        img.removeEventListener('load', onLoad);
                         gsap.to(img, {
                             opacity: 1,
                             scale: 1,
@@ -5039,7 +5041,9 @@
                             ease: 'power2.out'
                         });
                     };
+                    img.addEventListener('load', onLoad);
                     if (img.complete) {
+                        img.removeEventListener('load', onLoad);
                         gsap.to(img, {
                             opacity: 1,
                             scale: 1,
@@ -5050,18 +5054,18 @@
                 }
             });
 
-            // Slide text out, update, slide in
+            // 2. Fade text out, update, fade in
             const textElements = [name, eyebrow, price, desc];
             const amenityEls = [size, bed, pool, fireplace];
 
             gsap.to(textElements, {
-                y: -20,
+                y: -16,
                 opacity: 0,
                 duration: 0.3,
                 stagger: 0.04,
                 ease: 'power2.in',
-                onComplete: () => {
-                    // Update content
+                onComplete: function() {
+                    // Update all text content
                     name.textContent = data.name;
                     eyebrow.textContent = data.name;
                     price.innerHTML = 'From <strong>' + data.price + '</strong> per night';
@@ -5072,7 +5076,7 @@
                     pool.textContent = data.pool;
                     fireplace.textContent = data.fireplace;
 
-                    // Slide in
+                    // Fade text back in with stagger
                     gsap.to(textElements, {
                         y: 0,
                         opacity: 1,
@@ -5091,7 +5095,7 @@
                 }
             });
 
-            // Fade amenities out and in
+            // 3. Fade amenities out (they'll be faded back in above)
             gsap.to(amenityEls, {
                 opacity: 0,
                 duration: 0.2,
@@ -5099,7 +5103,7 @@
                 ease: 'power2.in'
             }, 0);
 
-            // Buttons subtle pulse
+            // 4. Button pulse effect
             gsap.to('#featuredBookBtn', {
                 scale: 0.96,
                 duration: 0.12,
@@ -5115,9 +5119,11 @@
                 repeat: 1
             }, 0.25);
 
+            // Update current room
             currentRoom = roomKey;
 
-            setTimeout(() => {
+            // Unlock after animation
+            setTimeout(function() {
                 isTransitioning = false;
             }, 800);
         }
