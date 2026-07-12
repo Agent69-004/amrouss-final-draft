@@ -9,9 +9,19 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&display=swap" rel="stylesheet" />
 
+    <!-- Three.js, GSAP, Lenis from CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js">
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js">
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js">
+    </script>
+    <script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js">
+    </script>
+
     <style>
         /* ============================================================ */
-        /*  CINEMATIC, IMMERSIVE EDITORIAL STYLE                        */
+        /*  CINEMATIC, IMMERSIVE EDITORIAL STYLE - ENHANCED             */
         /* ============================================================ */
 
         :root {
@@ -28,6 +38,12 @@
             --grey: #6b6b6b;
             --light-grey: #e8e4dd;
             --glow: rgba(184, 148, 75, 0.4);
+            --glass-bg: rgba(250, 248, 245, 0.72);
+            --glass-border: rgba(255, 255, 255, 0.12);
+            --shadow-soft: 0 8px 40px rgba(0, 0, 0, 0.04);
+            --shadow-lux: 0 20px 80px rgba(0, 0, 0, 0.08);
+            --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+            --ease-in-out-quart: cubic-bezier(0.77, 0, 0.175, 1);
         }
         * {
             box-sizing: border-box;
@@ -35,8 +51,8 @@
             padding: 0;
         }
         html {
-            scroll-behavior: smooth;
-            scroll-padding-top: 90px;
+            scroll-behavior: auto;
+            /* Lenis handles scrolling */;
         }
         body {
             margin: 0;
@@ -49,6 +65,7 @@
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
             width: 100%;
+            cursor: default;
         }
         img {
             max-width: 100%;
@@ -58,165 +75,164 @@
             color: inherit;
             text-decoration: none;
         }
+        ::selection {
+            background: var(--gold);
+            color: #fff;
+        }
 
         /* ============================================================ */
-        /*  3D INTRO — CINEMATIC OPENING                                */
+        /*  CUSTOM CURSOR                                               */
         /* ============================================================ */
-        .intro-3d {
+        .cursor-dot {
+            position: fixed;
+            width: 8px;
+            height: 8px;
+            background: var(--gold);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+            transition: width 0.3s ease, height 0.3s ease, background 0.3s ease, opacity 0.3s ease;
+            mix-blend-mode: difference;
+            opacity: 0;
+        }
+        .cursor-dot.visible {
+            opacity: 1;
+        }
+        .cursor-dot.hover {
+            width: 48px;
+            height: 48px;
+            background: rgba(184, 148, 75, 0.15);
+            mix-blend-mode: normal;
+        }
+        @media (max-width: 768px) {
+            .cursor-dot {
+                display: none;
+            }
+        }
+
+        /* ============================================================ */
+        /*  3D INTRO — CINEMATIC THREE.JS OVERLAY                      */
+        /* ============================================================ */
+        #intro-overlay {
             position: fixed;
             inset: 0;
-            z-index: 1000;
-            background: var(--deep);
+            z-index: 10000;
+            background: #0a0a0a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            pointer-events: all;
+            transition: opacity 1.6s var(--ease-out-expo), visibility 1.6s var(--ease-out-expo);
+        }
+        #intro-overlay.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+        #intro-canvas {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+        #intro-ui {
+            position: absolute;
+            bottom: 60px;
+            left: 0;
+            right: 0;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
-            perspective: 800px;
-            animation: introExit 1.2s cubic-bezier(0.77, 0, 0.18, 1) 2.8s forwards;
-            overflow: hidden;
+            gap: 20px;
+            z-index: 10;
+            padding: 0 5vw;
         }
-        .intro-3d .bg-particles {
-            position: absolute;
-            inset: 0;
-            overflow: hidden;
-        }
-        .intro-3d .bg-particles span {
-            position: absolute;
-            width: 2px;
-            height: 2px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 50%;
-            animation: particleFloat 8s ease-in-out infinite alternate;
-        }
-        @keyframes particleFloat {
-            0% { transform: translateY(0) scale(1); opacity: 0.1; }
-            100% { transform: translateY(-120px) scale(1.5); opacity: 0.6; }
-        }
-        .intro-3d .ring {
-            position: absolute;
-            border: 1px solid rgba(255, 255, 255, 0.03);
-            border-radius: 50%;
-            animation: ringSpin 20s linear infinite;
-        }
-        .intro-3d .ring:nth-child(1) { width: 50vw; height: 50vw; animation-duration: 25s; }
-        .intro-3d .ring:nth-child(2) { width: 35vw; height: 35vw; animation-duration: 18s; animation-direction: reverse; }
-        .intro-3d .ring:nth-child(3) { width: 20vw; height: 20vw; animation-duration: 12s; }
-        @keyframes ringSpin { to { transform: rotate(360deg); } }
-
-        .intro-3d .logo-container {
-            position: relative;
-            z-index: 2;
-            animation: logoFloat 3s ease-in-out infinite;
-        }
-        @keyframes logoFloat {
-            0%, 100% { transform: translateY(0) rotateX(0deg); }
-            50% { transform: translateY(-12px) rotateX(2deg); }
-        }
-
-        .intro-3d .logo-seal {
-            width: 72px;
-            height: 72px;
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font: 20px 'Playfair Display', serif;
-            color: var(--gold);
-            margin: 0 auto 24px;
-            animation: sealPulse 2s ease-in-out infinite;
-        }
-        @keyframes sealPulse {
-            0%, 100% { box-shadow: 0 0 20px rgba(184, 148, 75, 0.05); }
-            50% { box-shadow: 0 0 40px rgba(184, 148, 75, 0.15); }
-        }
-
-        .intro-3d h1 {
-            font-family: 'Playfair Display', serif;
-            font-size: clamp(36px, 10vw, 100px);
-            font-weight: 700;
-            color: #fff;
-            letter-spacing: 0.06em;
-            text-align: center;
-            line-height: 0.95;
-            animation: titleReveal 1.2s ease both;
-            transform-origin: center center;
-        }
-        .intro-3d h1 em {
-            font-style: italic;
-            color: var(--gold);
-            font-weight: 400;
-            display: inline-block;
-            animation: goldPulse 2.5s ease-in-out infinite;
-        }
-        @keyframes goldPulse {
-            0%, 100% { text-shadow: 0 0 20px rgba(184, 148, 75, 0.1); }
-            50% { text-shadow: 0 0 40px rgba(184, 148, 75, 0.3), 0 0 80px rgba(184, 148, 75, 0.1); }
-        }
-
-        .intro-3d .sub-line {
-            width: 0;
-            height: 1px;
-            background: rgba(255, 255, 255, 0.1);
-            margin: 20px auto;
-            animation: lineGrow 0.8s 0.6s ease forwards;
-        }
-        @keyframes lineGrow { to { width: 180px; } }
-
-        .intro-3d .location-text {
-            font-size: 8px;
-            letter-spacing: 0.3em;
+        #loading-progress {
+            font-family: "DM Mono", monospace;
+            font-size: 11px;
+            letter-spacing: 0.2em;
+            color: rgba(255, 255, 255, 0.3);
             text-transform: uppercase;
-            color: rgba(255, 255, 255, 0.15);
-            font-family: 'DM Sans', sans-serif;
-            opacity: 0;
-            animation: revealUp 0.6s 1s ease forwards;
+            transition: opacity 0.6s ease;
         }
-
-        .intro-3d .progress-bar {
-            position: absolute;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 120px;
-            height: 1px;
-            background: rgba(255, 255, 255, 0.04);
+        #loading-progress .bar-track {
+            display: block;
+            width: 160px;
+            height: 1.5px;
+            background: rgba(255, 255, 255, 0.06);
+            margin: 10px auto 0;
             overflow: hidden;
+            border-radius: 2px;
         }
-        .intro-3d .progress-bar .fill {
+        #loading-progress .bar-fill {
+            display: block;
             height: 100%;
-            width: 0;
+            width: 0%;
             background: var(--gold);
-            animation: progressFill 2.6s ease forwards;
+            transition: width 0.2s ease;
+            border-radius: 2px;
         }
-        @keyframes progressFill { to { width: 100%; } }
-
-        @keyframes introExit {
-            0% { opacity: 1; transform: scale(1); }
-            100% { opacity: 0; visibility: hidden; transform: scale(1.06); }
+        #skip-intro {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: rgba(255, 255, 255, 0.4);
+            padding: 10px 28px;
+            font-size: 9px;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            font-family: "DM Sans", sans-serif;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            border-radius: 0;
+            opacity: 0;
+            animation: fadeInUI 0.8s 1.2s ease forwards;
         }
-        @keyframes titleReveal {
-            0% { opacity: 0; transform: translateY(30px) scale(0.95) rotateX(5deg); }
-            100% { opacity: 1; transform: translateY(0) scale(1) rotateX(0deg); }
+        #skip-intro:hover {
+            background: rgba(255, 255, 255, 0.08);
+            color: #fff;
+            border-color: rgba(255, 255, 255, 0.2);
         }
-        @keyframes revealUp {
-            0% { opacity: 0; transform: translateY(12px); }
-            100% { opacity: 1; transform: translateY(0); }
+        @keyframes fadeInUI {
+            0% {
+                opacity: 0;
+                transform: translateY(12px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         /* ============================================================ */
-        /*  TYPOGRAPHY                                                  */
+        /*  TYPOGRAPHY — LUXURY ENHANCED                               */
         /* ============================================================ */
-        h1, h2, h3, h4, .brand {
+        h1,
+        h2,
+        h3,
+        h4,
+        .brand {
             font-family: "Playfair Display", Georgia, serif;
             font-weight: 500;
             letter-spacing: -0.03em;
             line-height: 1.1;
             margin: 0;
         }
-        h1 { font-size: clamp(52px, 10vw, 120px); letter-spacing: -0.04em; font-weight: 600; }
-        h2 { font-size: clamp(38px, 5.5vw, 72px); letter-spacing: -0.04em; font-weight: 500; }
-        h3 { font-size: clamp(26px, 3vw, 36px); font-weight: 500; }
+        h1 {
+            font-size: clamp(52px, 10vw, 120px);
+            letter-spacing: -0.04em;
+            font-weight: 600;
+        }
+        h2 {
+            font-size: clamp(38px, 5.5vw, 72px);
+            letter-spacing: -0.04em;
+            font-weight: 500;
+        }
+        h3 {
+            font-size: clamp(26px, 3vw, 36px);
+            font-weight: 500;
+        }
         .eyebrow {
             font-size: 10px;
             letter-spacing: 0.25em;
@@ -226,10 +242,12 @@
             margin-bottom: 16px;
             font-family: "DM Sans", sans-serif;
         }
-        .eyebrow.light { color: rgba(255, 255, 255, 0.5); }
+        .eyebrow.light {
+            color: rgba(255, 255, 255, 0.5);
+        }
 
         /* ============================================================ */
-        /*  BUTTONS — GLOWING BOOK NOW                                  */
+        /*  BUTTONS — LUXURY ENHANCED                                  */
         /* ============================================================ */
         .btn-primary {
             display: inline-flex;
@@ -245,11 +263,12 @@
             font-weight: 500;
             border: none;
             cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            transition: all 0.5s var(--ease-out-expo);
             font-family: "DM Sans", sans-serif;
             min-height: 54px;
             position: relative;
             overflow: hidden;
+            border-radius: 0;
         }
         .btn-primary::before {
             content: '';
@@ -257,21 +276,29 @@
             inset: 0;
             background: linear-gradient(135deg, var(--gold), var(--gold-light));
             opacity: 0;
-            transition: opacity 0.4s ease;
+            transition: opacity 0.5s ease;
         }
-        .btn-primary:hover::before { opacity: 1; }
-        .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 12px 40px rgba(184, 148, 75, 0.2); }
+        .btn-primary:hover::before {
+            opacity: 1;
+        }
+        .btn-primary:hover {
+            transform: translateY(-3px) scale(1.01);
+            box-shadow: 0 16px 48px rgba(184, 148, 75, 0.25);
+        }
         .btn-primary .arrow {
             font-size: 18px;
-            transition: transform 0.3s ease;
-            font-family: "DM Sans", sans-serif;
+            transition: transform 0.4s var(--ease-out-expo);
             position: relative;
             z-index: 1;
         }
-        .btn-primary:hover .arrow { transform: translate(4px, -2px); }
-        .btn-primary span { position: relative; z-index: 1; }
+        .btn-primary:hover .arrow {
+            transform: translate(6px, -2px);
+        }
+        .btn-primary span {
+            position: relative;
+            z-index: 1;
+        }
 
-        /* GLOWING BOOK BUTTON */
         .btn-book-glow {
             display: inline-flex;
             align-items: center;
@@ -289,8 +316,9 @@
             position: relative;
             background: var(--jade);
             color: #fff;
-            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            transition: all 0.5s var(--ease-out-expo);
             overflow: hidden;
+            border-radius: 0;
         }
         .btn-book-glow::before {
             content: '';
@@ -304,7 +332,9 @@
             opacity: 0;
             transition: opacity 0.5s ease;
         }
-        .btn-book-glow:hover::before { opacity: 1; }
+        .btn-book-glow:hover::before {
+            opacity: 1;
+        }
         .btn-book-glow::after {
             content: '';
             position: absolute;
@@ -313,10 +343,12 @@
             z-index: -1;
             transition: background 0.4s ease;
         }
-        .btn-book-glow:hover::after { background: var(--jade-light); }
+        .btn-book-glow:hover::after {
+            background: var(--jade-light);
+        }
         .btn-book-glow:hover {
             transform: translateY(-3px) scale(1.02);
-            box-shadow: 0 8px 40px rgba(45, 107, 79, 0.4);
+            box-shadow: 0 12px 48px rgba(45, 107, 79, 0.4);
         }
         .btn-book-glow .glow-text {
             position: relative;
@@ -327,13 +359,21 @@
         }
         .btn-book-glow .glow-text .arrow {
             font-size: 16px;
-            transition: transform 0.3s ease;
+            transition: transform 0.4s var(--ease-out-expo);
         }
-        .btn-book-glow:hover .glow-text .arrow { transform: translate(4px, -2px); }
+        .btn-book-glow:hover .glow-text .arrow {
+            transform: translate(6px, -2px);
+        }
         @keyframes glowBorder {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
         }
 
         .btn-outline-dark {
@@ -350,56 +390,112 @@
             background: transparent;
             color: var(--ink);
             cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            transition: all 0.5s var(--ease-out-expo);
             font-family: "DM Sans", sans-serif;
             min-height: 50px;
+            border-radius: 0;
+            position: relative;
+        }
+        .btn-outline-dark::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: var(--ink);
+            transform: scaleX(0);
+            transform-origin: right;
+            transition: transform 0.5s var(--ease-out-expo);
+            z-index: -1;
+        }
+        .btn-outline-dark:hover::after {
+            transform: scaleX(1);
+            transform-origin: left;
         }
         .btn-outline-dark:hover {
             border-color: var(--ink);
+            color: #fff;
             transform: translateY(-2px);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.04);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
+        }
+        .btn-outline-dark .arrow {
+            transition: transform 0.4s var(--ease-out-expo);
+        }
+        .btn-outline-dark:hover .arrow {
+            transform: translate(4px, -2px);
         }
 
         /* ============================================================ */
-        /*  NAVIGATION                                                  */
+        /*  NAVIGATION — GLASS MORPHISM                                 */
         /* ============================================================ */
         .nav {
             height: 80px;
             padding: 0 5vw;
-            position: sticky;
+            position: fixed;
             top: 0;
+            left: 0;
+            right: 0;
             z-index: 100;
             display: flex;
             align-items: center;
             justify-content: space-between;
             color: #fff;
-            transition: all 0.4s ease;
+            transition: all 0.6s var(--ease-out-expo);
             background: transparent;
             width: 100%;
+            backdrop-filter: none;
+            -webkit-backdrop-filter: none;
         }
         .nav.scrolled {
-            background: rgba(250, 248, 245, 0.96);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            box-shadow: 0 2px 32px rgba(0, 0, 0, 0.04);
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px) saturate(1.2);
+            -webkit-backdrop-filter: blur(20px) saturate(1.2);
+            box-shadow: 0 2px 40px rgba(0, 0, 0, 0.04);
             color: var(--ink);
-            height: 72px;
+            height: 68px;
+            border-bottom: 1px solid var(--glass-border);
         }
-        .nav.scrolled .brand { color: var(--ink); }
-        .nav.scrolled .nav-links a { color: var(--ink); }
-        .nav.scrolled .lang-toggle { color: var(--ink); }
-        .nav.scrolled .nav-book { color: var(--ink); border-color: var(--ink); }
-        .nav.scrolled .nav-book .bell-icon svg { stroke: var(--ink); }
-        .nav.scrolled .nav-book:hover { border-color: var(--gold); color: var(--gold); }
-        .nav.scrolled .nav-book:hover .bell-icon svg { stroke: var(--gold); }
-        .nav.scrolled .menu-btn { color: var(--ink); }
-        .nav.scrolled .lang-dropdown { background: rgba(250, 248, 245, 0.98); border-color: var(--light-grey); }
-        .nav.scrolled .lang-dropdown button { color: var(--grey); }
-        .nav.scrolled .lang-dropdown button:hover { background: var(--light-grey); color: var(--ink); }
-        .nav.scrolled .lang-dropdown button.active { color: var(--gold); }
+        .nav.scrolled .brand {
+            color: var(--ink);
+        }
+        .nav.scrolled .nav-links a {
+            color: var(--ink);
+        }
+        .nav.scrolled .lang-toggle {
+            color: var(--ink);
+        }
+        .nav.scrolled .nav-book {
+            color: var(--ink);
+            border-color: rgba(0, 0, 0, 0.12);
+        }
+        .nav.scrolled .nav-book .bell-icon svg {
+            stroke: var(--ink);
+        }
+        .nav.scrolled .nav-book:hover {
+            border-color: var(--gold);
+            color: var(--gold);
+        }
+        .nav.scrolled .nav-book:hover .bell-icon svg {
+            stroke: var(--gold);
+        }
+        .nav.scrolled .menu-btn {
+            color: var(--ink);
+        }
+        .nav.scrolled .lang-dropdown {
+            background: rgba(250, 248, 245, 0.98);
+            border-color: var(--light-grey);
+        }
+        .nav.scrolled .lang-dropdown button {
+            color: var(--grey);
+        }
+        .nav.scrolled .lang-dropdown button:hover {
+            background: var(--light-grey);
+            color: var(--ink);
+        }
+        .nav.scrolled .lang-dropdown button.active {
+            color: var(--gold);
+        }
 
         .brand {
-            font-size: 16px;
+            font-size: 15px;
             letter-spacing: 0.2em;
             display: flex;
             align-items: center;
@@ -410,7 +506,7 @@
         }
         .brand .divider {
             width: 1px;
-            height: 20px;
+            height: 18px;
             background: currentColor;
             opacity: 0.3;
         }
@@ -439,18 +535,25 @@
             color: inherit;
             transition: color 0.3s;
             position: relative;
+            padding: 4px 0;
         }
         .nav-links a::after {
             content: '';
             position: absolute;
-            bottom: -4px;
+            bottom: -2px;
             left: 0;
             width: 0;
             height: 1.5px;
             background: var(--gold);
-            transition: width 0.3s ease;
+            transition: width 0.5s var(--ease-out-expo);
         }
-        .nav-links a:hover::after { width: 100%; }
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+        .nav-links a.active::after {
+            width: 100%;
+            background: var(--gold);
+        }
 
         .nav-actions {
             display: flex;
@@ -478,43 +581,47 @@
         .lang-toggle .arrow-down {
             font-size: 8px;
             opacity: 0.5;
-            transition: transform 0.3s;
+            transition: transform 0.4s var(--ease-out-expo);
         }
-        .lang-toggle:hover .arrow-down { transform: rotate(180deg); }
+        .lang-toggle:hover .arrow-down {
+            transform: rotate(180deg);
+        }
 
         .lang-dropdown {
             position: absolute;
-            top: calc(100% + 10px);
+            top: calc(100% + 12px);
             right: 0;
             background: rgba(15, 26, 22, 0.96);
-            backdrop-filter: blur(12px);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
             border: 1px solid rgba(255, 255, 255, 0.05);
             border-radius: 0;
             padding: 8px 0;
-            min-width: 160px;
+            min-width: 170px;
             opacity: 0;
             visibility: hidden;
-            transform: translateY(-6px);
-            transition: all 0.3s ease;
+            transform: translateY(-8px) scale(0.98);
+            transition: all 0.4s var(--ease-out-expo);
             z-index: 60;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
         }
         .lang-dropdown.open {
             opacity: 1;
             visibility: visible;
-            transform: translateY(0);
+            transform: translateY(0) scale(1);
         }
         .lang-dropdown button {
             display: block;
             width: 100%;
             text-align: left;
-            padding: 8px 20px;
+            padding: 8px 22px;
             background: none;
             border: 0;
-            color: rgba(255, 255, 255, 0.6);
+            color: rgba(255, 255, 255, 0.5);
             font-size: 11px;
             font-family: "DM Sans", sans-serif;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.2s ease;
         }
         .lang-dropdown button:hover {
             background: rgba(255, 255, 255, 0.04);
@@ -531,28 +638,29 @@
 
         .nav-book {
             background: transparent;
-            border: 1px solid rgba(255, 255, 255, 0.25);
+            border: 1px solid rgba(255, 255, 255, 0.2);
             color: #fff;
-            padding: 10px 22px 10px 18px;
+            padding: 10px 24px 10px 18px;
             font-size: 10px;
             letter-spacing: 0.12em;
             text-transform: uppercase;
             font-weight: 500;
             font-family: "DM Sans", sans-serif;
             cursor: pointer;
-            transition: all 0.35s ease;
+            transition: all 0.5s var(--ease-out-expo);
             display: flex;
             align-items: center;
             gap: 10px;
             border-radius: 0;
             min-height: 48px;
+            position: relative;
         }
         .nav-book .bell-icon {
             width: 18px;
             height: 18px;
             display: inline-block;
             flex-shrink: 0;
-            transition: transform 0.3s;
+            transition: transform 0.5s var(--ease-out-expo);
         }
         .nav-book .bell-icon svg {
             width: 100%;
@@ -564,18 +672,19 @@
             stroke-linejoin: round;
         }
         .nav-book:hover {
-            border-color: rgba(255, 255, 255, 0.6);
+            border-color: rgba(255, 255, 255, 0.5);
+            transform: translateY(-1px);
         }
         .nav-book:hover .bell-icon {
-            transform: scale(1.1) rotate(-6deg);
+            transform: scale(1.12) rotate(-6deg);
         }
         .nav-book .arrow-right {
             font-size: 14px;
-            transition: transform 0.3s;
+            transition: transform 0.4s var(--ease-out-expo);
             font-family: "DM Sans", sans-serif;
         }
         .nav-book:hover .arrow-right {
-            transform: translate(3px, -2px);
+            transform: translate(4px, -2px);
         }
 
         .menu-btn {
@@ -598,7 +707,7 @@
             min-height: 100dvh;
             position: relative;
             color: #fff;
-            margin-top: -80px;
+            margin-top: 0;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -611,8 +720,8 @@
             inset: 0;
             background: url('hero.png') center/cover;
             z-index: 0;
-            animation: cinematicZoom 25s ease-in-out infinite alternate;
-            transform: scale(1.1);
+            transform: scale(1.15);
+            will-change: transform;
         }
         .hero-bg::after {
             content: '';
@@ -622,15 +731,11 @@
                 radial-gradient(ellipse at 30% 40%, rgba(184, 148, 75, 0.04) 0%, transparent 60%),
                 radial-gradient(ellipse at 70% 60%, rgba(184, 148, 75, 0.02) 0%, transparent 40%);
         }
-        @keyframes cinematicZoom {
-            0% { transform: scale(1.1); }
-            100% { transform: scale(1.25); }
-        }
         .hero-overlay {
             position: absolute;
             inset: 0;
             background:
-                linear-gradient(180deg, rgba(0, 0, 0, 0.25) 0%, rgba(0, 0, 0, 0.55) 60%, rgba(0, 0, 0, 0.75) 100%);
+                linear-gradient(180deg, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0.5) 60%, rgba(0, 0, 0, 0.75) 100%);
             z-index: 1;
         }
         .hero-content {
@@ -638,13 +743,14 @@
             z-index: 2;
             max-width: 900px;
             padding: 0 5vw;
-            margin-top: 40px;
+            margin-top: 20px;
         }
         .hero-content .eyebrow {
             color: rgba(255, 255, 255, 0.4);
             margin-bottom: 20px;
             font-size: 11px;
-            animation: fadeSlideDown 1.2s 0.3s both;
+            opacity: 0;
+            animation: fadeSlideDown 1.2s 0.8s both;
         }
         .hero-content h1 {
             font-size: clamp(48px, 12vw, 130px);
@@ -652,13 +758,14 @@
             letter-spacing: -0.05em;
             line-height: 0.95;
             margin-bottom: 16px;
-            animation: fadeSlideUp 1.4s 0.5s both;
+            opacity: 0;
+            animation: fadeSlideUp 1.4s 1s both;
         }
         .hero-content h1 em {
             font-weight: 500;
             font-style: italic;
             color: var(--gold);
-            text-shadow: 0 0 60px rgba(184, 148, 75, 0.15);
+            text-shadow: 0 0 80px rgba(184, 148, 75, 0.15);
         }
         .hero-content .subhead {
             font-size: clamp(16px, 2vw, 26px);
@@ -669,16 +776,29 @@
             letter-spacing: 0.02em;
             line-height: 1.6;
             font-family: "DM Sans", sans-serif;
-            animation: fadeSlideUp 1.2s 0.7s both;
+            opacity: 0;
+            animation: fadeSlideUp 1.2s 1.2s both;
         }
 
         @keyframes fadeSlideUp {
-            0% { opacity: 0; transform: translateY(30px); }
-            100% { opacity: 1; transform: translateY(0); }
+            0% {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
         @keyframes fadeSlideDown {
-            0% { opacity: 0; transform: translateY(-20px); }
-            100% { opacity: 1; transform: translateY(0); }
+            0% {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .hero-meta {
@@ -693,32 +813,34 @@
             font-size: 9px;
             letter-spacing: 0.15em;
             text-transform: uppercase;
-            color: rgba(255, 255, 255, 0.3);
+            color: rgba(255, 255, 255, 0.25);
             font-family: "DM Mono", monospace;
             width: 100%;
-            animation: fadeSlideUp 1s 0.9s both;
+            opacity: 0;
+            animation: fadeSlideUp 1s 1.4s both;
         }
 
         /* ============================================================ */
-        /*  BOOKING BAR                                                 */
+        /*  BOOKING BAR — ENHANCED                                     */
         /* ============================================================ */
         .booking-bar-wrapper {
             position: sticky;
-            top: 80px;
+            top: 68px;
             z-index: 50;
-            transition: all 0.4s ease;
+            transition: all 0.6s var(--ease-out-expo);
             background: transparent;
             padding: 0 5vw;
             margin-top: -24px;
             width: 100%;
         }
         .booking-bar-wrapper.scrolled {
-            background: rgba(250, 248, 245, 0.96);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            box-shadow: 0 2px 32px rgba(0, 0, 0, 0.04);
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px) saturate(1.2);
+            -webkit-backdrop-filter: blur(20px) saturate(1.2);
+            box-shadow: 0 2px 40px rgba(0, 0, 0, 0.04);
             padding: 8px 5vw;
-            top: 72px;
+            top: 68px;
+            border-bottom: 1px solid var(--glass-border);
         }
         .booking-bar {
             max-width: 1200px;
@@ -727,11 +849,12 @@
             display: grid;
             grid-template-columns: 1fr 1fr 1fr 1.2fr;
             gap: 0;
-            box-shadow: 0 4px 40px rgba(0, 0, 0, 0.04);
+            box-shadow: var(--shadow-lux);
             border: 0;
             transition: all 0.3s ease;
             padding: 0;
             width: 100%;
+            position: relative;
         }
         .booking-bar>div {
             padding: 16px 20px;
@@ -739,6 +862,7 @@
             display: flex;
             flex-direction: column;
             justify-content: center;
+            position: relative;
         }
         .booking-bar>div:last-child {
             border-right: 0;
@@ -764,6 +888,11 @@
             outline: 0;
             padding: 4px 0;
             min-height: 32px;
+            transition: color 0.3s;
+        }
+        .booking-bar input:focus,
+        .booking-bar select:focus {
+            color: var(--gold);
         }
         .booking-bar .btn-olive {
             width: 100%;
@@ -774,7 +903,7 @@
             font-weight: 500;
             border: none;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.5s var(--ease-out-expo);
             font-family: "DM Sans", sans-serif;
             min-height: 48px;
             display: flex;
@@ -783,15 +912,34 @@
             gap: 10px;
             background: var(--olive);
             color: #fff;
+            border-radius: 0;
+            position: relative;
+            overflow: hidden;
+        }
+        .booking-bar .btn-olive::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, var(--olive-light), var(--olive));
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+        .booking-bar .btn-olive:hover::after {
+            opacity: 1;
         }
         .booking-bar .btn-olive:hover {
-            background: var(--olive-light);
             transform: translateY(-2px);
+            box-shadow: 0 8px 32px rgba(85, 107, 47, 0.25);
+        }
+        .booking-bar .btn-olive span {
+            position: relative;
+            z-index: 1;
         }
         .booking-bar .btn-olive .arrow {
             font-size: 18px;
-            transition: transform 0.3s ease;
-            font-family: "DM Sans", sans-serif;
+            transition: transform 0.4s var(--ease-out-expo);
+            position: relative;
+            z-index: 1;
         }
         .booking-bar .btn-olive:hover .arrow {
             transform: translate(4px, -2px);
@@ -807,10 +955,11 @@
             letter-spacing: 0.1em;
             text-transform: uppercase;
             font-weight: 500;
+            border-radius: 0;
         }
 
         /* ============================================================ */
-        /*  SECTION COMMON                                              */
+        /*  SECTION COMMON — ENHANCED                                   */
         /* ============================================================ */
         .section {
             padding: 100px 5vw;
@@ -837,7 +986,47 @@
         }
 
         /* ============================================================ */
-        /*  INTRO                                                       */
+        /*  REVEAL CLASSES — GSAP DRIVEN                               */
+        /* ============================================================ */
+        .reveal-item {
+            opacity: 0;
+            transform: translateY(60px);
+            will-change: transform, opacity;
+        }
+        .reveal-item.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .reveal-item-left {
+            opacity: 0;
+            transform: translateX(-60px);
+            will-change: transform, opacity;
+        }
+        .reveal-item-left.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        .reveal-item-right {
+            opacity: 0;
+            transform: translateX(60px);
+            will-change: transform, opacity;
+        }
+        .reveal-item-right.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        .reveal-scale {
+            opacity: 0;
+            transform: scale(0.92);
+            will-change: transform, opacity;
+        }
+        .reveal-scale.visible {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        /* ============================================================ */
+        /*  INTRO — ENHANCED                                           */
         /* ============================================================ */
         .intro {
             padding: 120px 5vw 80px;
@@ -859,7 +1048,7 @@
         }
 
         /* ============================================================ */
-        /*  FEATURE GRID                                                */
+        /*  FEATURE GRID — ENHANCED                                    */
         /* ============================================================ */
         .feature-grid {
             display: grid;
@@ -874,15 +1063,17 @@
             min-height: 500px;
             overflow: hidden;
             color: #fff;
+            will-change: transform;
         }
         .feature img {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transition: transform 0.8s ease;
+            transition: transform 1.2s var(--ease-out-expo);
+            will-change: transform;
         }
         .feature:hover img {
-            transform: scale(1.04);
+            transform: scale(1.06);
         }
         .feature .overlay {
             position: absolute;
@@ -907,9 +1098,26 @@
         .feature .content .text-link {
             color: #fff;
             border-color: rgba(255, 255, 255, 0.4);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 10px;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            font-weight: 500;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+            padding-bottom: 4px;
+            transition: all 0.3s ease;
         }
         .feature .content .text-link:hover {
             border-color: #fff;
+            color: #fff;
+        }
+        .feature .content .text-link .arrow {
+            transition: transform 0.4s var(--ease-out-expo);
+        }
+        .feature .content .text-link:hover .arrow {
+            transform: translate(4px, -2px);
         }
         .feature.tall {
             grid-row: span 2;
@@ -917,7 +1125,7 @@
         }
 
         /* ============================================================ */
-        /*  ROOMS — SOPHISTICATED ARTISTIC DISPLAY                      */
+        /*  ROOMS — ENHANCED ARTISTIC DISPLAY                           */
         /* ============================================================ */
         .rooms-section {
             padding: 100px 5vw 60px;
@@ -938,12 +1146,13 @@
             background: #fff;
             overflow: hidden;
             cursor: pointer;
-            transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            transition: all 0.7s var(--ease-out-expo);
             transform: translateY(0);
+            will-change: transform, box-shadow;
         }
         .room-art-card:hover {
-            transform: translateY(-12px);
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.06);
+            transform: translateY(-16px) scale(1.01);
+            box-shadow: 0 24px 80px rgba(0, 0, 0, 0.07);
         }
         .room-art-card .art-image {
             position: relative;
@@ -954,7 +1163,8 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transition: transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            transition: transform 1s var(--ease-out-expo);
+            will-change: transform;
         }
         .room-art-card:hover .art-image img {
             transform: scale(1.08);
@@ -969,6 +1179,7 @@
             color: rgba(255, 255, 255, 0.6);
             background: rgba(0, 0, 0, 0.3);
             backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
             padding: 4px 14px;
             z-index: 2;
             font-weight: 500;
@@ -1032,14 +1243,14 @@
             position: fixed;
             inset: 0;
             z-index: 200;
-            background: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
             align-items: center;
             justify-content: center;
             padding: 40px 5vw;
             opacity: 0;
-            transition: opacity 0.6s ease;
+            transition: opacity 0.8s var(--ease-out-expo);
         }
         .room-modal.open {
             display: flex;
@@ -1052,12 +1263,13 @@
             max-height: 90vh;
             overflow-y: auto;
             position: relative;
-            transform: scale(0.92) translateY(30px);
-            transition: transform 0.7s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.6s ease;
+            transform: scale(0.92) translateY(40px);
+            transition: transform 0.8s var(--ease-out-expo), opacity 0.6s ease;
             opacity: 0;
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 0;
+            box-shadow: 0 40px 120px rgba(0, 0, 0, 0.2);
         }
         .room-modal.open .room-modal-content {
             transform: scale(1) translateY(0);
@@ -1069,22 +1281,23 @@
             right: 24px;
             border: 0;
             background: rgba(255, 255, 255, 0.95);
-            width: 44px;
-            height: 44px;
+            width: 48px;
+            height: 48px;
             border-radius: 50%;
             font-size: 22px;
             cursor: pointer;
             color: var(--ink);
-            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            transition: all 0.5s var(--ease-out-expo);
             display: flex;
             align-items: center;
             justify-content: center;
             z-index: 10;
-            box-shadow: 0 2px 16px rgba(0, 0, 0, 0.08);
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
         }
         .room-modal-content .close-modal:hover {
-            transform: rotate(90deg) scale(1.1);
+            transform: rotate(90deg) scale(1.08);
             background: #fff;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
         }
 
         .modal-gallery-wrap {
@@ -1098,7 +1311,8 @@
             height: 100%;
             min-height: 500px;
             object-fit: cover;
-            transition: opacity 0.5s ease;
+            transition: opacity 0.6s ease;
+            will-change: transform;
         }
         .modal-gallery-wrap .gallery-thumbs {
             position: absolute;
@@ -1114,9 +1328,9 @@
             height: 56px;
             object-fit: cover;
             cursor: pointer;
-            border: 2px solid rgba(255, 255, 255, 0.2);
-            transition: all 0.3s ease;
-            opacity: 0.5;
+            border: 2px solid rgba(255, 255, 255, 0.15);
+            transition: all 0.4s var(--ease-out-expo);
+            opacity: 0.4;
         }
         .modal-gallery-wrap .gallery-thumbs .thumb:hover,
         .modal-gallery-wrap .gallery-thumbs .thumb.active {
@@ -1129,25 +1343,31 @@
             top: 50%;
             transform: translateY(-50%);
             z-index: 5;
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(4px);
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
             border: 0;
             color: #fff;
-            width: 44px;
-            height: 44px;
+            width: 48px;
+            height: 48px;
             border-radius: 50%;
             cursor: pointer;
-            font-size: 20px;
-            transition: all 0.3s ease;
+            font-size: 22px;
+            transition: all 0.4s var(--ease-out-expo);
             display: flex;
             align-items: center;
             justify-content: center;
         }
         .modal-gallery-wrap .gallery-nav:hover {
-            background: rgba(255, 255, 255, 0.25);
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-50%) scale(1.05);
         }
-        .modal-gallery-wrap .gallery-nav.prev { left: 16px; }
-        .modal-gallery-wrap .gallery-nav.next { right: 16px; }
+        .modal-gallery-wrap .gallery-nav.prev {
+            left: 16px;
+        }
+        .modal-gallery-wrap .gallery-nav.next {
+            right: 16px;
+        }
         .modal-gallery-wrap .gallery-counter {
             position: absolute;
             top: 20px;
@@ -1161,6 +1381,7 @@
             padding: 4px 14px;
             border-radius: 20px;
             backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
         }
 
         .modal-content-right {
@@ -1231,12 +1452,13 @@
             inset: 0;
             z-index: 210;
             background: rgba(0, 0, 0, 0.7);
-            backdrop-filter: blur(12px);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
             align-items: center;
             justify-content: center;
             padding: 40px 5vw;
             opacity: 0;
-            transition: opacity 0.5s ease;
+            transition: opacity 0.6s var(--ease-out-expo);
         }
         .more-details-overlay.open {
             display: flex;
@@ -1250,9 +1472,10 @@
             overflow-y: auto;
             padding: 44px 48px;
             position: relative;
-            transform: scale(0.95) translateY(20px);
-            transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.4s ease;
+            transform: scale(0.95) translateY(30px);
+            transition: transform 0.7s var(--ease-out-expo), opacity 0.5s ease;
             opacity: 0;
+            box-shadow: 0 40px 120px rgba(0, 0, 0, 0.15);
         }
         .more-details-overlay.open .more-details-content {
             transform: scale(1) translateY(0);
@@ -1267,7 +1490,7 @@
             font-size: 28px;
             cursor: pointer;
             color: var(--grey);
-            transition: color 0.3s, transform 0.3s;
+            transition: all 0.4s var(--ease-out-expo);
             padding: 4px 8px;
             line-height: 1;
         }
@@ -1323,7 +1546,7 @@
         }
 
         /* ============================================================ */
-        /*  OTHER SECTIONS                                              */
+        /*  OTHER SECTIONS — ENHANCED                                   */
         /* ============================================================ */
         .quote-section {
             display: grid;
@@ -1334,6 +1557,7 @@
         }
         .quote-section .image {
             background: url('https://images.unsplash.com/photo-1511497584788-876760111969?auto=format&fit=crop&w=1300&q=85') center/cover;
+            min-height: 320px;
         }
         .quote-section .text {
             padding: 80px 60px;
@@ -1409,6 +1633,7 @@
         }
         .dining-section .image {
             background: url('https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&w=1300&q=90') center/cover;
+            min-height: 320px;
         }
 
         .chef-section {
@@ -1494,12 +1719,14 @@
             height: 420px;
             overflow: hidden;
             cursor: pointer;
+            will-change: transform;
         }
         .exp-card img {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transition: transform 0.6s ease;
+            transition: transform 0.8s var(--ease-out-expo);
+            will-change: transform;
         }
         .exp-card:hover img {
             transform: scale(1.05);
@@ -1536,7 +1763,7 @@
             color: rgba(255, 255, 255, 0.5);
             margin-top: 12px;
             display: inline-block;
-            transition: color 0.3s;
+            transition: all 0.3s ease;
             border-bottom: 1px solid rgba(255, 255, 255, 0.2);
             padding-bottom: 4px;
         }
@@ -1667,7 +1894,8 @@
             overflow: hidden;
             cursor: pointer;
             min-height: 120px;
-            transition: transform 0.3s ease;
+            transition: transform 0.5s var(--ease-out-expo);
+            will-change: transform;
         }
         .gallery-tile:hover {
             transform: scale(1.02);
@@ -1712,7 +1940,7 @@
             padding: 4px 0;
             font-weight: 500;
             font-family: "DM Sans", sans-serif;
-            transition: all 0.3s;
+            transition: all 0.4s var(--ease-out-expo);
             border-bottom: 1.5px solid transparent;
         }
         .gallery-filters button.active {
@@ -1737,6 +1965,7 @@
             max-width: 900px;
             margin: 0 auto 16px;
             letter-spacing: -0.03em;
+            transition: opacity 0.4s ease, transform 0.4s ease;
         }
         .testimonial-section .author {
             font-size: 10px;
@@ -1757,11 +1986,15 @@
             font-size: 16px;
             cursor: pointer;
             color: var(--grey);
-            transition: color 0.3s;
+            transition: all 0.3s ease;
             padding: 4px 8px;
         }
         .testimonial-nav button:hover {
             color: var(--ink);
+            transform: translateX(-2px);
+        }
+        .testimonial-nav button:last-child:hover {
+            transform: translateX(2px);
         }
         .testimonial-nav .current {
             font-size: 10px;
@@ -1792,6 +2025,11 @@
             height: 100%;
             min-height: 340px;
             border: 0;
+            filter: grayscale(0.2) contrast(1.05);
+            transition: filter 0.6s ease;
+        }
+        .location-dynamic .location-map-wrap iframe:hover {
+            filter: grayscale(0) contrast(1);
         }
         .location-dynamic .location-info h2 {
             font-size: clamp(34px, 4.5vw, 58px);
@@ -1842,6 +2080,30 @@
             font-weight: 500;
         }
 
+        .text-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 10px;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            font-weight: 500;
+            color: var(--ink);
+            border-bottom: 1px solid var(--light-grey);
+            padding-bottom: 4px;
+            transition: all 0.4s var(--ease-out-expo);
+        }
+        .text-link:hover {
+            color: var(--gold);
+            border-color: var(--gold);
+        }
+        .text-link .arrow {
+            transition: transform 0.4s var(--ease-out-expo);
+        }
+        .text-link:hover .arrow {
+            transform: translate(4px, -2px);
+        }
+
         .facilities-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -1853,10 +2115,12 @@
             background: #fff;
             padding: 32px 24px;
             text-align: center;
-            transition: background 0.3s;
+            transition: all 0.5s var(--ease-out-expo);
+            will-change: transform;
         }
         .facility-item:hover {
             background: var(--cream);
+            transform: translateY(-4px);
         }
         .facility-item .icon {
             font-size: 28px;
@@ -1895,6 +2159,12 @@
             padding: 32px 28px;
             background: #fff;
             border: 0;
+            transition: all 0.5s var(--ease-out-expo);
+            will-change: transform;
+        }
+        .policy-block:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-soft);
         }
         .policy-block h4 {
             font-size: 11px;
@@ -1946,6 +2216,7 @@
         .faq-list details {
             border-bottom: 1px solid var(--light-grey);
             padding: 16px 0;
+            transition: border-color 0.3s;
         }
         .faq-list details:last-child {
             border-bottom: 0;
@@ -1959,6 +2230,10 @@
             list-style: none;
             font-size: 15px;
             gap: 16px;
+            transition: color 0.3s;
+        }
+        .faq-list summary:hover {
+            color: var(--gold);
         }
         .faq-list summary::-webkit-details-marker {
             display: none;
@@ -1966,7 +2241,7 @@
         .faq-list summary .plus {
             font-size: 22px;
             color: var(--gold);
-            transition: transform 0.3s;
+            transition: transform 0.5s var(--ease-out-expo);
             flex-shrink: 0;
         }
         .faq-list details[open] summary .plus {
@@ -2023,12 +2298,13 @@
             color: rgba(255, 255, 255, 0.7);
             border-bottom: 1px solid rgba(255, 255, 255, 0.06);
             padding-bottom: 10px;
-            transition: color 0.3s;
+            transition: all 0.3s ease;
             display: flex;
             flex-direction: column;
         }
         .contact-section .dark .links a:hover {
             color: #fff;
+            border-color: rgba(255, 255, 255, 0.15);
         }
         .contact-section .dark .links a .label {
             font-size: 8px;
@@ -2077,6 +2353,10 @@
         .stats-grid .stat {
             padding: 16px 0;
             border-right: 1px solid rgba(0, 0, 0, 0.04);
+            transition: all 0.5s var(--ease-out-expo);
+        }
+        .stats-grid .stat:hover {
+            transform: translateY(-4px);
         }
         .stats-grid .stat:last-child {
             border-right: 0;
@@ -2112,6 +2392,11 @@
             text-align: center;
             line-height: 1.6;
             font-weight: 500;
+            opacity: 0.6;
+            transition: opacity 0.4s ease;
+        }
+        .trust-grid span:hover {
+            opacity: 1;
         }
 
         .journal-grid {
@@ -2123,6 +2408,10 @@
         .journal-grid article {
             border-top: 1px solid var(--light-grey);
             padding-top: 20px;
+            transition: all 0.5s var(--ease-out-expo);
+        }
+        .journal-grid article:hover {
+            transform: translateY(-4px);
         }
         .journal-grid article .label {
             font-size: 9px;
@@ -2144,7 +2433,7 @@
             color: var(--ink);
             border-bottom: 1px solid var(--ink);
             padding-bottom: 4px;
-            transition: color 0.3s, border-color 0.3s;
+            transition: all 0.4s var(--ease-out-expo);
         }
         .journal-grid article .link:hover {
             color: var(--gold);
@@ -2166,13 +2455,13 @@
             justify-content: center;
             text-decoration: none;
             box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.5);
-            transition: all 0.3s ease;
+            transition: all 0.5s var(--ease-out-expo);
             border: 0;
             animation: whatsappPulse 2.5s ease-in-out infinite;
         }
         .whatsapp-float:hover {
-            transform: scale(1.1);
-            box-shadow: 0 0 0 12px rgba(37, 211, 102, 0.15);
+            transform: scale(1.12);
+            box-shadow: 0 0 0 16px rgba(37, 211, 102, 0.12);
             animation-play-state: paused;
             color: #fff;
         }
@@ -2182,9 +2471,15 @@
             fill: #fff;
         }
         @keyframes whatsappPulse {
-            0% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.5); }
-            70% { box-shadow: 0 0 0 16px rgba(37, 211, 102, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); }
+            0% {
+                box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.5);
+            }
+            70% {
+                box-shadow: 0 0 0 18px rgba(37, 211, 102, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(37, 211, 102, 0);
+            }
         }
 
         footer {
@@ -2219,6 +2514,7 @@
         }
         .footer-grid p a {
             color: rgba(255, 255, 255, 0.7);
+            transition: color 0.3s;
         }
         .footer-grid p a:hover {
             color: #fff;
@@ -2237,14 +2533,19 @@
             font-size: 12px;
             padding: 4px 0;
             color: rgba(255, 255, 255, 0.5);
-            transition: color 0.3s;
+            transition: all 0.3s ease;
         }
         .footer-grid a:hover {
             color: #fff;
+            transform: translateX(4px);
         }
         .footer-grid .subscribe {
             border-bottom: 1px solid rgba(255, 255, 255, 0.06);
             display: flex;
+            transition: border-color 0.3s;
+        }
+        .footer-grid .subscribe:focus-within {
+            border-color: rgba(255, 255, 255, 0.2);
         }
         .footer-grid .subscribe input {
             background: none;
@@ -2266,10 +2567,11 @@
             font-size: 18px;
             cursor: pointer;
             padding: 4px 8px;
-            transition: color 0.3s;
+            transition: all 0.3s ease;
         }
         .footer-grid .subscribe button:hover {
             color: #fff;
+            transform: translateX(2px);
         }
         .footer-bottom {
             border-top: 1px solid rgba(255, 255, 255, 0.04);
@@ -2303,10 +2605,12 @@
             left: 50%;
             transform: translate(-50%, -50%);
             margin: 0;
+            box-shadow: 0 40px 120px rgba(0, 0, 0, 0.2);
         }
         dialog::backdrop {
             background: rgba(0, 0, 0, 0.7);
-            backdrop-filter: blur(4px);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
         }
         .booking-panel {
             padding: 48px 40px;
@@ -2321,13 +2625,14 @@
             font-size: 28px;
             cursor: pointer;
             color: var(--grey);
-            transition: color 0.3s;
+            transition: all 0.4s var(--ease-out-expo);
             padding: 4px 8px;
             line-height: 1;
             z-index: 5;
         }
         .booking-panel .close:hover {
             color: var(--ink);
+            transform: rotate(90deg);
         }
         .booking-panel h2 {
             font-size: 42px;
@@ -2372,6 +2677,7 @@
             font-family: "DM Sans", sans-serif;
             outline: 0;
             min-height: 40px;
+            transition: border-color 0.3s ease;
         }
         .booking-panel input:focus,
         .booking-panel select:focus,
@@ -2396,13 +2702,32 @@
             text-transform: uppercase;
             font-weight: 500;
             cursor: pointer;
-            transition: background 0.3s;
+            transition: all 0.5s var(--ease-out-expo);
             font-family: "DM Sans", sans-serif;
             min-height: 50px;
             margin-top: 4px;
+            border-radius: 0;
+            position: relative;
+            overflow: hidden;
+        }
+        .booking-panel .reserve-btn::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, var(--olive-light), var(--olive));
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+        .booking-panel .reserve-btn:hover::after {
+            opacity: 1;
         }
         .booking-panel .reserve-btn:hover {
-            background: var(--olive-light);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 32px rgba(85, 107, 47, 0.25);
+        }
+        .booking-panel .reserve-btn span {
+            position: relative;
+            z-index: 1;
         }
 
         #toast {
@@ -2410,30 +2735,23 @@
             z-index: 60;
             bottom: 30px;
             left: 50%;
-            transform: translate(-50%, 100px);
+            transform: translate(-50%, 80px);
             background: #fff;
-            padding: 16px 28px;
-            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.08);
+            padding: 16px 32px;
+            box-shadow: 0 8px 48px rgba(0, 0, 0, 0.06);
             font-size: 13px;
-            transition: all 0.4s ease;
+            transition: all 0.6s var(--ease-out-expo);
             color: var(--ink);
             width: 90%;
             max-width: 400px;
             text-align: center;
             border-radius: 0;
+            border: 1px solid var(--light-grey);
+            opacity: 0;
         }
         #toast.show {
             transform: translate(-50%, 0);
-        }
-
-        .reveal {
-            opacity: 0;
-            transform: translateY(24px);
-            transition: opacity 0.8s ease, transform 0.8s ease;
-        }
-        .reveal.visible {
             opacity: 1;
-            transform: none;
         }
 
         /* ============================================================ */
@@ -2465,9 +2783,6 @@
             }
             .more-details-content .details-grid {
                 grid-template-columns: 1fr;
-            }
-            .grid-3 {
-                grid-template-columns: repeat(2, 1fr);
             }
             .facilities-grid {
                 grid-template-columns: repeat(2, 1fr);
@@ -2508,6 +2823,13 @@
             .exp-grid {
                 grid-template-columns: repeat(2, 1fr);
             }
+            .faq-grid {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+            .faq-grid .right {
+                padding: 40px 5vw;
+            }
         }
 
         @media(max-width: 768px) {
@@ -2515,18 +2837,22 @@
                 height: 64px;
                 padding: 0 4vw;
             }
+            .nav.scrolled {
+                height: 60px;
+            }
             .nav-links {
                 display: none;
                 position: absolute;
                 top: 64px;
                 left: 0;
                 right: 0;
-                background: rgba(250, 248, 245, 0.98);
-                backdrop-filter: blur(12px);
+                background: var(--glass-bg);
+                backdrop-filter: blur(20px) saturate(1.2);
+                -webkit-backdrop-filter: blur(20px) saturate(1.2);
                 flex-direction: column;
                 padding: 24px 5vw 32px;
                 gap: 14px;
-                border-bottom: 1px solid var(--light-grey);
+                border-bottom: 1px solid var(--glass-border);
                 align-items: stretch;
                 text-align: center;
                 width: 100%;
@@ -2565,7 +2891,7 @@
             .hero {
                 min-height: 90vh;
                 min-height: 90dvh;
-                margin-top: -64px;
+                margin-top: 0;
             }
             .hero-content h1 {
                 font-size: 42px;
@@ -2580,11 +2906,11 @@
             }
 
             .booking-bar-wrapper {
-                top: 64px;
+                top: 60px;
                 padding: 0 4vw;
             }
             .booking-bar-wrapper.scrolled {
-                top: 64px;
+                top: 60px;
                 padding: 6px 4vw;
             }
             .booking-bar {
@@ -2646,8 +2972,7 @@
             .quote-section,
             .dining-section,
             .signature-section,
-            .contact-section,
-            .faq-grid {
+            .contact-section {
                 grid-template-columns: 1fr;
             }
             .quote-section .text,
@@ -2850,13 +3175,16 @@
             .brand .location {
                 font-size: 6px;
             }
-            .intro-3d h1 {
-                font-size: 32px;
+
+            .faq-grid {
+                padding: 60px 5vw;
             }
-            .intro-3d .logo-seal {
-                width: 56px;
-                height: 56px;
-                font-size: 16px;
+            .faq-grid .right {
+                padding: 40px 5vw;
+            }
+
+            .cursor-dot {
+                display: none;
             }
         }
 
@@ -2939,7 +3267,7 @@
             .modal-content-right .room-description {
                 font-size: 13px;
             }
-            .intro-3d h1 {
+            .booking-panel h2 {
                 font-size: 28px;
             }
         }
@@ -2948,32 +3276,26 @@
 <body>
 
     <!-- ============================================================ -->
-    <!--  3D INTRO — CINEMATIC OPENING                                 -->
+    <!--  THREE.JS INTRO OVERLAY                                      -->
     <!-- ============================================================ -->
-    <div class="intro-3d" id="intro3d">
-        <div class="bg-particles">
-            <span style="left:10%;animation-delay:0s;"></span>
-            <span style="left:20%;animation-delay:0.5s;"></span>
-            <span style="left:35%;animation-delay:1s;"></span>
-            <span style="left:50%;animation-delay:0.3s;"></span>
-            <span style="left:65%;animation-delay:0.8s;"></span>
-            <span style="left:78%;animation-delay:1.2s;"></span>
-            <span style="left:88%;animation-delay:0.6s;"></span>
+    <div id="intro-overlay">
+        <canvas id="intro-canvas"></canvas>
+        <div id="intro-ui">
+            <div id="loading-progress">
+                <span id="loading-text">Loading experience…</span>
+                <span class="bar-track"><span class="bar-fill" id="loading-bar"></span></span>
+            </div>
+            <button id="skip-intro">Skip Intro</button>
         </div>
-        <div class="ring"></div>
-        <div class="ring"></div>
-        <div class="ring"></div>
-        <div class="logo-container">
-            <div class="logo-seal">AD</div>
-            <h1>AMROUSS<br><em>touristic</em> DarMaroc</h1>
-            <div class="sub-line"></div>
-            <div class="location-text">Azrou · Morocco</div>
-        </div>
-        <div class="progress-bar"><div class="fill"></div></div>
     </div>
 
     <!-- ============================================================ -->
-    <!--  NAVIGATION                                                   -->
+    <!--  CUSTOM CURSOR                                               -->
+    <!-- ============================================================ -->
+    <div class="cursor-dot" id="cursorDot"></div>
+
+    <!-- ============================================================ -->
+    <!--  NAVIGATION — ENHANCED                                       -->
     <!-- ============================================================ -->
     <header class="nav" id="mainNav">
         <a class="brand" href="#home">
@@ -3026,7 +3348,7 @@
     <!--  HERO — CINEMATIC                                            -->
     <!-- ============================================================ -->
     <section class="hero" id="home">
-        <div class="hero-bg"></div>
+        <div class="hero-bg" id="heroBg"></div>
         <div class="hero-overlay"></div>
         <div class="hero-content">
             <p class="eyebrow light" data-i18n="heroOverline">6 KM FROM AZROU · MIDDLE ATLAS</p>
@@ -3040,7 +3362,7 @@
     </section>
 
     <!-- ============================================================ -->
-    <!--  BOOKING BAR                                                  -->
+    <!--  BOOKING BAR — ENHANCED                                      -->
     <!-- ============================================================ -->
     <div class="booking-bar-wrapper" id="bookingBarWrapper">
         <div class="booking-bar">
@@ -3071,9 +3393,9 @@
     </div>
 
     <!-- ============================================================ -->
-    <!--  INTRO                                                       -->
+    <!--  INTRO — ENHANCED                                            -->
     <!-- ============================================================ -->
-    <section class="intro reveal" id="story">
+    <section class="intro reveal-item" id="story">
         <p class="eyebrow">A HOUSE IN THE ATLAS</p>
         <h2>Not just outside the city.<br><em>Outside its hurry.</em></h2>
         <div class="intro-grid">
@@ -3083,10 +3405,10 @@
     </section>
 
     <!-- ============================================================ -->
-    <!--  FEATURE GRID                                                -->
+    <!--  FEATURE GRID — ENHANCED                                     -->
     <!-- ============================================================ -->
     <div class="feature-grid">
-        <div class="feature tall reveal">
+        <div class="feature tall reveal-item">
             <img src="https://images.unsplash.com/photo-1602002418082-a4443e081dd1?auto=format&fit=crop&w=1400&q=85" alt="Luxury room" loading="lazy" />
             <div class="overlay"></div>
             <div class="content">
@@ -3095,7 +3417,7 @@
                 <a href="#stay" class="text-link">Explore stays <span class="arrow">→</span></a>
             </div>
         </div>
-        <div class="feature reveal">
+        <div class="feature reveal-item">
             <img src="https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=1100&q=85" alt="Moroccan craft" loading="lazy" />
             <div class="overlay"></div>
             <div class="content">
@@ -3103,7 +3425,7 @@
                 <h3>Made with a sense of place.</h3>
             </div>
         </div>
-        <div class="feature reveal">
+        <div class="feature reveal-item">
             <img src="https://images.unsplash.com/photo-1540541338287-41700207dee6?auto=format&fit=crop&w=1100&q=85" alt="Pool in nature" loading="lazy" />
             <div class="overlay"></div>
             <div class="content">
@@ -3117,7 +3439,7 @@
     <!--  ROOMS — SOPHISTICATED ARTISTIC DISPLAY                      -->
     <!-- ============================================================ -->
     <section class="rooms-section" id="stay">
-        <div class="section-center reveal">
+        <div class="section-center reveal-item">
             <p class="eyebrow">STAY AT AMROUSS DAR</p>
             <h2>Rooms with <em>room to breathe.</em></h2>
             <p class="section-sub">Choose from four carefully curated room types, each designed for comfort and tranquility. Click on any room to explore.</p>
@@ -3210,9 +3532,9 @@
     </section>
 
     <!-- ============================================================ -->
-    <!--  FIND YOUR WAY OUT                                            -->
+    <!--  FIND YOUR WAY OUT — ENHANCED                                -->
     <!-- ============================================================ -->
-    <section class="location-dynamic reveal" id="location">
+    <section class="location-dynamic reveal-item" id="location">
         <div class="location-grid-inner">
             <div class="location-map-wrap">
                 <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d215.06774873347575!2d-5.206742026818542!3d33.40793823043272!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xd9e2c2b2b2b2b2b%3A0x2b2b2b2b2b2b2b2b!2sAzrou%2C%20Morocco!5e0!3m2!1sen!2suk!4v1700000000000" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Map of Amrouss Dar location"></iframe>
@@ -3317,7 +3639,7 @@
     </section>
 
     <!-- ============================================================ -->
-    <!--  DINING                                                      -->
+    <!--  DINING — ENHANCED                                           -->
     <!-- ============================================================ -->
     <section class="dining-section" id="dining">
         <div class="text">
@@ -3334,9 +3656,9 @@
     </section>
 
     <!-- ============================================================ -->
-    <!--  CHEF NOTE                                                   -->
+    <!--  CHEF NOTE — ENHANCED                                        -->
     <!-- ============================================================ -->
-    <section class="chef-section reveal">
+    <section class="chef-section reveal-item">
         <div>
             <p class="eyebrow">FROM OUR KITCHEN</p>
             <span class="mark">A</span>
@@ -3381,11 +3703,18 @@
                 </div>
             </div>
         </div>
-        <style>@media(max-width:768px){.section-sm>div{grid-template-columns:1fr;gap:40px;}}</style>
+        <style>
+            @media(max-width:768px) {
+                .section-sm>div {
+                    grid-template-columns: 1fr;
+                    gap: 40px;
+                }
+            }
+        </style>
     </section>
 
     <!-- ============================================================ -->
-    <!--  EXPERIENCES                                                 -->
+    <!--  EXPERIENCES — ENHANCED                                      -->
     <!-- ============================================================ -->
     <section class="experiences-section" id="experiences">
         <div class="section-center">
@@ -3394,7 +3723,7 @@
             <p class="section-sub">The Middle Atlas gives generously to those who go gently.</p>
         </div>
         <div class="exp-grid">
-            <div class="exp-card reveal">
+            <div class="exp-card reveal-item">
                 <img src="https://images.unsplash.com/photo-1470770841072-f978cf4d019e?auto=format&fit=crop&w=800&q=85" alt="Cedar forest" loading="lazy" />
                 <div class="overlay"></div>
                 <div class="content">
@@ -3403,7 +3732,7 @@
                     <span class="link">Discover →</span>
                 </div>
             </div>
-            <div class="exp-card reveal">
+            <div class="exp-card reveal-item">
                 <img src="https://images.unsplash.com/photo-1526481280695-3c687fd643ed?auto=format&fit=crop&w=800&q=85" alt="Horseback riding" loading="lazy" />
                 <div class="overlay"></div>
                 <div class="content">
@@ -3412,7 +3741,7 @@
                     <span class="link">Discover →</span>
                 </div>
             </div>
-            <div class="exp-card reveal">
+            <div class="exp-card reveal-item">
                 <img src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=800&q=85" alt="Mountains" loading="lazy" />
                 <div class="overlay"></div>
                 <div class="content">
@@ -3425,7 +3754,7 @@
     </section>
 
     <!-- ============================================================ -->
-    <!--  SIGNATURE                                                   -->
+    <!--  SIGNATURE — ENHANCED                                        -->
     <!-- ============================================================ -->
     <section class="signature-section">
         <div class="image"></div>
@@ -3442,7 +3771,7 @@
     </section>
 
     <!-- ============================================================ -->
-    <!--  EVENTS                                                      -->
+    <!--  EVENTS — ENHANCED                                           -->
     <!-- ============================================================ -->
     <section class="events-section">
         <div class="image"></div>
@@ -3459,10 +3788,10 @@
     </section>
 
     <!-- ============================================================ -->
-    <!--  GALLERY                                                     -->
+    <!--  GALLERY — ENHANCED                                          -->
     <!-- ============================================================ -->
     <section class="section" id="gallery">
-        <div class="section-center reveal">
+        <div class="section-center reveal-item">
             <p class="eyebrow">AN EVER-CHANGING LIGHT</p>
             <h2>A glimpse into <em>the Dar.</em></h2>
         </div>
@@ -3484,7 +3813,7 @@
     </section>
 
     <!-- ============================================================ -->
-    <!--  TESTIMONIALS                                                -->
+    <!--  TESTIMONIALS — ENHANCED                                     -->
     <!-- ============================================================ -->
     <section class="testimonial-section">
         <p class="eyebrow">WORDS FROM THE DAR</p>
@@ -3498,10 +3827,10 @@
     </section>
 
     <!-- ============================================================ -->
-    <!--  FACILITIES                                                  -->
+    <!--  FACILITIES — ENHANCED                                       -->
     <!-- ============================================================ -->
     <section class="section" id="facilities">
-        <div class="section-center reveal">
+        <div class="section-center reveal-item">
             <p class="eyebrow">MOST POPULAR FACILITIES</p>
             <h2>Everything you need<br /><em>for a perfect stay.</em></h2>
         </div>
@@ -3518,7 +3847,7 @@
     </section>
 
     <!-- ============================================================ -->
-    <!--  STATS                                                       -->
+    <!--  STATS — ENHANCED                                            -->
     <!-- ============================================================ -->
     <div class="stats-grid">
         <div class="stat"><b>9.4</b><span>Breakfast Rating</span></div>
@@ -3528,7 +3857,7 @@
     </div>
 
     <!-- ============================================================ -->
-    <!--  TRUST                                                       -->
+    <!--  TRUST — ENHANCED                                            -->
     <!-- ============================================================ -->
     <div class="trust-grid">
         <span>TRAVEL + LEISURE</span>
@@ -3539,10 +3868,10 @@
     </div>
 
     <!-- ============================================================ -->
-    <!--  POLICIES                                                    -->
+    <!--  POLICIES — ENHANCED                                         -->
     <!-- ============================================================ -->
     <section class="section" style="background:var(--cream);width:100%;" id="policies">
-        <div class="section-center reveal">
+        <div class="section-center reveal-item">
             <p class="eyebrow">HOUSE RULES</p>
             <h2>Before you <em>make your way.</em></h2>
         </div>
@@ -3553,11 +3882,17 @@
             <div class="policy-block"><h4>🚭 Other Policies</h4><p>No bachelor(ette) parties</p><p>No events/parties allowed</p><p class="small">Smoke-free property</p></div>
             <div class="policy-block" style="grid-column:span 1;"><h4>💳 Cancellation</h4><p>Cancellation and prepayment policies vary according to accommodation type.</p><p class="small">Check conditions when booking.</p></div>
         </div>
-        <style>@media(max-width:768px){.policies-grid .policy-block[style*="grid-column:span 1;"]{grid-column:span 1;}}</style>
+        <style>
+            @media(max-width:768px) {
+                .policies-grid .policy-block[style*="grid-column:span 1;"] {
+                    grid-column: span 1;
+                }
+            }
+        </style>
     </section>
 
     <!-- ============================================================ -->
-    <!--  FAQ / CONTACT                                               -->
+    <!--  FAQ / CONTACT — ENHANCED                                    -->
     <!-- ============================================================ -->
     <section class="faq-grid" id="contact">
         <div class="left">
@@ -3576,21 +3911,27 @@
             <h2 style="color:#fff;font-size:clamp(34px,4vw,56px);">We are here<br /><em style="font-style:italic;color:var(--gold);">when you are ready.</em></h2>
             <p style="color:rgba(255,255,255,0.5);font-size:15px;line-height:1.8;margin:16px 0 24px;max-width:400px;">For stays, celebrations, transfers or a question only a local can answer.</p>
             <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:28px;">
-                <a href="tel:+212630485646" style="color:rgba(255,255,255,0.6);border-bottom:1px solid rgba(255,255,255,0.04);padding-bottom:10px;transition:color .3s;display:flex;flex-direction:column;"><span style="font-size:8px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,0.2);font-weight:500;">Call us</span> +212 (0) 630 485 646</a>
-                <a href="mailto:hello@amroussdar.ma" style="color:rgba(255,255,255,0.6);border-bottom:1px solid rgba(255,255,255,0.04);padding-bottom:10px;transition:color .3s;display:flex;flex-direction:column;"><span style="font-size:8px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,0.2);font-weight:500;">Email</span> hello@amroussdar.ma</a>
-                <a href="https://wa.me/212630485646" target="_blank" rel="noopener" style="color:rgba(255,255,255,0.6);border-bottom:1px solid rgba(255,255,255,0.04);padding-bottom:10px;transition:color .3s;display:flex;flex-direction:column;"><span style="font-size:8px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,0.2);font-weight:500;">WhatsApp</span> Message the Dar →</a>
+                <a href="tel:+212630485646" style="color:rgba(255,255,255,0.6);border-bottom:1px solid rgba(255,255,255,0.04);padding-bottom:10px;transition:all .3s ease;display:flex;flex-direction:column;"><span style="font-size:8px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,0.2);font-weight:500;">Call us</span> +212 (0) 630 485 646</a>
+                <a href="mailto:hello@amroussdar.ma" style="color:rgba(255,255,255,0.6);border-bottom:1px solid rgba(255,255,255,0.04);padding-bottom:10px;transition:all .3s ease;display:flex;flex-direction:column;"><span style="font-size:8px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,0.2);font-weight:500;">Email</span> hello@amroussdar.ma</a>
+                <a href="https://wa.me/212630485646" target="_blank" rel="noopener" style="color:rgba(255,255,255,0.6);border-bottom:1px solid rgba(255,255,255,0.04);padding-bottom:10px;transition:all .3s ease;display:flex;flex-direction:column;"><span style="font-size:8px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,0.2);font-weight:500;">WhatsApp</span> Message the Dar →</a>
             </div>
             <p style="font-size:12px;color:rgba(255,255,255,0.2);margin-bottom:20px;">After booking, all property details including telephone and address are provided in your confirmation.</p>
             <button class="btn-primary" data-open-booking style="background:var(--gold);color:var(--ink);width:100%;justify-content:center;">Start a reservation <span class="arrow">→</span></button>
         </div>
-        <style>@media(max-width:768px){.faq-grid .right{padding:40px 5vw;}}</style>
+        <style>
+            @media(max-width:768px) {
+                .faq-grid .right {
+                    padding: 40px 5vw;
+                }
+            }
+        </style>
     </section>
 
     <!-- ============================================================ -->
-    <!--  JOURNAL                                                     -->
+    <!--  JOURNAL — ENHANCED                                          -->
     <!-- ============================================================ -->
     <section class="section" id="journal">
-        <div class="section-center reveal">
+        <div class="section-center reveal-item">
             <p class="eyebrow">FROM THE DAR JOURNAL</p>
             <h2>Stories from <em>the foothills.</em></h2>
         </div>
@@ -3610,7 +3951,7 @@
     </a>
 
     <!-- ============================================================ -->
-    <!--  FOOTER                                                      -->
+    <!--  FOOTER — ENHANCED                                           -->
     <!-- ============================================================ -->
     <footer>
         <div class="footer-grid">
@@ -3677,86 +4018,740 @@
     <div id="toast" role="status">Thank you — we'll be in touch shortly.</div>
 
     <!-- ============================================================ -->
-    <!--  JAVASCRIPT                                                  -->
+    <!--  JAVASCRIPT — ENHANCED                                       -->
     <!-- ============================================================ -->
     <script>
-        // ===== TRANSLATIONS =====
+        // ============================================================ //
+        //  1. THREE.JS CINEMATIC INTRO                                 //
+        // ============================================================ //
+
+        (function() {
+            const overlay = document.getElementById('intro-overlay');
+            const canvas = document.getElementById('intro-canvas');
+            const skipBtn = document.getElementById('skip-intro');
+            const loadingBar = document.getElementById('loading-bar');
+            const loadingText = document.getElementById('loading-text');
+
+            let introActive = true;
+            let progress = 0;
+            let scene, camera, renderer, particles, logoMesh, particleCount = 1200;
+
+            // --- Scene Setup ---
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x0a0a0a);
+
+            camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 100);
+            camera.position.set(0, 0, 8);
+
+            renderer = new THREE.WebGLRenderer({
+                canvas: canvas,
+                antialias: true,
+                alpha: false
+            });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            renderer.toneMapping = THREE.ACESFilmicToneMapping;
+            renderer.toneMappingExposure = 1.2;
+
+            // --- Lights ---
+            const ambientLight = new THREE.AmbientLight(0x222233, 0.5);
+            scene.add(ambientLight);
+
+            const keyLight = new THREE.DirectionalLight(0xffdd99, 1.8);
+            keyLight.position.set(2, 3, 4);
+            scene.add(keyLight);
+
+            const fillLight = new THREE.DirectionalLight(0x446688, 0.6);
+            fillLight.position.set(-3, 1, -2);
+            scene.add(fillLight);
+
+            const rimLight = new THREE.DirectionalLight(0xffcc88, 0.8);
+            rimLight.position.set(0, -2, -4);
+            scene.add(rimLight);
+
+            // --- Particles ---
+            const particleGeo = new THREE.BufferGeometry();
+            const positions = new Float32Array(particleCount * 3);
+            const sizes = new Float32Array(particleCount);
+            const colors = new Float32Array(particleCount * 3);
+
+            for (let i = 0; i < particleCount; i++) {
+                const radius = 3 + Math.random() * 4;
+                const theta = Math.random() * Math.PI * 2;
+                const phi = Math.acos((Math.random() * 2) - 1);
+                positions[i * 3] = radius * Math.sin(phi) * Math.cos(theta);
+                positions[i * 3 + 1] = radius * Math.cos(phi) * 0.6;
+                positions[i * 3 + 2] = radius * Math.sin(phi) * Math.sin(theta) - 2;
+
+                sizes[i] = 0.008 + Math.random() * 0.025;
+                const goldness = 0.5 + Math.random() * 0.5;
+                colors[i * 3] = 0.9 + Math.random() * 0.1;
+                colors[i * 3 + 1] = 0.7 + Math.random() * 0.2;
+                colors[i * 3 + 2] = 0.3 + Math.random() * 0.2;
+            }
+            particleGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            particleGeo.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
+            particleGeo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+            const particleMat = new THREE.PointsMaterial({
+                size: 0.04,
+                vertexColors: true,
+                transparent: true,
+                opacity: 0.7,
+                blending: THREE.AdditiveBlending,
+                depthWrite: false,
+                sizeAttenuation: true
+            });
+            particles = new THREE.Points(particleGeo, particleMat);
+            scene.add(particles);
+
+            // --- Logo (3D Text-like using a plane with canvas texture) ---
+            const logoCanvas = document.createElement('canvas');
+            logoCanvas.width = 800;
+            logoCanvas.height = 300;
+            const ctx = logoCanvas.getContext('2d');
+
+            // Background
+            ctx.clearRect(0, 0, 800, 300);
+
+            // Gold gradient
+            const grad = ctx.createLinearGradient(0, 0, 800, 0);
+            grad.addColorStop(0, '#b8944b');
+            grad.addColorStop(0.3, '#d4b06a');
+            grad.addColorStop(0.5, '#f0d89a');
+            grad.addColorStop(0.7, '#d4b06a');
+            grad.addColorStop(1, '#b8944b');
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+
+            // Main text
+            ctx.font = 'bold 80px "Playfair Display", Georgia, serif';
+            ctx.shadowColor = 'rgba(184, 148, 75, 0.3)';
+            ctx.shadowBlur = 30;
+            ctx.fillStyle = grad;
+            ctx.fillText('AMROUSS', 400, 120);
+
+            ctx.font = '400 42px "Playfair Display", Georgia, serif';
+            ctx.shadowBlur = 20;
+            ctx.fillStyle = '#d4b06a';
+            ctx.fillText('touristic DarMaroc', 400, 190);
+
+            // Subtle gold border
+            ctx.shadowBlur = 0;
+            ctx.strokeStyle = 'rgba(184, 148, 75, 0.08)';
+            ctx.lineWidth = 0.5;
+            ctx.strokeText('AMROUSS', 400, 120);
+
+            const texture = new THREE.CanvasTexture(logoCanvas);
+            texture.needsUpdate = true;
+
+            const logoMat = new THREE.MeshStandardMaterial({
+                map: texture,
+                transparent: true,
+                emissive: new THREE.Color(0xb8944b),
+                emissiveIntensity: 0.15,
+                metalness: 0.5,
+                roughness: 0.3,
+                side: THREE.DoubleSide
+            });
+
+            const logoGeo = new THREE.PlaneGeometry(5, 1.6);
+            logoMesh = new THREE.Mesh(logoGeo, logoMat);
+            logoMesh.position.set(0, 0.1, 0);
+            scene.add(logoMesh);
+
+            // Small gold ring behind logo
+            const ringGeo = new THREE.RingGeometry(2.2, 2.6, 64);
+            const ringMat = new THREE.MeshBasicMaterial({
+                color: 0xb8944b,
+                transparent: true,
+                opacity: 0.12,
+                side: THREE.DoubleSide
+            });
+            const ring = new THREE.Mesh(ringGeo, ringMat);
+            ring.position.set(0, 0.1, -0.2);
+            scene.add(ring);
+
+            // --- Animations ---
+            let time = 0;
+            let cameraZ = 8;
+            let targetZ = 6;
+            let isSkipped = false;
+
+            function animateIntro() {
+                if (!introActive) return;
+                requestAnimationFrame(animateIntro);
+
+                time += 0.01;
+
+                // Camera gently moves forward and back
+                const breath = Math.sin(time * 0.3) * 0.15;
+                cameraZ += (targetZ + breath - cameraZ) * 0.008;
+                camera.position.z = cameraZ;
+
+                // Camera slight drift
+                camera.position.x = Math.sin(time * 0.1) * 0.15;
+                camera.position.y = Math.cos(time * 0.08) * 0.05 + 0.1;
+                camera.lookAt(0, 0.1, 0);
+
+                // Particles rotate slowly
+                particles.rotation.y = time * 0.015;
+                particles.rotation.x = Math.sin(time * 0.01) * 0.02;
+
+                // Logo subtle float
+                logoMesh.position.y = 0.1 + Math.sin(time * 0.6) * 0.04;
+                logoMesh.rotation.z = Math.sin(time * 0.3) * 0.003;
+
+                // Ring pulse
+                ring.material.opacity = 0.08 + Math.sin(time * 0.5) * 0.04;
+
+                // Update loading progress
+                if (progress < 1) {
+                    progress += 0.003 + Math.random() * 0.005;
+                    if (progress > 1) progress = 1;
+                    const pct = Math.round(progress * 100);
+                    loadingBar.style.width = pct + '%';
+                    if (pct < 30) loadingText.textContent = 'Loading experience…';
+                    else if (pct < 60) loadingText.textContent = 'Preparing the Atlas…';
+                    else if (pct < 90) loadingText.textContent = 'Almost ready…';
+                    else loadingText.textContent = 'Welcome to Amrouss Dar';
+                }
+
+                renderer.render(scene, camera);
+            }
+
+            // --- Resize ---
+            function onResize() {
+                const w = window.innerWidth;
+                const h = window.innerHeight;
+                camera.aspect = w / h;
+                camera.updateProjectionMatrix();
+                renderer.setSize(w, h);
+            }
+            window.addEventListener('resize', onResize);
+
+            // --- Skip / Exit ---
+            function exitIntro() {
+                if (isSkipped) return;
+                isSkipped = true;
+                introActive = false;
+
+                // Fade out overlay
+                overlay.classList.add('hidden');
+
+                // Remove canvas after transition
+                setTimeout(() => {
+                    renderer.dispose();
+                    // Start Lenis and GSAP after intro
+                    initLenisAndGSAP();
+                }, 1800);
+            }
+
+            skipBtn.addEventListener('click', exitIntro);
+
+            // Auto-exit after progress completes
+            const progressCheck = setInterval(() => {
+                if (progress >= 1 && !isSkipped) {
+                    clearInterval(progressCheck);
+                    setTimeout(exitIntro, 600);
+                }
+            }, 100);
+
+            // Also exit after max 8 seconds (safety)
+            setTimeout(() => {
+                if (!isSkipped && progress < 1) {
+                    progress = 1;
+                    loadingBar.style.width = '100%';
+                    loadingText.textContent = 'Welcome to Amrouss Dar';
+                    setTimeout(exitIntro, 500);
+                }
+            }, 8000);
+
+            // --- Start ---
+            animateIntro();
+
+            // Expose for cleanup
+            window.__introCleanup = function() {
+                renderer.dispose();
+                scene = null;
+                renderer = null;
+            };
+
+        })();
+
+
+        // ============================================================ //
+        //  2. LENIS SMOOTH SCROLL + GSAP                              //
+        // ============================================================ //
+
+        let lenis = null;
+        let gsapInitialized = false;
+
+        function initLenisAndGSAP() {
+            if (gsapInitialized) return;
+            gsapInitialized = true;
+
+            // --- Lenis ---
+            lenis = new Lenis({
+                duration: 1.2,
+                easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+                orientation: 'vertical',
+                smoothWheel: true,
+                wheelMultiplier: 0.9,
+                touchMultiplier: 1.2,
+            });
+
+            lenis.on('scroll', () => {
+                // Update nav and booking bar
+                const scrolled = window.scrollY > 30;
+                document.getElementById('mainNav').classList.toggle('scrolled', scrolled);
+                document.getElementById('bookingBarWrapper').classList.toggle('scrolled', scrolled);
+            });
+
+            // Connect Lenis to RAF
+            function raf(time) {
+                lenis.raf(time);
+                requestAnimationFrame(raf);
+            }
+            requestAnimationFrame(raf);
+
+            // --- GSAP + ScrollTrigger ---
+            gsap.registerPlugin(ScrollTrigger);
+
+            // Hero parallax
+            gsap.to('#heroBg', {
+                scale: 1.25,
+                y: '10%',
+                ease: 'none',
+                scrollTrigger: {
+                    trigger: '.hero',
+                    start: 'top top',
+                    end: 'bottom top',
+                    scrub: 1.2,
+                }
+            });
+
+            // Reveal items with GSAP
+            document.querySelectorAll('.reveal-item').forEach((el) => {
+                gsap.fromTo(el, {
+                    opacity: 0,
+                    y: 60,
+                }, {
+                    opacity: 1,
+                    y: 0,
+                    duration: 1.2,
+                    ease: 'power3.out',
+                    scrollTrigger: {
+                        trigger: el,
+                        start: 'top 85%',
+                        toggleActions: 'play none none reverse',
+                    }
+                });
+            });
+
+            // Room cards stagger
+            gsap.fromTo('.room-art-card', {
+                opacity: 0,
+                y: 40,
+                scale: 0.97,
+            }, {
+                opacity: 1,
+                y: 0,
+                scale: 1,
+                duration: 0.9,
+                ease: 'power3.out',
+                stagger: 0.08,
+                scrollTrigger: {
+                    trigger: '.rooms-grid-artistic',
+                    start: 'top 80%',
+                    toggleActions: 'play none none reverse',
+                }
+            });
+
+            // Feature grid items
+            gsap.fromTo('.feature', {
+                opacity: 0,
+                y: 50,
+            }, {
+                opacity: 1,
+                y: 0,
+                duration: 1,
+                ease: 'power3.out',
+                stagger: 0.12,
+                scrollTrigger: {
+                    trigger: '.feature-grid',
+                    start: 'top 80%',
+                    toggleActions: 'play none none reverse',
+                }
+            });
+
+            // Experience cards
+            gsap.fromTo('.exp-card', {
+                opacity: 0,
+                y: 40,
+                scale: 0.96,
+            }, {
+                opacity: 1,
+                y: 0,
+                scale: 1,
+                duration: 0.9,
+                ease: 'power3.out',
+                stagger: 0.1,
+                scrollTrigger: {
+                    trigger: '.exp-grid',
+                    start: 'top 80%',
+                    toggleActions: 'play none none reverse',
+                }
+            });
+
+            // Gallery tiles
+            gsap.fromTo('.gallery-tile', {
+                opacity: 0,
+                scale: 0.92,
+            }, {
+                opacity: 1,
+                scale: 1,
+                duration: 0.8,
+                ease: 'power3.out',
+                stagger: 0.06,
+                scrollTrigger: {
+                    trigger: '.gallery-grid',
+                    start: 'top 80%',
+                    toggleActions: 'play none none reverse',
+                }
+            });
+
+            // Stats
+            gsap.fromTo('.stat b', {
+                opacity: 0,
+                y: 20,
+            }, {
+                opacity: 1,
+                y: 0,
+                duration: 0.8,
+                ease: 'power3.out',
+                stagger: 0.08,
+                scrollTrigger: {
+                    trigger: '.stats-grid',
+                    start: 'top 85%',
+                    toggleActions: 'play none none reverse',
+                }
+            });
+
+            // Facility items
+            gsap.fromTo('.facility-item', {
+                opacity: 0,
+                y: 30,
+            }, {
+                opacity: 1,
+                y: 0,
+                duration: 0.7,
+                ease: 'power3.out',
+                stagger: 0.06,
+                scrollTrigger: {
+                    trigger: '.facilities-grid',
+                    start: 'top 85%',
+                    toggleActions: 'play none none reverse',
+                }
+            });
+
+            // Policy blocks
+            gsap.fromTo('.policy-block', {
+                opacity: 0,
+                y: 30,
+            }, {
+                opacity: 1,
+                y: 0,
+                duration: 0.8,
+                ease: 'power3.out',
+                stagger: 0.08,
+                scrollTrigger: {
+                    trigger: '.policies-grid',
+                    start: 'top 85%',
+                    toggleActions: 'play none none reverse',
+                }
+            });
+
+            // Journal articles
+            gsap.fromTo('.journal-grid article', {
+                opacity: 0,
+                y: 30,
+            }, {
+                opacity: 1,
+                y: 0,
+                duration: 0.8,
+                ease: 'power3.out',
+                stagger: 0.1,
+                scrollTrigger: {
+                    trigger: '.journal-grid',
+                    start: 'top 85%',
+                    toggleActions: 'play none none reverse',
+                }
+            });
+
+            // Update ScrollTrigger on resize
+            window.addEventListener('resize', () => {
+                ScrollTrigger.refresh();
+            });
+        }
+
+
+        // ============================================================ //
+        //  3. CUSTOM CURSOR                                           //
+        // ============================================================ //
+
+        (function() {
+            const dot = document.getElementById('cursorDot');
+            let mouseX = 0,
+                mouseY = 0;
+            let dotX = 0,
+                dotY = 0;
+            let isVisible = false;
+
+            document.addEventListener('mousemove', (e) => {
+                mouseX = e.clientX;
+                mouseY = e.clientY;
+                if (!isVisible) {
+                    isVisible = true;
+                    dot.classList.add('visible');
+                }
+            });
+
+            document.addEventListener('mouseleave', () => {
+                isVisible = false;
+                dot.classList.remove('visible');
+            });
+
+            // Hover effects on interactive elements
+            document.querySelectorAll('a, button, .room-art-card, .exp-card, .gallery-tile, .facility-item, .policy-block')
+                .forEach(el => {
+                    el.addEventListener('mouseenter', () => dot.classList.add('hover'));
+                    el.addEventListener('mouseleave', () => dot.classList.remove('hover'));
+                });
+
+            // Smooth follow
+            function updateCursor() {
+                dotX += (mouseX - dotX) * 0.12;
+                dotY += (mouseY - dotY) * 0.12;
+                dot.style.left = dotX + 'px';
+                dot.style.top = dotY + 'px';
+                requestAnimationFrame(updateCursor);
+            }
+            updateCursor();
+        })();
+
+
+        // ============================================================ //
+        //  4. TRANSLATIONS                                             //
+        // ============================================================ //
+
         const translations = {
             en: {
-                navStay: 'Stay', navStory: 'The Dar', navDining: 'Dining', navExperiences: 'Experiences', contact: 'Contact',
-                reserve: 'Reserve', heroOverline: '6 KM FROM AZROU · MIDDLE ATLAS', heroCopy: 'Six minutes beyond the city, a rare kind of quiet begins: cedar air, mountain light and nothing competing for your attention.',
-                availability: 'Check availability', arrival: 'Arrival', departure: 'Departure',
-                guests: 'Guests', twoGuests: '2 Guests', oneGuest: '1 Guest', family: 'Family of 4'
+                navStay: 'Stay',
+                navStory: 'The Dar',
+                navDining: 'Dining',
+                navExperiences: 'Experiences',
+                contact: 'Contact',
+                reserve: 'Reserve',
+                heroOverline: '6 KM FROM AZROU · MIDDLE ATLAS',
+                heroCopy: 'Six minutes beyond the city, a rare kind of quiet begins: cedar air, mountain light and nothing competing for your attention.',
+                availability: 'Check availability',
+                arrival: 'Arrival',
+                departure: 'Departure',
+                guests: 'Guests',
+                twoGuests: '2 Guests',
+                oneGuest: '1 Guest',
+                family: 'Family of 4'
             },
             fr: {
-                navStay: 'Séjours', navStory: 'La Maison', navDining: 'Table', navExperiences: 'Expériences', contact: 'Contact',
-                reserve: 'Réserver', heroOverline: 'À 6 KM D\'AZROU · MOYEN ATLAS', heroCopy: 'À six minutes de la ville commence un silence rare : l\'air des cèdres, la lumière des montagnes et rien pour vous distraire.',
-                availability: 'Voir disponibilités', arrival: 'Arrivée', departure: 'Départ',
-                guests: 'Voyageurs', twoGuests: '2 voyageurs', oneGuest: '1 voyageur', family: 'Famille de 4'
+                navStay: 'Séjours',
+                navStory: 'La Maison',
+                navDining: 'Table',
+                navExperiences: 'Expériences',
+                contact: 'Contact',
+                reserve: 'Réserver',
+                heroOverline: 'À 6 KM D\'AZROU · MOYEN ATLAS',
+                heroCopy: 'À six minutes de la ville commence un silence rare : l\'air des cèdres, la lumière des montagnes et rien pour vous distraire.',
+                availability: 'Voir disponibilités',
+                arrival: 'Arrivée',
+                departure: 'Départ',
+                guests: 'Voyageurs',
+                twoGuests: '2 voyageurs',
+                oneGuest: '1 voyageur',
+                family: 'Famille de 4'
             },
             es: {
-                navStay: 'Estancias', navStory: 'El Dar', navDining: 'Gastronomía', navExperiences: 'Experiencias', contact: 'Contacto',
-                reserve: 'Reservar', heroOverline: 'A 6 KM DE AZROU · MEDIO ATLAS', heroCopy: 'A seis minutos de la ciudad empieza un silencio excepcional: aire de cedro, luz de montaña y nada que reclame tu atención.',
-                availability: 'Ver disponibilidad', arrival: 'Llegada', departure: 'Salida',
-                guests: 'Huéspedes', twoGuests: '2 huéspedes', oneGuest: '1 huésped', family: 'Familia de 4'
+                navStay: 'Estancias',
+                navStory: 'El Dar',
+                navDining: 'Gastronomía',
+                navExperiences: 'Experiencias',
+                contact: 'Contacto',
+                reserve: 'Reservar',
+                heroOverline: 'A 6 KM DE AZROU · MEDIO ATLAS',
+                heroCopy: 'A seis minutos de la ciudad empieza un silencio excepcional: aire de cedro, luz de montaña y nada que reclame tu atención.',
+                availability: 'Ver disponibilidad',
+                arrival: 'Llegada',
+                departure: 'Salida',
+                guests: 'Huéspedes',
+                twoGuests: '2 huéspedes',
+                oneGuest: '1 huésped',
+                family: 'Familia de 4'
             },
             de: {
-                navStay: 'Aufenthalt', navStory: 'Das Dar', navDining: 'Gastronomie', navExperiences: 'Erlebnisse', contact: 'Kontakt',
-                reserve: 'Reservieren', heroOverline: '6 KM VON AZROU · MITTELATLAS', heroCopy: 'Sechs Minuten außerhalb der Stadt beginnt eine seltene Stille: Zedernluft, Berglicht und nichts, das um Ihre Aufmerksamkeit buhlt.',
-                availability: 'Verfügbarkeit prüfen', arrival: 'Anreise', departure: 'Abreise',
-                guests: 'Gäste', twoGuests: '2 Gäste', oneGuest: '1 Gast', family: 'Familie von 4'
+                navStay: 'Aufenthalt',
+                navStory: 'Das Dar',
+                navDining: 'Gastronomie',
+                navExperiences: 'Erlebnisse',
+                contact: 'Kontakt',
+                reserve: 'Reservieren',
+                heroOverline: '6 KM VON AZROU · MITTELATLAS',
+                heroCopy: 'Sechs Minuten außerhalb der Stadt beginnt eine seltene Stille: Zedernluft, Berglicht und nichts, das um Ihre Aufmerksamkeit buhlt.',
+                availability: 'Verfügbarkeit prüfen',
+                arrival: 'Anreise',
+                departure: 'Abreise',
+                guests: 'Gäste',
+                twoGuests: '2 Gäste',
+                oneGuest: '1 Gast',
+                family: 'Familie von 4'
             },
             it: {
-                navStay: 'Soggiorno', navStory: 'Il Dar', navDining: 'Cucina', navExperiences: 'Esperienze', contact: 'Contatto',
-                reserve: 'Prenota', heroOverline: '6 KM DA AZROU · MEDIO ATLANTE', heroCopy: 'A sei minuti dalla città inizia un silenzio raro: aria di cedro, luce di montagna e niente che cerca la vostra attenzione.',
-                availability: 'Verifica disponibilità', arrival: 'Arrivo', departure: 'Partenza',
-                guests: 'Ospiti', twoGuests: '2 ospiti', oneGuest: '1 ospite', family: 'Famiglia di 4'
+                navStay: 'Soggiorno',
+                navStory: 'Il Dar',
+                navDining: 'Cucina',
+                navExperiences: 'Esperienze',
+                contact: 'Contatto',
+                reserve: 'Prenota',
+                heroOverline: '6 KM DA AZROU · MEDIO ATLANTE',
+                heroCopy: 'A sei minuti dalla città inizia un silenzio raro: aria di cedro, luce di montagna e niente che cerca la vostra attenzione.',
+                availability: 'Verifica disponibilità',
+                arrival: 'Arrivo',
+                departure: 'Partenza',
+                guests: 'Ospiti',
+                twoGuests: '2 ospiti',
+                oneGuest: '1 ospite',
+                family: 'Famiglia di 4'
             },
             pt: {
-                navStay: 'Estadia', navStory: 'O Dar', navDining: 'Gastronomia', navExperiences: 'Experiências', contact: 'Contato',
-                reserve: 'Reservar', heroOverline: '6 KM DE AZROU · MÉDIO ATLAS', heroCopy: 'A seis minutos da cidade, começa um raro silêncio: ar de cedro, luz da montanha e nada que dispute a sua atenção.',
-                availability: 'Verificar disponibilidade', arrival: 'Chegada', departure: 'Partida',
-                guests: 'Hóspedes', twoGuests: '2 hóspedes', oneGuest: '1 hóspede', family: 'Família de 4'
+                navStay: 'Estadia',
+                navStory: 'O Dar',
+                navDining: 'Gastronomia',
+                navExperiences: 'Experiências',
+                contact: 'Contato',
+                reserve: 'Reservar',
+                heroOverline: '6 KM DE AZROU · MÉDIO ATLAS',
+                heroCopy: 'A seis minutos da cidade, começa um raro silêncio: ar de cedro, luz da montanha e nada que dispute a sua atenção.',
+                availability: 'Verificar disponibilidade',
+                arrival: 'Chegada',
+                departure: 'Partida',
+                guests: 'Hóspedes',
+                twoGuests: '2 hóspedes',
+                oneGuest: '1 hóspede',
+                family: 'Família de 4'
             },
             nl: {
-                navStay: 'Verblijf', navStory: 'Het Dar', navDining: 'Gastronomie', navExperiences: 'Ervaringen', contact: 'Contact',
-                reserve: 'Reserveren', heroOverline: '6 KM VAN AZROU · MIDDEN-ATLAS', heroCopy: 'Zes minuten buiten de stad begint een zeldzame stilte: cederlucht, berglicht en niets dat uw aandacht opeist.',
-                availability: 'Beschikbaarheid controleren', arrival: 'Aankomst', departure: 'Vertrek',
-                guests: 'Gasten', twoGuests: '2 gasten', oneGuest: '1 gast', family: 'Gezin van 4'
+                navStay: 'Verblijf',
+                navStory: 'Het Dar',
+                navDining: 'Gastronomie',
+                navExperiences: 'Ervaringen',
+                contact: 'Contact',
+                reserve: 'Reserveren',
+                heroOverline: '6 KM VAN AZROU · MIDDEN-ATLAS',
+                heroCopy: 'Zes minuten buiten de stad begint een zeldzame stilte: cederlucht, berglicht en niets dat uw aandacht opeist.',
+                availability: 'Beschikbaarheid controleren',
+                arrival: 'Aankomst',
+                departure: 'Vertrek',
+                guests: 'Gasten',
+                twoGuests: '2 gasten',
+                oneGuest: '1 gast',
+                family: 'Gezin van 4'
             },
             ar: {
-                navStay: 'الإقامة', navStory: 'الدار', navDining: 'المطبخ', navExperiences: 'التجارب', contact: 'اتصل بنا',
-                reserve: 'احجز', heroOverline: '6 كم من أزرو · الأطلس المتوسط', heroCopy: 'على بعد ست دقائق من المدينة، يبدأ هدوء نادر: هواء الأرز، ضوء الجبال ولا شيء ينافس انتباهك.',
-                availability: 'تحقق من التوفر', arrival: 'الوصول', departure: 'المغادرة',
-                guests: 'الضيوف', twoGuests: 'ضيفان', oneGuest: 'ضيف واحد', family: 'عائلة من 4'
+                navStay: 'الإقامة',
+                navStory: 'الدار',
+                navDining: 'المطبخ',
+                navExperiences: 'التجارب',
+                contact: 'اتصل بنا',
+                reserve: 'احجز',
+                heroOverline: '6 كم من أزرو · الأطلس المتوسط',
+                heroCopy: 'على بعد ست دقائق من المدينة، يبدأ هدوء نادر: هواء الأرز، ضوء الجبال ولا شيء ينافس انتباهك.',
+                availability: 'تحقق من التوفر',
+                arrival: 'الوصول',
+                departure: 'المغادرة',
+                guests: 'الضيوف',
+                twoGuests: 'ضيفان',
+                oneGuest: 'ضيف واحد',
+                family: 'عائلة من 4'
             },
             zh: {
-                navStay: '住宿', navStory: '达尔酒店', navDining: '餐饮', navExperiences: '体验', contact: '联系我们',
-                reserve: '预订', heroOverline: '距阿兹鲁6公里 · 中阿特拉斯', heroCopy: '距离城市仅六分钟，一种罕见的宁静开始：雪松空气、山间光线，没有任何事物争夺您的注意力。',
-                availability: '查询空房', arrival: '抵达', departure: '离开',
-                guests: '客人', twoGuests: '2位客人', oneGuest: '1位客人', family: '4人家庭'
+                navStay: '住宿',
+                navStory: '达尔酒店',
+                navDining: '餐饮',
+                navExperiences: '体验',
+                contact: '联系我们',
+                reserve: '预订',
+                heroOverline: '距阿兹鲁6公里 · 中阿特拉斯',
+                heroCopy: '距离城市仅六分钟，一种罕见的宁静开始：雪松空气、山间光线，没有任何事物争夺您的注意力。',
+                availability: '查询空房',
+                arrival: '抵达',
+                departure: '离开',
+                guests: '客人',
+                twoGuests: '2位客人',
+                oneGuest: '1位客人',
+                family: '4人家庭'
             },
             ja: {
-                navStay: '滞在', navStory: 'ダール', navDining: 'ダイニング', navExperiences: '体験', contact: 'お問い合わせ',
-                reserve: '予約', heroOverline: 'アズルーより6km · 中部アトラス', heroCopy: '街からわずか6分、希少な静けさが始まります：杉の香り、山の光、そしてあなたの注意を奪うものは何もありません。',
-                availability: '空室確認', arrival: '到着', departure: '出発',
-                guests: 'ゲスト', twoGuests: '2名様', oneGuest: '1名様', family: '4人家族'
+                navStay: '滞在',
+                navStory: 'ダール',
+                navDining: 'ダイニング',
+                navExperiences: '体験',
+                contact: 'お問い合わせ',
+                reserve: '予約',
+                heroOverline: 'アズルーより6km · 中部アトラス',
+                heroCopy: '街からわずか6分、希少な静けさが始まります：杉の香り、山の光、そしてあなたの注意を奪うものは何もありません。',
+                availability: '空室確認',
+                arrival: '到着',
+                departure: '出発',
+                guests: 'ゲスト',
+                twoGuests: '2名様',
+                oneGuest: '1名様',
+                family: '4人家族'
             },
             ru: {
-                navStay: 'Проживание', navStory: 'Дар', navDining: 'Кухня', navExperiences: 'Впечатления', contact: 'Контакты',
-                reserve: 'Забронировать', heroOverline: '6 КМ ОТ АЗРУ · СРЕДНИЙ АТЛАС', heroCopy: 'В шести минутах от города начинается редкая тишина: воздух кедров, горный свет и ничто не борется за ваше внимание.',
-                availability: 'Проверить наличие', arrival: 'Прибытие', departure: 'Отъезд',
-                guests: 'Гости', twoGuests: '2 гостя', oneGuest: '1 гость', family: 'Семья из 4'
+                navStay: 'Проживание',
+                navStory: 'Дар',
+                navDining: 'Кухня',
+                navExperiences: 'Впечатления',
+                contact: 'Контакты',
+                reserve: 'Забронировать',
+                heroOverline: '6 КМ ОТ АЗРУ · СРЕДНИЙ АТЛАС',
+                heroCopy: 'В шести минутах от города начинается редкая тишина: воздух кедров, горный свет и ничто не борется за ваше внимание.',
+                availability: 'Проверить наличие',
+                arrival: 'Прибытие',
+                departure: 'Отъезд',
+                guests: 'Гости',
+                twoGuests: '2 гостя',
+                oneGuest: '1 гость',
+                family: 'Семья из 4'
             },
             tr: {
-                navStay: 'Konaklama', navStory: 'Dar', navDining: 'Yemek', navExperiences: 'Deneyimler', contact: 'İletişim',
-                reserve: 'Rezervasyon', heroOverline: 'AZROU\'YA 6 KM · ORTA ATLAS', heroCopy: 'Şehrin altı dakika ötesinde, nadir bir sessizlik başlar: sedir kokusu, dağ ışığı ve dikkatinizi dağıtacak hiçbir şey.',
-                availability: 'Müsaitlik kontrol et', arrival: 'Geliş', departure: 'Ayrılış',
-                guests: 'Misafirler', twoGuests: '2 misafir', oneGuest: '1 misafir', family: '4 kişilik aile'
+                navStay: 'Konaklama',
+                navStory: 'Dar',
+                navDining: 'Yemek',
+                navExperiences: 'Deneyimler',
+                contact: 'İletişim',
+                reserve: 'Rezervasyon',
+                heroOverline: 'AZROU\'YA 6 KM · ORTA ATLAS',
+                heroCopy: 'Şehrin altı dakika ötesinde, nadir bir sessizlik başlar: sedir kokusu, dağ ışığı ve dikkatinizi dağıtacak hiçbir şey.',
+                availability: 'Müsaitlik kontrol et',
+                arrival: 'Geliş',
+                departure: 'Ayrılış',
+                guests: 'Misafirler',
+                twoGuests: '2 misafir',
+                oneGuest: '1 misafir',
+                family: '4 kişilik aile'
             }
         };
 
-        // ===== LANGUAGE =====
         const langToggle = document.getElementById('langToggle');
         const langDropdown = document.getElementById('langDropdown');
         const currentLangSpan = document.getElementById('currentLang');
@@ -3791,7 +4786,7 @@
                 el.innerHTML = copy[el.dataset.i18nHtml] || el.innerHTML;
             });
             try { localStorage.setItem('amrouss-language', lang); } catch (_) {}
-            const reserveBtn = document.querySelector('.nav-book span:not(.bell-icon)');
+            const reserveBtn = document.querySelector('.nav-book span:not(.bell-icon):not(.arrow-right)');
             if (reserveBtn) reserveBtn.textContent = copy.reserve || 'Reserve';
         }
 
@@ -3803,7 +4798,11 @@
         });
         setLanguage(savedLanguage);
 
-        // ===== MOBILE MENU =====
+
+        // ============================================================ //
+        //  5. MOBILE MENU                                              //
+        // ============================================================ //
+
         const menuToggle = document.getElementById('menuToggle');
         const navLinks = document.getElementById('navLinks');
         menuToggle.addEventListener('click', function() {
@@ -3817,16 +4816,11 @@
             });
         });
 
-        // ===== STICKY NAV & BOOKING BAR =====
-        const nav = document.getElementById('mainNav');
-        const bookingWrapper = document.getElementById('bookingBarWrapper');
-        window.addEventListener('scroll', () => {
-            const scrolled = window.scrollY > 30;
-            nav.classList.toggle('scrolled', scrolled);
-            bookingWrapper.classList.toggle('scrolled', scrolled);
-        });
 
-        // ===== DIALOG =====
+        // ============================================================ //
+        //  6. DIALOG & TOAST                                           //
+        // ============================================================ //
+
         const dialog = document.querySelector('#booking');
         const toast = document.querySelector('#toast');
         document.querySelectorAll('[data-open-booking]').forEach(button => {
@@ -3846,8 +4840,9 @@
             setTimeout(() => toast.classList.remove('show'), 4000);
         });
 
+
         // ============================================================ //
-        // ===== ROOM MODAL — ADVANCED TRANSITIONS =====
+        //  7. ROOM MODAL                                               //
         // ============================================================ //
 
         const roomModal = document.getElementById('roomModal');
@@ -3856,7 +4851,6 @@
         const closeMoreDetails = document.getElementById('closeMoreDetails');
         const closeMoreDetailsBtn = document.getElementById('closeMoreDetailsBtn');
 
-        // Room data
         const roomData = {
             double: {
                 name: 'Double Room',
@@ -3924,37 +4918,10 @@
             }
         };
 
-        // Open room modal from "Book Now" buttons on cards
-        document.querySelectorAll('.btn-book-glow[data-room]').forEach(btn => {
-            btn.addEventListener('click', function(e) {
-                e.stopPropagation();
-                const room = this.dataset.room;
-                openRoomModal(room);
-            });
-        });
-
-        // Open room modal from "Details" buttons on cards
-        document.querySelectorAll('.details-btn[data-room]').forEach(btn => {
-            btn.addEventListener('click', function(e) {
-                e.stopPropagation();
-                const room = this.dataset.room;
-                openRoomModal(room);
-            });
-        });
-
-        // Also open from clicking the card itself
-        document.querySelectorAll('.room-art-card').forEach(card => {
-            card.addEventListener('click', function() {
-                const room = this.dataset.room;
-                if (room) openRoomModal(room);
-            });
-        });
-
         function openRoomModal(room) {
             const data = roomData[room];
             if (!data) return;
 
-            // Set content
             document.getElementById('modalBadge').textContent = data.name;
             document.getElementById('modalTitle').textContent = data.name;
             document.getElementById('modalSub').textContent = 'From ' + data.price + ' per night';
@@ -3964,7 +4931,6 @@
             document.getElementById('amenityPool').textContent = data.pool;
             document.getElementById('amenityFireplace').textContent = data.fireplace;
 
-            // Set gallery
             const mainImg = document.getElementById('galleryMain');
             const thumbsContainer = document.getElementById('galleryThumbs');
             const counter = document.getElementById('galleryCounter');
@@ -3979,15 +4945,32 @@
                 `<img class="thumb ${i === 0 ? 'active' : ''}" src="${img}" alt="Thumb ${i+1}" data-index="${i}" />`
             ).join('');
 
-            // Store room for "More Details"
             document.getElementById('modalMoreDetails').dataset.room = room;
-
-            // Show modal
             roomModal.classList.add('open');
             document.body.style.overflow = 'hidden';
+
+            if (lenis) lenis.stop();
         }
 
-        // Gallery navigation
+        document.querySelectorAll('.btn-book-glow[data-room]').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                openRoomModal(this.dataset.room);
+            });
+        });
+        document.querySelectorAll('.details-btn[data-room]').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                openRoomModal(this.dataset.room);
+            });
+        });
+        document.querySelectorAll('.room-art-card').forEach(card => {
+            card.addEventListener('click', function() {
+                const room = this.dataset.room;
+                if (room) openRoomModal(room);
+            });
+        });
+
         document.getElementById('galleryPrev').addEventListener('click', function() {
             const images = window._currentImages;
             if (!images) return;
@@ -3995,7 +4978,6 @@
             if (idx < 0) idx = images.length - 1;
             updateGallery(idx);
         });
-
         document.getElementById('galleryNext').addEventListener('click', function() {
             const images = window._currentImages;
             if (!images) return;
@@ -4015,7 +4997,6 @@
             });
         }
 
-        // Thumb click
         document.getElementById('galleryThumbs').addEventListener('click', function(e) {
             const thumb = e.target.closest('.thumb');
             if (!thumb) return;
@@ -4023,31 +5004,26 @@
             if (!isNaN(idx)) updateGallery(idx);
         });
 
-        // Close room modal
         closeRoomModal.addEventListener('click', function() {
             roomModal.classList.remove('open');
             document.body.style.overflow = '';
+            if (lenis) lenis.start();
         });
         roomModal.addEventListener('click', function(e) {
             if (e.target === this) {
                 this.classList.remove('open');
                 document.body.style.overflow = '';
+                if (lenis) lenis.start();
             }
         });
 
-        // Keyboard navigation
         document.addEventListener('keydown', function(e) {
             if (!roomModal.classList.contains('open')) return;
-            if (e.key === 'ArrowLeft') {
-                document.getElementById('galleryPrev').click();
-            } else if (e.key === 'ArrowRight') {
-                document.getElementById('galleryNext').click();
-            } else if (e.key === 'Escape') {
-                closeRoomModal.click();
-            }
+            if (e.key === 'ArrowLeft') document.getElementById('galleryPrev').click();
+            else if (e.key === 'ArrowRight') document.getElementById('galleryNext').click();
+            else if (e.key === 'Escape') closeRoomModal.click();
         });
 
-        // "More Details" button
         document.getElementById('modalMoreDetails').addEventListener('click', function() {
             const room = this.dataset.room;
             const data = roomData[room];
@@ -4065,37 +5041,33 @@
             setTimeout(() => {
                 moreDetailsModal.classList.add('open');
                 document.body.style.overflow = 'hidden';
+                if (lenis) lenis.stop();
             }, 300);
         });
 
-        // Close more details
         closeMoreDetails.addEventListener('click', function() {
             moreDetailsModal.classList.remove('open');
             document.body.style.overflow = '';
+            if (lenis) lenis.start();
         });
         closeMoreDetailsBtn.addEventListener('click', function() {
             moreDetailsModal.classList.remove('open');
             document.body.style.overflow = '';
+            if (lenis) lenis.start();
         });
         moreDetailsModal.addEventListener('click', function(e) {
             if (e.target === this) {
                 this.classList.remove('open');
                 document.body.style.overflow = '';
+                if (lenis) lenis.start();
             }
         });
 
-        // ===== REVEAL =====
-        const observer = new IntersectionObserver(items => {
-            items.forEach(item => {
-                if (item.isIntersecting) {
-                    item.target.classList.add('visible');
-                    observer.unobserve(item.target);
-                }
-            });
-        }, { threshold: .1 });
-        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
-        // ===== REVIEWS =====
+        // ============================================================ //
+        //  8. REVIEWS                                                  //
+        // ============================================================ //
+
         const reviews = [
             ['“A beautiful antidote to the everyday. The air, the service, the silence — perfection.”', 'JULIEN & CLARA · PARIS'],
             ['“The rare kind of place that makes you want to keep its secret. We will return.”', 'MAYA R. · LONDON'],
@@ -4119,19 +5091,33 @@
         document.querySelector('[data-review-next]').addEventListener('click', () => showReview(1));
         document.querySelector('[data-review-prev]').addEventListener('click', () => showReview(-1));
 
-        // ===== GALLERY FILTERS =====
+
+        // ============================================================ //
+        //  9. GALLERY FILTERS                                          //
+        // ============================================================ //
+
         document.querySelectorAll('.gallery-filters button').forEach(btn => {
             btn.addEventListener('click', function() {
                 document.querySelectorAll('.gallery-filters button').forEach(b => b.classList.remove('active'));
                 this.classList.add('active');
                 const filter = this.dataset.filter;
                 document.querySelectorAll('.gallery-tile').forEach(tile => {
-                    tile.style.display = (filter === 'all' || tile.dataset.gallery === filter) ? 'flex' : 'none';
+                    tile.style.display = (filter === 'all' || tile.dataset.gallery === filter) ? 'flex' :
+                    'none';
                 });
+                // Re-trigger GSAP animations for visible tiles
+                ScrollTrigger.refresh();
             });
         });
 
-        console.log('🛎️ Amrouss touristic DarMaroc — Cinematic experience with 3D intro, advanced room modals & full language support');
+        // Refresh ScrollTrigger after everything loads
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                ScrollTrigger.refresh();
+            }, 500);
+        });
+
+        console.log('🛎️ Amrouss touristic DarMaroc — Cinematic experience with Three.js intro, Lenis smooth scroll & GSAP animations');
     </script>
 </body>
 </html>
