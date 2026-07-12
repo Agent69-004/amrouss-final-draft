@@ -9,9 +9,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&display=swap" rel="stylesheet" />
 
-    <!-- Three.js, GSAP, Lenis from CDN -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js">
-    </script>
+    <!-- GSAP & Lenis -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js">
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js">
@@ -118,100 +116,6 @@
         @media (max-width: 768px) {
             .cursor-dot {
                 display: none;
-            }
-        }
-
-        /* ============================================================ */
-        /*  3D INTRO — CINEMATIC THREE.JS OVERLAY                      */
-        /* ============================================================ */
-        #intro-overlay {
-            position: fixed;
-            inset: 0;
-            z-index: 10000;
-            background: #0a0a0a;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            pointer-events: all;
-            transition: opacity 2s var(--ease-out-expo), visibility 2s var(--ease-out-expo);
-        }
-        #intro-overlay.hidden {
-            opacity: 0;
-            visibility: hidden;
-            pointer-events: none;
-        }
-        #intro-canvas {
-            position: absolute;
-            inset: 0;
-            width: 100%;
-            height: 100%;
-            display: block;
-        }
-        #intro-ui {
-            position: absolute;
-            bottom: 60px;
-            left: 0;
-            right: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 20px;
-            z-index: 10;
-            padding: 0 5vw;
-        }
-        #loading-progress {
-            font-family: var(--font-mono);
-            font-size: 11px;
-            letter-spacing: 0.2em;
-            color: rgba(255, 255, 255, 0.3);
-            text-transform: uppercase;
-            transition: opacity 0.6s ease;
-        }
-        #loading-progress .bar-track {
-            display: block;
-            width: 160px;
-            height: 1.5px;
-            background: rgba(255, 255, 255, 0.06);
-            margin: 10px auto 0;
-            overflow: hidden;
-            border-radius: 2px;
-        }
-        #loading-progress .bar-fill {
-            display: block;
-            height: 100%;
-            width: 0%;
-            background: var(--gold);
-            transition: width 0.2s ease;
-            border-radius: 2px;
-        }
-        #skip-intro {
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            color: rgba(255, 255, 255, 0.4);
-            padding: 10px 28px;
-            font-size: 9px;
-            letter-spacing: 0.2em;
-            text-transform: uppercase;
-            font-family: var(--font-sans);
-            cursor: pointer;
-            transition: all 0.4s ease;
-            border-radius: 0;
-            opacity: 0;
-            animation: fadeInUI 0.8s 1.2s ease forwards;
-        }
-        #skip-intro:hover {
-            background: rgba(255, 255, 255, 0.08);
-            color: #fff;
-            border-color: rgba(255, 255, 255, 0.2);
-        }
-        @keyframes fadeInUI {
-            0% {
-                opacity: 0;
-                transform: translateY(12px);
-            }
-            100% {
-                opacity: 1;
-                transform: translateY(0);
             }
         }
 
@@ -757,7 +661,6 @@
                 linear-gradient(180deg, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0.5) 60%, rgba(0, 0, 0, 0.75) 100%);
             z-index: 1;
         }
-        /* Volumetric light rays */
         .hero-rays {
             position: absolute;
             inset: 0;
@@ -818,7 +721,6 @@
                 opacity: 0.4;
             }
         }
-        /* Floating particles in hero */
         .hero-particles {
             position: absolute;
             inset: 0;
@@ -977,7 +879,7 @@
         }
 
         /* ============================================================ */
-        /*  BOOKING BAR — REFINED                                      */
+        /*  BOOKING BAR — ALWAYS VISIBLE, ANIMATED                     */
         /* ============================================================ */
         .booking-bar-wrapper {
             position: sticky;
@@ -1311,118 +1213,273 @@
         }
 
         /* ============================================================ */
-        /*  ROOMS — ENHANCED WITH 3D TILT                              */
+        /*  ROOMS — PREMIUM CAROUSEL / BROCHURE EXPERIENCE             */
         /* ============================================================ */
         .rooms-section {
-            padding: 100px 5vw 60px;
+            padding: 100px 5vw 80px;
             max-width: 1400px;
             margin: 0 auto;
             width: 100%;
+            background: var(--paper);
+            position: relative;
         }
 
-        .rooms-grid-artistic {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 20px;
+        /* Room carousel container */
+        .room-carousel-container {
+            position: relative;
             margin-top: 50px;
+            overflow: hidden;
         }
 
-        .room-art-card {
+        /* Featured room display */
+        .room-featured {
             position: relative;
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 0;
             background: #fff;
+            box-shadow: var(--shadow-lux);
             overflow: hidden;
-            cursor: pointer;
-            transition: all 0.8s var(--ease-out-expo);
-            transform: translateY(0) rotateX(0) rotateY(0);
-            will-change: transform, box-shadow;
-            transform-style: preserve-3d;
-            perspective: 800px;
+            min-height: 460px;
+            transition: box-shadow 0.6s ease;
         }
-        .room-art-card:hover {
-            transform: translateY(-16px) scale(1.01);
-            box-shadow: 0 24px 80px rgba(0, 0, 0, 0.07);
+        .room-featured:hover {
+            box-shadow: 0 30px 100px rgba(0, 0, 0, 0.08);
         }
-        .room-art-card .art-image {
+        .room-featured .featured-image {
             position: relative;
             overflow: hidden;
-            height: 280px;
-            transform: translateZ(0);
+            min-height: 360px;
+            background: var(--light-grey);
         }
-        .room-art-card .art-image img {
+        .room-featured .featured-image img {
             width: 100%;
             height: 100%;
             object-fit: cover;
             transition: transform 1.2s var(--ease-out-expo);
             will-change: transform;
         }
-        .room-art-card:hover .art-image img {
-            transform: scale(1.08);
+        .room-featured:hover .featured-image img {
+            transform: scale(1.04);
         }
-        .room-art-card .art-image .badge-top {
+        .room-featured .featured-image .image-overlay {
             position: absolute;
-            top: 16px;
-            left: 16px;
+            inset: 0;
+            background: linear-gradient(0deg, rgba(0, 0, 0, 0.15) 0%, transparent 50%);
+        }
+        .room-featured .featured-image .room-badge-featured {
+            position: absolute;
+            top: 20px;
+            left: 20px;
             font-size: 8px;
             letter-spacing: 0.2em;
             text-transform: uppercase;
-            color: rgba(255, 255, 255, 0.6);
+            color: rgba(255, 255, 255, 0.7);
             background: rgba(0, 0, 0, 0.3);
             backdrop-filter: blur(4px);
             -webkit-backdrop-filter: blur(4px);
-            padding: 4px 14px;
+            padding: 4px 16px;
             z-index: 2;
             font-weight: 500;
         }
-        .room-art-card .art-image .overlay-gradient {
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(0deg, rgba(0, 0, 0, 0.5) 0%, transparent 40%);
-            opacity: 0;
-            transition: opacity 0.6s ease;
+        .room-featured .featured-details {
+            padding: 40px 44px 40px 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
-        .room-art-card:hover .art-image .overlay-gradient {
-            opacity: 1;
-        }
-        .room-art-card .art-info {
-            padding: 22px 24px 28px;
-            position: relative;
-            transform: translateZ(20px);
-        }
-        .room-art-card .art-info .room-name {
-            font-size: 20px;
-            font-family: var(--font-serif);
-            font-weight: 500;
+        .room-featured .featured-details .room-eyebrow {
+            font-size: 8px;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--gold);
+            font-weight: 600;
             margin-bottom: 2px;
         }
-        .room-art-card .art-info .room-price {
-            font-size: 13px;
-            color: var(--grey);
-            margin-bottom: 16px;
+        .room-featured .featured-details .room-name {
+            font-size: 32px;
+            font-family: var(--font-serif);
+            font-weight: 500;
+            line-height: 1.05;
+            margin-bottom: 2px;
         }
-        .room-art-card .art-info .room-price strong {
+        .room-featured .featured-details .room-price {
+            font-size: 14px;
+            color: var(--grey);
+            margin-bottom: 14px;
+        }
+        .room-featured .featured-details .room-price strong {
             color: var(--ink);
             font-weight: 500;
         }
-        .room-art-card .art-actions {
+        .room-featured .featured-details .room-desc {
+            font-size: 14px;
+            color: var(--grey);
+            line-height: 1.8;
+            max-width: 440px;
+            margin-bottom: 18px;
+        }
+        .room-featured .featured-details .room-amenities-preview {
             display: flex;
-            gap: 10px;
+            flex-wrap: wrap;
+            gap: 8px 16px;
+            margin-bottom: 20px;
+        }
+        .room-featured .featured-details .room-amenities-preview .amenity-tag {
+            font-size: 11px;
+            color: var(--grey);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .room-featured .featured-details .room-amenities-preview .amenity-tag strong {
+            color: var(--ink);
+            font-weight: 500;
+        }
+        .room-featured .featured-details .room-actions {
+            display: flex;
+            gap: 14px;
             flex-wrap: wrap;
         }
-        .room-art-card .art-actions .btn-book-glow {
-            flex: 1;
-            padding: 12px 16px;
-            font-size: 9px;
-            min-height: 42px;
-            justify-content: center;
+        .room-featured .featured-details .room-actions .btn-book-glow {
+            padding: 12px 28px;
+            font-size: 10px;
+            min-height: 44px;
         }
-        .room-art-card .art-actions .btn-outline-dark {
+        .room-featured .featured-details .room-actions .btn-outline-dark {
+            padding: 12px 24px;
+            font-size: 10px;
+            min-height: 44px;
+        }
+
+        /* Thumbnail navigation */
+        .room-thumbnails {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+            overflow-x: auto;
+            padding: 4px 2px 8px;
+            scroll-behavior: smooth;
+            -webkit-overflow-scrolling: touch;
+        }
+        .room-thumbnails::-webkit-scrollbar {
+            height: 2px;
+        }
+        .room-thumbnails::-webkit-scrollbar-track {
+            background: var(--light-grey);
+        }
+        .room-thumbnails::-webkit-scrollbar-thumb {
+            background: var(--gold);
+        }
+        .room-thumb {
             flex: 0 0 auto;
-            padding: 12px 18px;
-            font-size: 9px;
-            min-height: 42px;
+            width: 120px;
+            height: 80px;
+            overflow: hidden;
+            cursor: pointer;
+            position: relative;
+            border: 2px solid transparent;
+            transition: all 0.5s var(--ease-out-expo);
+            opacity: 0.5;
+            transform: scale(0.92);
+            filter: grayscale(0.4);
         }
-        .room-art-card .art-actions .btn-outline-dark .arrow {
-            font-size: 14px;
+        .room-thumb:hover {
+            opacity: 0.8;
+            transform: scale(0.96);
+        }
+        .room-thumb.active {
+            border-color: var(--gold);
+            opacity: 1;
+            transform: scale(1);
+            filter: grayscale(0);
+            box-shadow: 0 0 30px rgba(184, 148, 75, 0.15);
+        }
+        .room-thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s var(--ease-out-expo);
+        }
+        .room-thumb:hover img {
+            transform: scale(1.06);
+        }
+        .room-thumb .thumb-label {
+            position: absolute;
+            bottom: 6px;
+            left: 8px;
+            font-size: 7px;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.8);
+            font-weight: 500;
+            text-shadow: 0 1px 8px rgba(0, 0, 0, 0.4);
+            background: rgba(0, 0, 0, 0.2);
+            padding: 2px 10px;
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+        }
+
+        /* Room transition overlay */
+        .room-transition-overlay {
+            position: absolute;
+            inset: 0;
+            z-index: 10;
+            pointer-events: none;
+            background: var(--paper);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+        .room-transition-overlay.active {
+            opacity: 1;
+        }
+
+        /* Responsive rooms */
+        @media (max-width: 1024px) {
+            .room-featured {
+                grid-template-columns: 1fr;
+                min-height: auto;
+            }
+            .room-featured .featured-image {
+                min-height: 280px;
+            }
+            .room-featured .featured-details {
+                padding: 30px 32px 36px;
+            }
+            .room-featured .featured-details .room-name {
+                font-size: 28px;
+            }
+            .room-thumb {
+                width: 100px;
+                height: 68px;
+            }
+        }
+        @media (max-width: 768px) {
+            .room-featured .featured-details {
+                padding: 24px 20px 28px;
+            }
+            .room-featured .featured-details .room-name {
+                font-size: 24px;
+            }
+            .room-featured .featured-details .room-desc {
+                font-size: 13px;
+            }
+            .room-featured .featured-details .room-actions {
+                flex-direction: column;
+            }
+            .room-featured .featured-details .room-actions .btn-book-glow,
+            .room-featured .featured-details .room-actions .btn-outline-dark {
+                width: 100%;
+                justify-content: center;
+            }
+            .room-thumb {
+                width: 80px;
+                height: 56px;
+            }
+            .room-thumb .thumb-label {
+                font-size: 6px;
+                padding: 1px 8px;
+            }
         }
 
         /* ============================================================ */
@@ -3192,8 +3249,22 @@
         /* ============================================================ */
 
         @media(max-width: 1024px) {
-            .rooms-grid-artistic {
-                grid-template-columns: repeat(2, 1fr);
+            .room-featured {
+                grid-template-columns: 1fr;
+                min-height: auto;
+            }
+            .room-featured .featured-image {
+                min-height: 280px;
+            }
+            .room-featured .featured-details {
+                padding: 30px 32px 36px;
+            }
+            .room-featured .featured-details .room-name {
+                font-size: 28px;
+            }
+            .room-thumb {
+                width: 100px;
+                height: 68px;
             }
             .room-modal-content {
                 grid-template-columns: 1fr;
@@ -3400,28 +3471,30 @@
                 padding: 2px 12px;
             }
 
-            .rooms-grid-artistic {
-                grid-template-columns: 1fr 1fr;
-                gap: 16px;
+            .room-thumb {
+                width: 80px;
+                height: 56px;
             }
-            .room-art-card .art-image {
-                height: 200px;
+            .room-thumb .thumb-label {
+                font-size: 6px;
+                padding: 1px 8px;
             }
-            .room-art-card .art-info {
-                padding: 16px 18px 20px;
+            .room-featured .featured-details {
+                padding: 24px 20px 28px;
             }
-            .room-art-card .art-info .room-name {
-                font-size: 18px;
+            .room-featured .featured-details .room-name {
+                font-size: 24px;
             }
-            .room-art-card .art-actions .btn-book-glow {
-                padding: 10px 12px;
-                font-size: 8px;
-                min-height: 36px;
+            .room-featured .featured-details .room-desc {
+                font-size: 13px;
             }
-            .room-art-card .art-actions .btn-outline-dark {
-                padding: 10px 14px;
-                font-size: 8px;
-                min-height: 36px;
+            .room-featured .featured-details .room-actions {
+                flex-direction: column;
+            }
+            .room-featured .featured-details .room-actions .btn-book-glow,
+            .room-featured .featured-details .room-actions .btn-outline-dark {
+                width: 100%;
+                justify-content: center;
             }
 
             .intro-grid,
@@ -3655,12 +3728,12 @@
             .hero-content .subhead {
                 font-size: 13px;
             }
-            .rooms-grid-artistic {
-                grid-template-columns: 1fr;
-                gap: 20px;
+            .room-thumb {
+                width: 64px;
+                height: 44px;
             }
-            .room-art-card .art-image {
-                height: 240px;
+            .room-featured .featured-image {
+                min-height: 200px;
             }
             .facilities-grid {
                 grid-template-columns: 1fr 1fr;
@@ -3734,20 +3807,6 @@
     </style>
 </head>
 <body>
-
-    <!-- ============================================================ -->
-    <!--  THREE.JS INTRO OVERLAY — CINEMATIC DRONE SEQUENCE           -->
-    <!-- ============================================================ -->
-    <div id="intro-overlay">
-        <canvas id="intro-canvas"></canvas>
-        <div id="intro-ui">
-            <div id="loading-progress">
-                <span id="loading-text">Loading experience…</span>
-                <span class="bar-track"><span class="bar-fill" id="loading-bar"></span></span>
-            </div>
-            <button id="skip-intro">Skip Intro</button>
-        </div>
-    </div>
 
     <!-- ============================================================ -->
     <!--  CUSTOM CURSOR                                               -->
@@ -3838,7 +3897,7 @@
     </section>
 
     <!-- ============================================================ -->
-    <!--  BOOKING BAR — REFINED                                      -->
+    <!--  BOOKING BAR — ALWAYS VISIBLE WITH ANIMATED BUTTON           -->
     <!-- ============================================================ -->
     <div class="booking-bar-wrapper" id="bookingBarWrapper">
         <div class="booking-bar">
@@ -3913,124 +3972,63 @@
     </div>
 
     <!-- ============================================================ -->
-    <!--  ROOMS — SOPHISTICATED ARTISTIC DISPLAY                      -->
+    <!--  ROOMS — PREMIUM CAROUSEL / BROCHURE EXPERIENCE              -->
     <!-- ============================================================ -->
     <section class="rooms-section" id="stay">
         <div class="section-center reveal-item">
             <p class="eyebrow">STAY AT AMROUSS DAR</p>
             <h2>Rooms with <em>room to breathe.</em></h2>
-            <p class="section-sub">Choose from four carefully curated room types, each designed for comfort and tranquility. Click on any room to explore.</p>
+            <p class="section-sub">Choose from four carefully curated room types, each designed for comfort and tranquility.</p>
         </div>
-        <div class="rooms-grid-artistic">
-            <!-- Double -->
-            <div class="room-art-card" data-room="double">
-                <div class="art-image">
-                    <img src="https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&w=600&q=85" alt="Double Room" loading="lazy" />
-                    <span class="badge-top">Double</span>
-                    <div class="overlay-gradient"></div>
+
+        <div class="room-carousel-container">
+            <!-- Featured Room Display -->
+            <div class="room-featured" id="featuredRoom">
+                <div class="featured-image">
+                    <img id="featuredImage" src="https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&w=800&q=85" alt="Double Room" />
+                    <div class="image-overlay"></div>
+                    <span class="room-badge-featured" id="featuredBadge">Double Room</span>
                 </div>
-                <div class="art-info">
-                    <h3 class="room-name">Double Room</h3>
-                    <p class="room-price">From <strong>1,950 MAD</strong> per night</p>
-                    <div class="art-actions">
-                        <button class="btn-book-glow" data-room="double">
+                <div class="featured-details">
+                    <span class="room-eyebrow" id="featuredEyebrow">Double Room</span>
+                    <h3 class="room-name" id="featuredName">Double Room</h3>
+                    <p class="room-price" id="featuredPrice">From <strong>1,950 MAD</strong> per night</p>
+                    <p class="room-desc" id="featuredDesc">This air-conditioned room features a comfortable seating area, a flat-screen TV, and a private bathroom with bath. The room includes a wardrobe and free toiletries.</p>
+                    <div class="room-amenities-preview" id="featuredAmenities">
+                        <span class="amenity-tag"><strong>Size:</strong> <span id="fSize">38 m²</span></span>
+                        <span class="amenity-tag"><strong>Bed:</strong> <span id="fBed">1 queen bed</span></span>
+                        <span class="amenity-tag"><strong>Pool:</strong> <span id="fPool">No</span></span>
+                        <span class="amenity-tag"><strong>Fireplace:</strong> <span id="fFireplace">No</span></span>
+                    </div>
+                    <div class="room-actions">
+                        <button class="btn-book-glow" id="featuredBookBtn" data-room="double">
                             <span class="glow-text">Book Now <span class="arrow">→</span></span>
                         </button>
-                        <button class="btn-outline-dark details-btn" data-room="double">
+                        <button class="btn-outline-dark" id="featuredDetailsBtn" data-room="double">
                             Details <span class="arrow">→</span>
                         </button>
                     </div>
                 </div>
             </div>
 
-            <!-- Twin -->
-            <div class="room-art-card" data-room="twin">
-                <div class="art-image">
-                    <img src="https://images.unsplash.com/photo-1618773928121-c32242e63f39?auto=format&fit=crop&w=600&q=85" alt="Twin Room" loading="lazy" />
-                    <span class="badge-top">Twin</span>
-                    <div class="overlay-gradient"></div>
+            <!-- Thumbnails -->
+            <div class="room-thumbnails" id="roomThumbnails">
+                <div class="room-thumb active" data-room="double">
+                    <img src="https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&w=200&q=80" alt="Double Room" />
+                    <span class="thumb-label">Double</span>
                 </div>
-                <div class="art-info">
-                    <h3 class="room-name">Twin Room</h3>
-                    <p class="room-price">From <strong>2,100 MAD</strong> per night</p>
-                    <div class="art-actions">
-                        <button class="btn-book-glow" data-room="twin">
-                            <span class="glow-text">Book Now <span class="arrow">→</span></span>
-                        </button>
-                        <button class="btn-outline-dark details-btn" data-room="twin">
-                            Details <span class="arrow">→</span>
-                        </button>
-                    </div>
+                <div class="room-thumb" data-room="twin">
+                    <img src="https://images.unsplash.com/photo-1618773928121-c32242e63f39?auto=format&fit=crop&w=200&q=80" alt="Twin Room" />
+                    <span class="thumb-label">Twin</span>
                 </div>
-            </div>
-
-            <!-- Triple -->
-            <div class="room-art-card" data-room="triple">
-                <div class="art-image">
-                    <img src="https://images.unsplash.com/photo-1560185127-6ed189bf02f4?auto=format&fit=crop&w=600&q=85" alt="Triple Room" loading="lazy" />
-                    <span class="badge-top">Triple</span>
-                    <div class="overlay-gradient"></div>
+                <div class="room-thumb" data-room="triple">
+                    <img src="https://images.unsplash.com/photo-1560185127-6ed189bf02f4?auto=format&fit=crop&w=200&q=80" alt="Triple Room" />
+                    <span class="thumb-label">Triple</span>
                 </div>
-                <div class="art-info">
-                    <h3 class="room-name">Triple Room</h3>
-                    <p class="room-price">From <strong>2,400 MAD</strong> per night</p>
-                    <div class="art-actions">
-                        <button class="btn-book-glow" data-room="triple">
-                            <span class="glow-text">Book Now <span class="arrow">→</span></span>
-                        </button>
-                        <button class="btn-outline-dark details-btn" data-room="triple">
-                            Details <span class="arrow">→</span>
-                        </button>
-                    </div>
+                <div class="room-thumb" data-room="suite">
+                    <img src="https://images.unsplash.com/photo-1631049307264-da0ec9d70304?auto=format&fit=crop&w=200&q=80" alt="Suite" />
+                    <span class="thumb-label">Suite</span>
                 </div>
-            </div>
-
-            <!-- Suite -->
-            <div class="room-art-card" data-room="suite">
-                <div class="art-image">
-                    <img src="https://images.unsplash.com/photo-1631049307264-da0ec9d70304?auto=format&fit=crop&w=600&q=85" alt="Suite" loading="lazy" />
-                    <span class="badge-top">Suite</span>
-                    <div class="overlay-gradient"></div>
-                </div>
-                <div class="art-info">
-                    <h3 class="room-name">Suite</h3>
-                    <p class="room-price">From <strong>3,200 MAD</strong> per night</p>
-                    <div class="art-actions">
-                        <button class="btn-book-glow" data-room="suite">
-                            <span class="glow-text">Book Now <span class="arrow">→</span></span>
-                        </button>
-                        <button class="btn-outline-dark details-btn" data-room="suite">
-                            Details <span class="arrow">→</span>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- ============================================================ -->
-    <!--  FIND YOUR WAY OUT — ENHANCED                                -->
-    <!-- ============================================================ -->
-    <section class="location-dynamic reveal-item" id="location">
-        <div class="location-grid-inner">
-            <div class="location-map-wrap">
-                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d215.06774873347575!2d-5.206742026818542!3d33.40793823043272!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xd9e2c2b2b2b2b2b%3A0x2b2b2b2b2b2b2b2b!2sAzrou%2C%20Morocco!5e0!3m2!1sen!2suk!4v1700000000000" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Map of Amrouss Dar location"></iframe>
-            </div>
-            <div class="location-info">
-                <p class="eyebrow">FIND YOUR WAY OUT</p>
-                <h2>Near enough.<br /><em>Far from it all.</em></h2>
-                <p class="desc">Amrouss touristic DarMaroc sits at Km 6 Route de Meknés, Azrou, on the quiet edge of the cedar forest.</p>
-                <div class="distances-grid">
-                    <div class="item"><b>06 min</b><span>AZROU CENTRE</span></div>
-                    <div class="item"><b>55 min</b><span>IFRANE</span></div>
-                    <div class="item"><b>47 mi</b><span>FÈS–SAÏSS</span></div>
-                </div>
-                <div class="attractions-list">
-                    <span>Lion Stone &amp; Ifrane Lake <span class="val">15 mi</span></span>
-                    <span>Ain Vittel Water Source <span class="val">17 mi</span></span>
-                    <span>Aoua Lake <span class="val">26 mi</span></span>
-                </div>
-                <a class="text-link" href="https://maps.google.com/?q=Azrou,Morocco" target="_blank" rel="noopener">Open directions <span class="arrow">→</span></a>
             </div>
         </div>
     </section>
@@ -4510,486 +4508,13 @@
     <!-- ============================================================ -->
     <script>
         // ============================================================ //
-        //  1. THREE.JS CINEMATIC INTRO — DRONE SEQUENCE               //
-        // ============================================================ //
-
-        (function() {
-            const overlay = document.getElementById('intro-overlay');
-            const canvas = document.getElementById('intro-canvas');
-            const skipBtn = document.getElementById('skip-intro');
-            const loadingBar = document.getElementById('loading-bar');
-            const loadingText = document.getElementById('loading-text');
-
-            let introActive = true;
-            let progress = 0;
-            let scene, camera, renderer, particles, logoMesh, hotelGroup, doors = [],
-                interiorLight, receptionDesk;
-            let isSkipped = false;
-            const particleCount = 1800;
-
-            // --- Scene Setup ---
-            scene = new THREE.Scene();
-            scene.background = new THREE.Color(0x0a0a0a);
-            scene.fog = new THREE.Fog(0x0a0a0a, 12, 25);
-
-            camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 50);
-            camera.position.set(0, 4, 18);
-            camera.lookAt(0, 1.5, 0);
-
-            renderer = new THREE.WebGLRenderer({
-                canvas: canvas,
-                antialias: true,
-                alpha: false
-            });
-            renderer.setSize(window.innerWidth, window.innerHeight);
-            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-            renderer.toneMapping = THREE.ACESFilmicToneMapping;
-            renderer.toneMappingExposure = 1.0;
-            renderer.shadowMap.enabled = true;
-            renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-
-            // --- Lights ---
-            const ambientLight = new THREE.AmbientLight(0x222244, 0.4);
-            scene.add(ambientLight);
-
-            const moonLight = new THREE.DirectionalLight(0x446688, 0.3);
-            moonLight.position.set(-5, 5, 10);
-            scene.add(moonLight);
-
-            const keyLight = new THREE.DirectionalLight(0xffeedd, 1.2);
-            keyLight.position.set(5, 8, 4);
-            keyLight.castShadow = true;
-            keyLight.shadow.mapSize.width = 1024;
-            keyLight.shadow.mapSize.height = 1024;
-            const d = 10;
-            keyLight.shadow.camera.left = -d;
-            keyLight.shadow.camera.right = d;
-            keyLight.shadow.camera.top = d;
-            keyLight.shadow.camera.bottom = -d;
-            keyLight.shadow.camera.near = 1;
-            keyLight.shadow.camera.far = 15;
-            scene.add(keyLight);
-
-            const fillLight = new THREE.DirectionalLight(0x88aaff, 0.6);
-            fillLight.position.set(-4, 2, -3);
-            scene.add(fillLight);
-
-            const rimLight = new THREE.DirectionalLight(0xffcc88, 0.8);
-            rimLight.position.set(0, -2, -6);
-            scene.add(rimLight);
-
-            // --- Ground ---
-            const groundMat = new THREE.MeshStandardMaterial({
-                color: 0x1a1a1a,
-                roughness: 0.8,
-                metalness: 0.1,
-            });
-            const groundGeo = new THREE.PlaneGeometry(30, 30);
-            const ground = new THREE.Mesh(groundGeo, groundMat);
-            ground.rotation.x = -Math.PI / 2;
-            ground.position.y = -0.1;
-            ground.receiveShadow = true;
-            scene.add(ground);
-
-            // --- Build the Hotel (Group) ---
-            function createHotel() {
-                const group = new THREE.Group();
-
-                // Main Building
-                const mainMat = new THREE.MeshStandardMaterial({
-                    color: 0x1a1a1a,
-                    roughness: 0.5,
-                    metalness: 0.05
-                });
-                const mainGeo = new THREE.BoxGeometry(7, 3, 4.5);
-                const main = new THREE.Mesh(mainGeo, mainMat);
-                main.position.y = 1.5;
-                main.castShadow = true;
-                main.receiveShadow = true;
-                group.add(main);
-
-                // Roof
-                const roofMat = new THREE.MeshStandardMaterial({
-                    color: 0xb8944b,
-                    roughness: 0.6,
-                    metalness: 0.4
-                });
-                const roofGeo = new THREE.BoxGeometry(7.4, 0.15, 4.9);
-                const roof = new THREE.Mesh(roofGeo, roofMat);
-                roof.position.y = 3.1;
-                roof.castShadow = true;
-                group.add(roof);
-
-                // Left Wing
-                const wingMat = new THREE.MeshStandardMaterial({
-                    color: 0x222222,
-                    roughness: 0.6,
-                    metalness: 0.1
-                });
-                const wingGeo = new THREE.BoxGeometry(2.5, 2.5, 3);
-                const wingL = new THREE.Mesh(wingGeo, wingMat);
-                wingL.position.set(-4.7, 1.25, 0);
-                wingL.castShadow = true;
-                wingL.receiveShadow = true;
-                group.add(wingL);
-
-                // Right Wing
-                const wingR = new THREE.Mesh(wingGeo, wingMat);
-                wingR.position.set(4.7, 1.25, 0);
-                wingR.castShadow = true;
-                wingR.receiveShadow = true;
-                group.add(wingR);
-
-                // Wing Roofs
-                const wRoofMat = new THREE.MeshStandardMaterial({
-                    color: 0xb8944b,
-                    roughness: 0.6,
-                    metalness: 0.4
-                });
-                const wRoofGeo = new THREE.BoxGeometry(2.9, 0.1, 3.4);
-                const wRoofL = new THREE.Mesh(wRoofGeo, wRoofMat);
-                wRoofL.position.set(-4.7, 2.5, 0);
-                group.add(wRoofL);
-                const wRoofR = new THREE.Mesh(wRoofGeo, wRoofMat);
-                wRoofR.position.set(4.7, 2.5, 0);
-                group.add(wRoofR);
-
-                // Windows (Emissive)
-                const winMat = new THREE.MeshStandardMaterial({
-                    color: 0xffdd99,
-                    emissive: 0xffaa33,
-                    emissiveIntensity: 0.6
-                });
-                const winGeo = new THREE.BoxGeometry(0.4, 0.8, 0.1);
-                const winPositions = [
-                    [-2.5, 1.8, 2.26],
-                    [-1.5, 1.8, 2.26],
-                    [-0.5, 1.8, 2.26],
-                    [0.5, 1.8, 2.26],
-                    [1.5, 1.8, 2.26],
-                    [2.5, 1.8, 2.26],
-                    [-2.5, 0.8, 2.26],
-                    [-1.5, 0.8, 2.26],
-                    [-0.5, 0.8, 2.26],
-                    [0.5, 0.8, 2.26],
-                    [1.5, 0.8, 2.26],
-                    [2.5, 0.8, 2.26],
-                ];
-                winPositions.forEach(pos => {
-                    const win = new THREE.Mesh(winGeo, winMat);
-                    win.position.set(pos[0], pos[1], pos[2]);
-                    group.add(win);
-                });
-
-                // Entrance Doorway
-                const doorMat = new THREE.MeshStandardMaterial({
-                    color: 0x0a0a0a,
-                    roughness: 0.9,
-                    metalness: 0.1
-                });
-                const doorGeo = new THREE.BoxGeometry(1.4, 1.8, 0.2);
-
-                // Left Door
-                const doorL = new THREE.Mesh(doorGeo, doorMat);
-                doorL.position.set(-0.7, 0.9, 2.26);
-                doorL.castShadow = true;
-                group.add(doorL);
-                // Right Door
-                const doorR = new THREE.Mesh(doorGeo, doorMat);
-                doorR.position.set(0.7, 0.9, 2.26);
-                doorR.castShadow = true;
-                group.add(doorR);
-
-                doors = [doorL, doorR];
-
-                // Interior Warm Light (hidden initially)
-                const intLight = new THREE.PointLight(0xffaa44, 0, 6);
-                intLight.position.set(0, 1.2, 2.8);
-                group.add(intLight);
-                interiorLight = intLight;
-
-                // Reception Desk (visible inside)
-                const deskMat = new THREE.MeshStandardMaterial({
-                    color: 0xb8944b,
-                    roughness: 0.5,
-                    metalness: 0.2
-                });
-                const deskGeo = new THREE.BoxGeometry(1.8, 0.4, 0.8);
-                const desk = new THREE.Mesh(deskGeo, deskMat);
-                desk.position.set(0, 0.6, 3.2);
-                group.add(desk);
-                receptionDesk = desk;
-
-                // Chandelier (small)
-                const chandelierMat = new THREE.MeshStandardMaterial({
-                    color: 0xffdd44,
-                    emissive: 0xffaa22,
-                    emissiveIntensity: 0.3,
-                    roughness: 0.3,
-                    metalness: 0.8
-                });
-                const chandelierGeo = new THREE.SphereGeometry(0.2, 8, 8);
-                const chandelier = new THREE.Mesh(chandelierGeo, chandelierMat);
-                chandelier.position.set(0, 2.6, 2.5);
-                group.add(chandelier);
-                const chandelier2 = new THREE.Mesh(chandelierGeo, chandelierMat);
-                chandelier2.position.set(0, 2.6, 3.5);
-                group.add(chandelier2);
-
-                return group;
-            }
-
-            hotelGroup = createHotel();
-            hotelGroup.position.y = 0;
-            scene.add(hotelGroup);
-
-            // --- Particles (Fireflies / Dust) ---
-            const particleGeo = new THREE.BufferGeometry();
-            const positions = new Float32Array(particleCount * 3);
-            const sizes = new Float32Array(particleCount);
-            const colors = new Float32Array(particleCount * 3);
-
-            for (let i = 0; i < particleCount; i++) {
-                const radius = 4 + Math.random() * 6;
-                const theta = Math.random() * Math.PI * 2;
-                const phi = Math.acos((Math.random() * 2) - 1);
-                positions[i * 3] = radius * Math.sin(phi) * Math.cos(theta);
-                positions[i * 3 + 1] = Math.random() * 4;
-                positions[i * 3 + 2] = radius * Math.sin(phi) * Math.sin(theta) - 2;
-
-                sizes[i] = 0.008 + Math.random() * 0.025;
-                const goldness = 0.5 + Math.random() * 0.5;
-                colors[i * 3] = 0.9 + Math.random() * 0.1;
-                colors[i * 3 + 1] = 0.7 + Math.random() * 0.2;
-                colors[i * 3 + 2] = 0.3 + Math.random() * 0.2;
-            }
-            particleGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-            particleGeo.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
-            particleGeo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
-
-            const particleMat = new THREE.PointsMaterial({
-                size: 0.05,
-                vertexColors: true,
-                transparent: true,
-                opacity: 0.6,
-                blending: THREE.AdditiveBlending,
-                depthWrite: false,
-                sizeAttenuation: true
-            });
-            particles = new THREE.Points(particleGeo, particleMat);
-            scene.add(particles);
-
-            // --- Logo (Canvas Texture) ---
-            const logoCanvas = document.createElement('canvas');
-            logoCanvas.width = 800;
-            logoCanvas.height = 300;
-            const ctx = logoCanvas.getContext('2d');
-            ctx.clearRect(0, 0, 800, 300);
-            const grad = ctx.createLinearGradient(0, 0, 800, 0);
-            grad.addColorStop(0, '#b8944b');
-            grad.addColorStop(0.3, '#d4b06a');
-            grad.addColorStop(0.5, '#f0d89a');
-            grad.addColorStop(0.7, '#d4b06a');
-            grad.addColorStop(1, '#b8944b');
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'middle';
-            ctx.font = 'bold 80px "Playfair Display", Georgia, serif';
-            ctx.shadowColor = 'rgba(184, 148, 75, 0.4)';
-            ctx.shadowBlur = 40;
-            ctx.fillStyle = grad;
-            ctx.fillText('AMROUSS', 400, 120);
-            ctx.font = '400 42px "Playfair Display", Georgia, serif';
-            ctx.shadowBlur = 25;
-            ctx.fillStyle = '#d4b06a';
-            ctx.fillText('touristic DarMaroc', 400, 190);
-
-            const texture = new THREE.CanvasTexture(logoCanvas);
-            texture.needsUpdate = true;
-            const logoMat = new THREE.MeshStandardMaterial({
-                map: texture,
-                transparent: true,
-                emissive: new THREE.Color(0xb8944b),
-                emissiveIntensity: 0.2,
-                metalness: 0.4,
-                roughness: 0.2,
-                side: THREE.DoubleSide
-            });
-            const logoGeo = new THREE.PlaneGeometry(6, 1.8);
-            logoMesh = new THREE.Mesh(logoGeo, logoMat);
-            logoMesh.position.set(0, 2.2, 9);
-            scene.add(logoMesh);
-
-            // --- GSAP Timeline for Drone Sequence ---
-            const tl = gsap.timeline({
-                onComplete: () => {
-                    if (!isSkipped) exitIntro();
-                }
-            });
-
-            // Phase 1: Black Screen & Logo (0s - 2s)
-            tl.set(camera.position, { x: 0, y: 4, z: 18 });
-            tl.set(camera.lookAt, { target: [0, 1.5, 0] });
-            tl.to(logoMesh.position, {
-                z: 4,
-                duration: 2,
-                ease: "power2.inOut",
-                onUpdate: () => {
-                    camera.lookAt(0, 1.5, 0);
-                }
-            });
-
-            // Phase 2: Drone Approach (2s - 7s)
-            tl.to(camera.position, {
-                x: 0,
-                y: 2.5,
-                z: 6,
-                duration: 4,
-                ease: "power1.inOut",
-                onUpdate: () => {
-                    camera.lookAt(0, 1.2, 0);
-                    progress = 0.3 + (7 - (camera.position.z - 6)) / 12;
-                    if (progress > 0.9) progress = 0.9;
-                    loadingBar.style.width = Math.round(progress * 100) + '%';
-                    if (progress > 0.6) loadingText.textContent = 'Approaching the Dar…';
-                }
-            });
-
-            // Phase 3: Doors Open (7s - 9s)
-            tl.call(() => {
-                gsap.to(doors[0].rotation, {
-                    y: -1.2,
-                    duration: 1.2,
-                    ease: "back.out(1.2)"
-                });
-                gsap.to(doors[1].rotation, {
-                    y: 1.2,
-                    duration: 1.2,
-                    ease: "back.out(1.2)"
-                });
-                gsap.to(interiorLight, {
-                    intensity: 2.5,
-                    duration: 0.8,
-                    ease: "power2.out"
-                });
-                const spillMat = new THREE.MeshStandardMaterial({
-                    color: 0xffaa44,
-                    transparent: true,
-                    opacity: 0,
-                    emissive: 0xffaa33,
-                    emissiveIntensity: 0.5
-                });
-                const spillGeo = new THREE.PlaneGeometry(1.5, 1.5);
-                const spill = new THREE.Mesh(spillGeo, spillMat);
-                spill.position.set(0, 0.1, 2.7);
-                spill.rotation.x = -Math.PI / 2;
-                scene.add(spill);
-                gsap.to(spill.material, {
-                    opacity: 0.8,
-                    duration: 0.6
-                });
-            }, null, "+=0.5");
-
-            // Phase 4: Camera Enters & Reaches Reception (9s - 13s)
-            tl.to(camera.position, {
-                x: 0,
-                y: 1.8,
-                z: 1.5,
-                duration: 2.5,
-                ease: "power1.inOut",
-                onUpdate: () => {
-                    camera.lookAt(0, 1.6, 3.5);
-                    progress = 0.95;
-                    loadingBar.style.width = '95%';
-                    loadingText.textContent = 'Entering the Dar…';
-                }
-            })
-            .to(camera.position, {
-                x: 0,
-                y: 1.8,
-                z: -0.5,
-                duration: 1.5,
-                ease: "power1.inOut",
-                onUpdate: () => {
-                    camera.lookAt(0, 1.6, 4);
-                    progress = 1.0;
-                    loadingBar.style.width = '100%';
-                    loadingText.textContent = 'Welcome to Amrouss Dar';
-                }
-            });
-
-            // Phase 5: Transition (13s - 15s)
-            tl.call(() => {
-                exitIntro();
-            }, null, "+=1.5");
-
-            // --- Resize Handler ---
-            function onResize() {
-                const w = window.innerWidth;
-                const h = window.innerHeight;
-                camera.aspect = w / h;
-                camera.updateProjectionMatrix();
-                renderer.setSize(w, h);
-            }
-            window.addEventListener('resize', onResize);
-
-            // --- Skip Intro ---
-            function exitIntro() {
-                if (isSkipped) return;
-                isSkipped = true;
-                introActive = false;
-                overlay.classList.add('hidden');
-                setTimeout(() => {
-                    renderer.dispose();
-                    initLenisAndGSAP();
-                }, 1800);
-            }
-
-            skipBtn.addEventListener('click', () => {
-                if (!isSkipped) {
-                    tl.progress(1);
-                    exitIntro();
-                }
-            });
-
-            // --- Animation Loop ---
-            let time = 0;
-
-            function animateIntro() {
-                if (!introActive) return;
-                requestAnimationFrame(animateIntro);
-                time += 0.01;
-                particles.rotation.y = time * 0.008;
-                if (logoMesh) {
-                    logoMesh.position.y = 2.2 + Math.sin(time * 0.5) * 0.05;
-                }
-                renderer.render(scene, camera);
-            }
-
-            animateIntro();
-
-            setTimeout(() => {
-                if (!isSkipped) {
-                    tl.progress(1);
-                    exitIntro();
-                }
-            }, 16000);
-
-            window.__introCleanup = function() {
-                renderer.dispose();
-                scene = null;
-                renderer = null;
-            };
-        })();
-
-
-        // ============================================================ //
-        //  2. LENIS SMOOTH SCROLL + GSAP                              //
+        //  1. LENIS SMOOTH SCROLL + GSAP                              //
         // ============================================================ //
 
         let lenis = null;
         let gsapInitialized = false;
 
-        function initLenisAndGSAP() {
+        (function initLenisAndGSAP() {
             if (gsapInitialized) return;
             gsapInitialized = true;
 
@@ -5029,7 +4554,6 @@
                 }
             });
 
-            // Hero rays parallax
             gsap.to('.hero-rays', {
                 opacity: 0,
                 y: 40,
@@ -5058,25 +4582,6 @@
                         toggleActions: 'play none none reverse',
                     }
                 });
-            });
-
-            // Room cards with stagger
-            gsap.fromTo('.room-art-card', {
-                opacity: 0,
-                y: 40,
-                scale: 0.97,
-            }, {
-                opacity: 1,
-                y: 0,
-                scale: 1,
-                duration: 0.9,
-                ease: 'power3.out',
-                stagger: 0.08,
-                scrollTrigger: {
-                    trigger: '.rooms-grid-artistic',
-                    start: 'top 80%',
-                    toggleActions: 'play none none reverse',
-                }
             });
 
             // Feature grid
@@ -5225,6 +4730,279 @@
             window.addEventListener('resize', () => {
                 ScrollTrigger.refresh();
             });
+
+            // --- Room carousel animations ---
+            initRoomCarousel();
+        })();
+
+
+        // ============================================================ //
+        //  2. ROOM CAROUSEL — CINEMATIC SWITCHING                     //
+        // ============================================================ //
+
+        const roomData = {
+            double: {
+                name: 'Double Room',
+                price: '1,950 MAD',
+                size: '38 m²',
+                bed: '1 queen bed',
+                pool: 'No',
+                fireplace: 'No',
+                description: 'This air-conditioned room features a comfortable seating area, a flat-screen TV, and a private bathroom with bath. The room includes a wardrobe and free toiletries.',
+                details: '<p><strong>Room Size:</strong> 38 m²</p><p><strong>Bed:</strong> 1 queen bed</p><p><strong>Comfy beds:</strong> 7.3 – Based on 120 reviews</p><p><strong>Bathroom:</strong> Private bathroom with bath</p><p><strong>View:</strong> Garden view</p><p><strong>Room Facilities:</strong> Air conditioning, Flat-screen TV, Wardrobe or closet, Heating, Socket near the bed</p><p><strong>Smoking:</strong> No smoking</p>',
+                images: [
+                    'https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&w=800&q=85',
+                    'https://images.unsplash.com/photo-1618773928121-c32242e63f39?auto=format&fit=crop&w=800&q=85',
+                    'https://images.unsplash.com/photo-1560185127-6ed189bf02f4?auto=format&fit=crop&w=800&q=85',
+                    'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?auto=format&fit=crop&w=800&q=85'
+                ],
+                thumb: 'https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&w=200&q=80',
+                badge: 'Double'
+            },
+            twin: {
+                name: 'Twin Room',
+                price: '2,100 MAD',
+                size: '36 m²',
+                bed: '2 twin beds',
+                pool: 'No',
+                fireplace: 'No',
+                description: 'This air-conditioned twin room features a flat-screen TV, a private bathroom with bath, and a wardrobe. The room includes free toiletries and heating.',
+                details: '<p><strong>Room Size:</strong> 36 m²</p><p><strong>Bed:</strong> 2 twin beds</p><p><strong>Bathroom:</strong> Private bathroom with bath</p><p><strong>View:</strong> Garden view</p><p><strong>Room Facilities:</strong> Air conditioning, Flat-screen TV, Wardrobe or closet, Heating</p><p><strong>Smoking:</strong> No smoking</p>',
+                images: [
+                    'https://images.unsplash.com/photo-1618773928121-c32242e63f39?auto=format&fit=crop&w=800&q=85',
+                    'https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&w=800&q=85',
+                    'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?auto=format&fit=crop&w=800&q=85',
+                    'https://images.unsplash.com/photo-1560185127-6ed189bf02f4?auto=format&fit=crop&w=800&q=85'
+                ],
+                thumb: 'https://images.unsplash.com/photo-1618773928121-c32242e63f39?auto=format&fit=crop&w=200&q=80',
+                badge: 'Twin'
+            },
+            triple: {
+                name: 'Triple Room',
+                price: '2,400 MAD',
+                size: '42 m²',
+                bed: '1 queen bed + 1 twin bed',
+                pool: 'No',
+                fireplace: 'No',
+                description: 'This spacious air-conditioned triple room features a flat-screen TV, a private bathroom with bath, and a wardrobe. The room includes free toiletries and heating.',
+                details: '<p><strong>Room Size:</strong> 42 m²</p><p><strong>Bed:</strong> 1 queen bed + 1 twin bed</p><p><strong>Bathroom:</strong> Private bathroom with bath</p><p><strong>View:</strong> Garden view</p><p><strong>Room Facilities:</strong> Air conditioning, Flat-screen TV, Wardrobe or closet, Heating</p><p><strong>Smoking:</strong> No smoking</p>',
+                images: [
+                    'https://images.unsplash.com/photo-1560185127-6ed189bf02f4?auto=format&fit=crop&w=800&q=85',
+                    'https://images.unsplash.com/photo-1618773928121-c32242e63f39?auto=format&fit=crop&w=800&q=85',
+                    'https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&w=800&q=85',
+                    'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?auto=format&fit=crop&w=800&q=85'
+                ],
+                thumb: 'https://images.unsplash.com/photo-1560185127-6ed189bf02f4?auto=format&fit=crop&w=200&q=80',
+                badge: 'Triple'
+            },
+            suite: {
+                name: 'Suite',
+                price: '3,200 MAD',
+                size: '50 m²',
+                bed: '1 queen bed',
+                pool: 'Yes',
+                fireplace: 'Yes',
+                description: 'The private pool and fireplace are the special features of this suite. This air-conditioned suite consists of 1 living room, 1 separate bedroom and 1 bathroom with a bath. The suite features parquet floors, a seating area with a flat-screen TV, a wardrobe, a sofa, as well as heating. The unit offers 1 bed.',
+                details: '<p><strong>Room Size:</strong> 50 m²</p><p><strong>Bed:</strong> 1 queen bed</p><p><strong>Comfy beds:</strong> 7.3 – Based on 120 reviews</p><p><strong>Bathroom:</strong> Private bathroom with bath</p><p><strong>View:</strong> Pool view</p><p><strong>Room Facilities:</strong> Private pool, Hardwood or parquet floors, Fireplace, Flat-screen TV, Sofa, Heating, Wardrobe or closet, Seating area, Socket near the bed, Air conditioning</p><p><strong>Smoking:</strong> No smoking</p>',
+                images: [
+                    'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?auto=format&fit=crop&w=800&q=85',
+                    'https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&w=800&q=85',
+                    'https://images.unsplash.com/photo-1618773928121-c32242e63f39?auto=format&fit=crop&w=800&q=85',
+                    'https://images.unsplash.com/photo-1560185127-6ed189bf02f4?auto=format&fit=crop&w=800&q=85'
+                ],
+                thumb: 'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?auto=format&fit=crop&w=200&q=80',
+                badge: 'Suite'
+            }
+        };
+
+        let currentRoom = 'double';
+        let isTransitioning = false;
+
+        function initRoomCarousel() {
+            // Thumbnail clicks
+            document.querySelectorAll('.room-thumb').forEach(thumb => {
+                thumb.addEventListener('click', function() {
+                    const room = this.dataset.room;
+                    if (room && room !== currentRoom && !isTransitioning) {
+                        switchRoom(room);
+                    }
+                });
+            });
+
+            // Featured book and details buttons
+            document.getElementById('featuredBookBtn').addEventListener('click', function(e) {
+                e.stopPropagation();
+                const room = this.dataset.room || currentRoom;
+                openRoomModal(room);
+            });
+            document.getElementById('featuredDetailsBtn').addEventListener('click', function(e) {
+                e.stopPropagation();
+                const room = this.dataset.room || currentRoom;
+                openRoomModal(room);
+            });
+
+            // Set initial room
+            updateFeaturedRoom('double', true);
+        }
+
+        function switchRoom(roomKey) {
+            if (isTransitioning || roomKey === currentRoom) return;
+            isTransitioning = true;
+
+            // Update thumbnails
+            document.querySelectorAll('.room-thumb').forEach(th => {
+                th.classList.toggle('active', th.dataset.room === roomKey);
+            });
+
+            // Get data
+            const data = roomData[roomKey];
+            if (!data) { isTransitioning = false; return; }
+
+            // Animate the transition
+            const featured = document.getElementById('featuredRoom');
+            const img = document.getElementById('featuredImage');
+            const name = document.getElementById('featuredName');
+            const price = document.getElementById('featuredPrice');
+            const desc = document.getElementById('featuredDesc');
+            const badge = document.getElementById('featuredBadge');
+            const eyebrow = document.getElementById('featuredEyebrow');
+            const size = document.getElementById('fSize');
+            const bed = document.getElementById('fBed');
+            const pool = document.getElementById('fPool');
+            const fireplace = document.getElementById('fFireplace');
+            const bookBtn = document.getElementById('featuredBookBtn');
+            const detailsBtn = document.getElementById('featuredDetailsBtn');
+
+            // Store current image for crossfade
+            const currentSrc = img.src;
+
+            // Animate: fade out current content (except image which crossfades)
+            const tl = gsap.timeline({
+                onComplete: () => {
+                    isTransitioning = false;
+                }
+            });
+
+            // Image crossfade with scale
+            tl.to(img, {
+                opacity: 0,
+                scale: 1.02,
+                duration: 0.5,
+                ease: 'power2.inOut',
+                onComplete: () => {
+                    img.src = data.images[0];
+                    img.onload = () => {
+                        gsap.to(img, {
+                            opacity: 1,
+                            scale: 1,
+                            duration: 0.7,
+                            ease: 'power2.out'
+                        });
+                    };
+                    // If image already loaded
+                    if (img.complete) {
+                        gsap.to(img, {
+                            opacity: 1,
+                            scale: 1,
+                            duration: 0.7,
+                            ease: 'power2.out'
+                        });
+                    }
+                }
+            });
+
+            // Text elements: slide out and in with stagger
+            const textElements = [name, eyebrow, price, desc];
+            const amenities = [size, bed, pool, fireplace];
+
+            tl.to(textElements, {
+                y: -20,
+                opacity: 0,
+                duration: 0.4,
+                stagger: 0.05,
+                ease: 'power2.in',
+                onComplete: () => {
+                    // Update content
+                    name.textContent = data.name;
+                    eyebrow.textContent = data.name;
+                    price.innerHTML = 'From <strong>' + data.price + '</strong> per night';
+                    desc.textContent = data.description;
+                    badge.textContent = data.badge || data.name;
+                    size.textContent = data.size;
+                    bed.textContent = data.bed;
+                    pool.textContent = data.pool;
+                    fireplace.textContent = data.fireplace;
+                    bookBtn.dataset.room = roomKey;
+                    detailsBtn.dataset.room = roomKey;
+
+                    // Animate in
+                    gsap.to(textElements, {
+                        y: 0,
+                        opacity: 1,
+                        duration: 0.5,
+                        stagger: 0.06,
+                        ease: 'power2.out',
+                        delay: 0.1
+                    });
+                    gsap.to(amenities, {
+                        opacity: 1,
+                        duration: 0.4,
+                        stagger: 0.04,
+                        ease: 'power2.out',
+                        delay: 0.2
+                    });
+                }
+            });
+
+            // Amenities fade
+            tl.to(amenities, {
+                opacity: 0,
+                duration: 0.3,
+                stagger: 0.03,
+                ease: 'power2.in'
+            }, 0);
+
+            // Buttons subtle pulse
+            tl.to(bookBtn, {
+                scale: 0.96,
+                duration: 0.15,
+                ease: 'power2.inOut',
+                yoyo: true,
+                repeat: 1
+            }, 0.3);
+            tl.to(detailsBtn, {
+                scale: 0.96,
+                duration: 0.15,
+                ease: 'power2.inOut',
+                yoyo: true,
+                repeat: 1
+            }, 0.35);
+
+            currentRoom = roomKey;
+        }
+
+        function updateFeaturedRoom(roomKey, instant) {
+            const data = roomData[roomKey];
+            if (!data) return;
+
+            document.getElementById('featuredImage').src = data.images[0];
+            document.getElementById('featuredName').textContent = data.name;
+            document.getElementById('featuredEyebrow').textContent = data.name;
+            document.getElementById('featuredPrice').innerHTML = 'From <strong>' + data.price + '</strong> per night';
+            document.getElementById('featuredDesc').textContent = data.description;
+            document.getElementById('featuredBadge').textContent = data.badge || data.name;
+            document.getElementById('fSize').textContent = data.size;
+            document.getElementById('fBed').textContent = data.bed;
+            document.getElementById('fPool').textContent = data.pool;
+            document.getElementById('fFireplace').textContent = data.fireplace;
+            document.getElementById('featuredBookBtn').dataset.room = roomKey;
+            document.getElementById('featuredDetailsBtn').dataset.room = roomKey;
+
+            document.querySelectorAll('.room-thumb').forEach(th => {
+                th.classList.toggle('active', th.dataset.room === roomKey);
+            });
+
+            currentRoom = roomKey;
         }
 
 
@@ -5254,7 +5032,7 @@
                 dot.classList.remove('visible');
             });
 
-            document.querySelectorAll('a, button, .room-art-card, .exp-card, .gallery-tile, .facility-item, .policy-block')
+            document.querySelectorAll('a, button, .room-thumb, .exp-card, .gallery-tile, .facility-item, .policy-block')
                 .forEach(el => {
                     el.addEventListener('mouseenter', () => dot.classList.add('hover'));
                     el.addEventListener('mouseleave', () => dot.classList.remove('hover'));
@@ -5272,7 +5050,7 @@
 
 
         // ============================================================ //
-        //  4. TRANSLATIONS                                             //
+        //  4. COMPLETE TRANSLATIONS — FULL MULTILINGUAL               //
         // ============================================================ //
 
         const translations = {
@@ -5291,7 +5069,67 @@
                 guests: 'Guests',
                 twoGuests: '2 Guests',
                 oneGuest: '1 Guest',
-                family: 'Family of 4'
+                family: 'Family of 4',
+                // Room names and descriptions
+                roomDouble: 'Double Room',
+                roomTwin: 'Twin Room',
+                roomTriple: 'Triple Room',
+                roomSuite: 'Suite',
+                roomDoubleDesc: 'This air-conditioned room features a comfortable seating area, a flat-screen TV, and a private bathroom with bath. The room includes a wardrobe and free toiletries.',
+                roomTwinDesc: 'This air-conditioned twin room features a flat-screen TV, a private bathroom with bath, and a wardrobe. The room includes free toiletries and heating.',
+                roomTripleDesc: 'This spacious air-conditioned triple room features a flat-screen TV, a private bathroom with bath, and a wardrobe. The room includes free toiletries and heating.',
+                roomSuiteDesc: 'The private pool and fireplace are the special features of this suite. This air-conditioned suite consists of 1 living room, 1 separate bedroom and 1 bathroom with a bath.',
+                // Modal
+                bookNow: 'Book Now',
+                details: 'Details',
+                moreDetails: 'More Details',
+                close: 'Close',
+                // Footer
+                explore: 'Explore',
+                theDar: 'The Dar',
+                stayClose: 'Stay Close',
+                backToTop: 'Back to top',
+                // Contact
+                callUs: 'Call us',
+                email: 'Email',
+                whatsapp: 'WhatsApp',
+                messageDar: 'Message the Dar →',
+                startReservation: 'Start a reservation',
+                // FAQ
+                faqBreakfast: 'What kind of breakfast is served?',
+                faqBreakfastAns: 'Guests can enjoy a wonderful buffet breakfast (guest review score: 9.4).',
+                faqPool: 'Does the hotel have a pool?',
+                faqPoolAns: 'Yes, a seasonal outdoor swimming pool with a shallow end and beach umbrellas.',
+                faqRooms: 'What room types are available?',
+                faqRoomsAns: 'Double, Twin, Triple, and Suite options are available.',
+                faqRestaurant: 'Is there a restaurant on site?',
+                faqRestaurantAns: 'Yes, Restaurant #1 serves Italian and Moroccan cuisine with halal and vegetarian options.',
+                faqDistance: 'How far is the property from Azrou center?',
+                faqDistanceAns: 'Amrouss touristic DarMaroc is 6 km from the center of Azrou.',
+                // Toast
+                toastThankYou: 'Thank you — we\'ll be in touch shortly.',
+                // Gallery
+                galleryAll: 'All',
+                galleryRooms: 'Rooms',
+                galleryPool: 'Pool',
+                galleryTable: 'Table',
+                galleryNature: 'Nature',
+                // Policies
+                policiesCheckIn: 'Check-in / Check-out',
+                policiesChildren: 'Children & Beds',
+                policiesPets: 'Pets & Payment',
+                policiesOther: 'Other Policies',
+                policiesCancellation: 'Cancellation',
+                // Booking form
+                bookingTitle: 'Reserve your stay.',
+                bookingSub: 'We will confirm availability within 24 hours.',
+                bookingAdults: 'Adults',
+                bookingChildren: 'Children',
+                bookingRoomType: 'Room type',
+                bookingPhone: 'Phone',
+                bookingEmail: 'Email (optional)',
+                bookingRequests: 'Special requests',
+                bookingSubmit: 'Request reservation',
             },
             fr: {
                 navStay: 'Séjours',
@@ -5308,7 +5146,58 @@
                 guests: 'Voyageurs',
                 twoGuests: '2 voyageurs',
                 oneGuest: '1 voyageur',
-                family: 'Famille de 4'
+                family: 'Famille de 4',
+                roomDouble: 'Chambre Double',
+                roomTwin: 'Chambre Jumelle',
+                roomTriple: 'Chambre Triple',
+                roomSuite: 'Suite',
+                roomDoubleDesc: 'Cette chambre climatisée dispose d\'un coin salon confortable, d\'une télévision à écran plat et d\'une salle de bain privative avec baignoire. La chambre comprend une armoire et des articles de toilette gratuits.',
+                roomTwinDesc: 'Cette chambre jumelle climatisée dispose d\'une télévision à écran plat, d\'une salle de bain privative avec baignoire et d\'une armoire. La chambre comprend des articles de toilette gratuits et un chauffage.',
+                roomTripleDesc: 'Cette spacieuse chambre triple climatisée dispose d\'une télévision à écran plat, d\'une salle de bain privative avec baignoire et d\'une armoire. La chambre comprend des articles de toilette gratuits et un chauffage.',
+                roomSuiteDesc: 'La piscine privée et la cheminée sont les caractéristiques spéciales de cette suite. Cette suite climatisée se compose d\'un salon, d\'une chambre séparée et d\'une salle de bain avec baignoire.',
+                bookNow: 'Réserver',
+                details: 'Détails',
+                moreDetails: 'Plus de détails',
+                close: 'Fermer',
+                explore: 'Explorer',
+                theDar: 'La Maison',
+                stayClose: 'Restez proche',
+                backToTop: 'Retour en haut',
+                callUs: 'Appelez-nous',
+                email: 'Email',
+                whatsapp: 'WhatsApp',
+                messageDar: 'Message au Dar →',
+                startReservation: 'Démarrer une réservation',
+                faqBreakfast: 'Quel type de petit-déjeuner est servi ?',
+                faqBreakfastAns: 'Les clients peuvent profiter d\'un merveilleux petit-déjeuner buffet (note des clients : 9,4).',
+                faqPool: 'L\'hôtel dispose-t-il d\'une piscine ?',
+                faqPoolAns: 'Oui, une piscine extérieure saisonnière avec un bassin peu profond et des parasols.',
+                faqRooms: 'Quels types de chambres sont disponibles ?',
+                faqRoomsAns: 'Des options Double, Jumelle, Triple et Suite sont disponibles.',
+                faqRestaurant: 'Y a-t-il un restaurant sur place ?',
+                faqRestaurantAns: 'Oui, le Restaurant #1 propose une cuisine italienne et marocaine avec des options halal et végétariennes.',
+                faqDistance: 'À quelle distance se trouve la propriété du centre d\'Azrou ?',
+                faqDistanceAns: 'Amrouss touristic DarMaroc se trouve à 6 km du centre d\'Azrou.',
+                toastThankYou: 'Merci — nous vous contacterons sous peu.',
+                galleryAll: 'Tout',
+                galleryRooms: 'Chambres',
+                galleryPool: 'Piscine',
+                galleryTable: 'Table',
+                galleryNature: 'Nature',
+                policiesCheckIn: 'Arrivée / Départ',
+                policiesChildren: 'Enfants & Lits',
+                policiesPets: 'Animaux & Paiement',
+                policiesOther: 'Autres règles',
+                policiesCancellation: 'Annulation',
+                bookingTitle: 'Réservez votre séjour.',
+                bookingSub: 'Nous vous confirmerons la disponibilité dans les 24 heures.',
+                bookingAdults: 'Adultes',
+                bookingChildren: 'Enfants',
+                bookingRoomType: 'Type de chambre',
+                bookingPhone: 'Téléphone',
+                bookingEmail: 'Email (facultatif)',
+                bookingRequests: 'Demandes spéciales',
+                bookingSubmit: 'Demander une réservation',
             },
             es: {
                 navStay: 'Estancias',
@@ -5325,7 +5214,58 @@
                 guests: 'Huéspedes',
                 twoGuests: '2 huéspedes',
                 oneGuest: '1 huésped',
-                family: 'Familia de 4'
+                family: 'Familia de 4',
+                roomDouble: 'Habitación Doble',
+                roomTwin: 'Habitación Twin',
+                roomTriple: 'Habitación Triple',
+                roomSuite: 'Suite',
+                roomDoubleDesc: 'Esta habitación con aire acondicionado cuenta con una cómoda zona de estar, TV de pantalla plana y baño privado con bañera. La habitación incluye armario y artículos de aseo gratuitos.',
+                roomTwinDesc: 'Esta habitación twin con aire acondicionado cuenta con TV de pantalla plana, baño privado con bañera y armario. La habitación incluye artículos de aseo gratuitos y calefacción.',
+                roomTripleDesc: 'Esta espaciosa habitación triple con aire acondicionado cuenta con TV de pantalla plana, baño privado con bañera y armario. La habitación incluye artículos de aseo gratuitos y calefacción.',
+                roomSuiteDesc: 'La piscina privada y la chimenea son las características especiales de esta suite. Esta suite con aire acondicionado consta de 1 sala de estar, 1 dormitorio separado y 1 baño con bañera.',
+                bookNow: 'Reservar',
+                details: 'Detalles',
+                moreDetails: 'Más detalles',
+                close: 'Cerrar',
+                explore: 'Explorar',
+                theDar: 'El Dar',
+                stayClose: 'Mantente cerca',
+                backToTop: 'Volver arriba',
+                callUs: 'Llámenos',
+                email: 'Email',
+                whatsapp: 'WhatsApp',
+                messageDar: 'Mensaje al Dar →',
+                startReservation: 'Iniciar reserva',
+                faqBreakfast: '¿Qué tipo de desayuno se sirve?',
+                faqBreakfastAns: 'Los huéspedes pueden disfrutar de un maravilloso desayuno buffet (puntuación: 9,4).',
+                faqPool: '¿El hotel tiene piscina?',
+                faqPoolAns: 'Sí, una piscina al aire libre de temporada con zona poco profunda y sombrillas.',
+                faqRooms: '¿Qué tipos de habitaciones hay disponibles?',
+                faqRoomsAns: 'Hay opciones Doble, Twin, Triple y Suite.',
+                faqRestaurant: '¿Hay un restaurante en el lugar?',
+                faqRestaurantAns: 'Sí, el Restaurante #1 sirve cocina italiana y marroquí con opciones halal y vegetarianas.',
+                faqDistance: '¿A qué distancia está la propiedad del centro de Azrou?',
+                faqDistanceAns: 'Amrouss touristic DarMaroc está a 6 km del centro de Azrou.',
+                toastThankYou: 'Gracias — nos pondremos en contacto pronto.',
+                galleryAll: 'Todo',
+                galleryRooms: 'Habitaciones',
+                galleryPool: 'Piscina',
+                galleryTable: 'Mesa',
+                galleryNature: 'Naturaleza',
+                policiesCheckIn: 'Llegada / Salida',
+                policiesChildren: 'Niños & Camas',
+                policiesPets: 'Mascotas & Pago',
+                policiesOther: 'Otras reglas',
+                policiesCancellation: 'Cancelación',
+                bookingTitle: 'Reserva tu estancia.',
+                bookingSub: 'Confirmaremos la disponibilidad en 24 horas.',
+                bookingAdults: 'Adultos',
+                bookingChildren: 'Niños',
+                bookingRoomType: 'Tipo de habitación',
+                bookingPhone: 'Teléfono',
+                bookingEmail: 'Email (opcional)',
+                bookingRequests: 'Peticiones especiales',
+                bookingSubmit: 'Solicitar reserva',
             },
             de: {
                 navStay: 'Aufenthalt',
@@ -5342,7 +5282,58 @@
                 guests: 'Gäste',
                 twoGuests: '2 Gäste',
                 oneGuest: '1 Gast',
-                family: 'Familie von 4'
+                family: 'Familie von 4',
+                roomDouble: 'Doppelzimmer',
+                roomTwin: 'Zweibettzimmer',
+                roomTriple: 'Dreibettzimmer',
+                roomSuite: 'Suite',
+                roomDoubleDesc: 'Dieses klimatisierte Zimmer verfügt über einen Sitzbereich, einen Flachbild-TV und ein eigenes Bad mit Badewanne. Das Zimmer bietet einen Kleiderschrank und kostenlose Pflegeprodukte.',
+                roomTwinDesc: 'Dieses klimatisierte Zweibettzimmer verfügt über einen Flachbild-TV, ein eigenes Bad mit Badewanne und einen Kleiderschrank. Das Zimmer bietet kostenlose Pflegeprodukte und Heizung.',
+                roomTripleDesc: 'Dieses geräumige klimatisierte Dreibettzimmer verfügt über einen Flachbild-TV, ein eigenes Bad mit Badewanne und einen Kleiderschrank. Das Zimmer bietet kostenlose Pflegeprodukte und Heizung.',
+                roomSuiteDesc: 'Der private Pool und der Kamin sind die Besonderheiten dieser Suite. Diese klimatisierte Suite besteht aus 1 Wohnzimmer, 1 separatem Schlafzimmer und 1 Badezimmer mit Badewanne.',
+                bookNow: 'Buchen',
+                details: 'Details',
+                moreDetails: 'Weitere Details',
+                close: 'Schließen',
+                explore: 'Entdecken',
+                theDar: 'Das Dar',
+                stayClose: 'Bleiben Sie nah',
+                backToTop: 'Zurück nach oben',
+                callUs: 'Rufen Sie uns an',
+                email: 'Email',
+                whatsapp: 'WhatsApp',
+                messageDar: 'Nachricht ans Dar →',
+                startReservation: 'Reservierung starten',
+                faqBreakfast: 'Welche Art von Frühstück wird serviert?',
+                faqBreakfastAns: 'Gäste können ein wunderbares Frühstücksbuffet genießen (Bewertung: 9,4).',
+                faqPool: 'Hat das Hotel einen Pool?',
+                faqPoolAns: 'Ja, einen saisonalen Außenpool mit flachem Bereich und Sonnenschirmen.',
+                faqRooms: 'Welche Zimmertypen gibt es?',
+                faqRoomsAns: 'Doppel-, Zweibett-, Dreibettzimmer und Suite sind verfügbar.',
+                faqRestaurant: 'Gibt es ein Restaurant vor Ort?',
+                faqRestaurantAns: 'Ja, Restaurant #1 serviert italienische und marokkanische Küche mit Halal- und vegetarischen Optionen.',
+                faqDistance: 'Wie weit ist die Unterkunft vom Zentrum Azrous entfernt?',
+                faqDistanceAns: 'Amrouss touristic DarMaroc liegt 6 km vom Zentrum Azrous entfernt.',
+                toastThankYou: 'Vielen Dank — wir melden uns in Kürze bei Ihnen.',
+                galleryAll: 'Alle',
+                galleryRooms: 'Zimmer',
+                galleryPool: 'Pool',
+                galleryTable: 'Tisch',
+                galleryNature: 'Natur',
+                policiesCheckIn: 'Anreise / Abreise',
+                policiesChildren: 'Kinder & Betten',
+                policiesPets: 'Haustiere & Zahlung',
+                policiesOther: 'Weitere Regeln',
+                policiesCancellation: 'Stornierung',
+                bookingTitle: 'Reservieren Sie Ihren Aufenthalt.',
+                bookingSub: 'Wir bestätigen die Verfügbarkeit innerhalb von 24 Stunden.',
+                bookingAdults: 'Erwachsene',
+                bookingChildren: 'Kinder',
+                bookingRoomType: 'Zimmertyp',
+                bookingPhone: 'Telefon',
+                bookingEmail: 'Email (optional)',
+                bookingRequests: 'Sonderwünsche',
+                bookingSubmit: 'Reservierung anfragen',
             },
             it: {
                 navStay: 'Soggiorno',
@@ -5359,7 +5350,58 @@
                 guests: 'Ospiti',
                 twoGuests: '2 ospiti',
                 oneGuest: '1 ospite',
-                family: 'Famiglia di 4'
+                family: 'Famiglia di 4',
+                roomDouble: 'Camera Doppia',
+                roomTwin: 'Camera Twin',
+                roomTriple: 'Camera Tripla',
+                roomSuite: 'Suite',
+                roomDoubleDesc: 'Questa camera climatizzata dispone di un\'area salotto confortevole, una TV a schermo piatto e un bagno privato con vasca. La camera include un armadio e set di cortesia.',
+                roomTwinDesc: 'Questa camera twin climatizzata dispone di una TV a schermo piatto, un bagno privato con vasca e un armadio. La camera include set di cortesia e riscaldamento.',
+                roomTripleDesc: 'Questa spaziosa camera tripla climatizzata dispone di una TV a schermo piatto, un bagno privato con vasca e un armadio. La camera include set di cortesia e riscaldamento.',
+                roomSuiteDesc: 'La piscina privata e il caminetto sono le caratteristiche speciali di questa suite. Questa suite climatizzata è composta da 1 soggiorno, 1 camera da letto separata e 1 bagno con vasca.',
+                bookNow: 'Prenota',
+                details: 'Dettagli',
+                moreDetails: 'Più dettagli',
+                close: 'Chiudi',
+                explore: 'Esplora',
+                theDar: 'Il Dar',
+                stayClose: 'Rimani vicino',
+                backToTop: 'Torna su',
+                callUs: 'Chiamaci',
+                email: 'Email',
+                whatsapp: 'WhatsApp',
+                messageDar: 'Messaggio al Dar →',
+                startReservation: 'Inizia una prenotazione',
+                faqBreakfast: 'Che tipo di colazione viene servita?',
+                faqBreakfastAns: 'Gli ospiti possono gustare una meravigliosa colazione a buffet (punteggio: 9,4).',
+                faqPool: 'L\'hotel ha una piscina?',
+                faqPoolAns: 'Sì, una piscina all\'aperto stagionale con area poco profonda e ombrelloni.',
+                faqRooms: 'Quali tipi di camere sono disponibili?',
+                faqRoomsAns: 'Sono disponibili opzioni Doppia, Twin, Tripla e Suite.',
+                faqRestaurant: 'C\'è un ristorante in loco?',
+                faqRestaurantAns: 'Sì, il Ristorante #1 serve cucina italiana e marocchina con opzioni halal e vegetariane.',
+                faqDistance: 'Quanto dista la proprietà dal centro di Azrou?',
+                faqDistanceAns: 'Amrouss touristic DarMaroc si trova a 6 km dal centro di Azrou.',
+                toastThankYou: 'Grazie — ti contatteremo a breve.',
+                galleryAll: 'Tutti',
+                galleryRooms: 'Camere',
+                galleryPool: 'Piscina',
+                galleryTable: 'Tavola',
+                galleryNature: 'Natura',
+                policiesCheckIn: 'Check-in / Check-out',
+                policiesChildren: 'Bambini & Letti',
+                policiesPets: 'Animali & Pagamento',
+                policiesOther: 'Altre regole',
+                policiesCancellation: 'Cancellazione',
+                bookingTitle: 'Prenota il tuo soggiorno.',
+                bookingSub: 'Confermeremo la disponibilità entro 24 ore.',
+                bookingAdults: 'Adulti',
+                bookingChildren: 'Bambini',
+                bookingRoomType: 'Tipo di camera',
+                bookingPhone: 'Telefono',
+                bookingEmail: 'Email (opzionale)',
+                bookingRequests: 'Richieste speciali',
+                bookingSubmit: 'Richiedi prenotazione',
             },
             pt: {
                 navStay: 'Estadia',
@@ -5376,7 +5418,58 @@
                 guests: 'Hóspedes',
                 twoGuests: '2 hóspedes',
                 oneGuest: '1 hóspede',
-                family: 'Família de 4'
+                family: 'Família de 4',
+                roomDouble: 'Quarto Duplo',
+                roomTwin: 'Quarto Twin',
+                roomTriple: 'Quarto Triplo',
+                roomSuite: 'Suíte',
+                roomDoubleDesc: 'Este quarto com ar condicionado dispõe de uma área de estar confortável, uma TV de ecrã plano e uma casa de banho privativa com banheira. O quarto inclui um roupeiro e produtos de higiene pessoal gratuitos.',
+                roomTwinDesc: 'Este quarto twin com ar condicionado dispõe de uma TV de ecrã plano, uma casa de banho privativa com banheira e um roupeiro. O quarto inclui produtos de higiene pessoal gratuitos e aquecimento.',
+                roomTripleDesc: 'Este espaçoso quarto triplo com ar condicionado dispõe de uma TV de ecrã plano, uma casa de banho privativa com banheira e um roupeiro. O quarto inclui produtos de higiene pessoal gratuitos e aquecimento.',
+                roomSuiteDesc: 'A piscina privada e a lareira são as características especiais desta suíte. Esta suíte com ar condicionado consiste em 1 sala de estar, 1 quarto separado e 1 casa de banho com banheira.',
+                bookNow: 'Reservar',
+                details: 'Detalhes',
+                moreDetails: 'Mais detalhes',
+                close: 'Fechar',
+                explore: 'Explorar',
+                theDar: 'O Dar',
+                stayClose: 'Fique perto',
+                backToTop: 'Voltar ao topo',
+                callUs: 'Ligue-nos',
+                email: 'Email',
+                whatsapp: 'WhatsApp',
+                messageDar: 'Mensagem ao Dar →',
+                startReservation: 'Iniciar reserva',
+                faqBreakfast: 'Que tipo de pequeno-almoço é servido?',
+                faqBreakfastAns: 'Os hóspedes podem desfrutar de um maravilhoso buffet de pequeno-almoço (pontuação: 9,4).',
+                faqPool: 'O hotel tem piscina?',
+                faqPoolAns: 'Sim, uma piscina exterior sazonal com área pouco profunda e guarda-sóis.',
+                faqRooms: 'Que tipos de quartos estão disponíveis?',
+                faqRoomsAns: 'Estão disponíveis opções Duplo, Twin, Triplo e Suíte.',
+                faqRestaurant: 'Há um restaurante no local?',
+                faqRestaurantAns: 'Sim, o Restaurante #1 serve cozinha italiana e marroquina com opções halal e vegetarianas.',
+                faqDistance: 'A que distância fica a propriedade do centro de Azrou?',
+                faqDistanceAns: 'Amrouss touristic DarMaroc fica a 6 km do centro de Azrou.',
+                toastThankYou: 'Obrigado — entraremos em contacto em breve.',
+                galleryAll: 'Todos',
+                galleryRooms: 'Quartos',
+                galleryPool: 'Piscina',
+                galleryTable: 'Mesa',
+                galleryNature: 'Natureza',
+                policiesCheckIn: 'Check-in / Check-out',
+                policiesChildren: 'Crianças & Camas',
+                policiesPets: 'Animais & Pagamento',
+                policiesOther: 'Outras regras',
+                policiesCancellation: 'Cancelamento',
+                bookingTitle: 'Reserve a sua estadia.',
+                bookingSub: 'Confirmaremos a disponibilidade dentro de 24 horas.',
+                bookingAdults: 'Adultos',
+                bookingChildren: 'Crianças',
+                bookingRoomType: 'Tipo de quarto',
+                bookingPhone: 'Telefone',
+                bookingEmail: 'Email (opcional)',
+                bookingRequests: 'Pedidos especiais',
+                bookingSubmit: 'Solicitar reserva',
             },
             nl: {
                 navStay: 'Verblijf',
@@ -5393,7 +5486,58 @@
                 guests: 'Gasten',
                 twoGuests: '2 gasten',
                 oneGuest: '1 gast',
-                family: 'Gezin van 4'
+                family: 'Gezin van 4',
+                roomDouble: 'Tweepersoonskamer',
+                roomTwin: 'Twin-kamer',
+                roomTriple: 'Driepersoonskamer',
+                roomSuite: 'Suite',
+                roomDoubleDesc: 'Deze airconditioned kamer heeft een zithoek, een flatscreen-tv en een eigen badkamer met bad. De kamer heeft een kledingkast en gratis toiletartikelen.',
+                roomTwinDesc: 'Deze airconditioned twin-kamer heeft een flatscreen-tv, een eigen badkamer met bad en een kledingkast. De kamer heeft gratis toiletartikelen en verwarming.',
+                roomTripleDesc: 'Deze ruime airconditioned driepersoonskamer heeft een flatscreen-tv, een eigen badkamer met bad en een kledingkast. De kamer heeft gratis toiletartikelen en verwarming.',
+                roomSuiteDesc: 'Het privézwembad en de open haard zijn de speciale kenmerken van deze suite. Deze airconditioned suite bestaat uit 1 woonkamer, 1 aparte slaapkamer en 1 badkamer met bad.',
+                bookNow: 'Boek nu',
+                details: 'Details',
+                moreDetails: 'Meer details',
+                close: 'Sluiten',
+                explore: 'Ontdek',
+                theDar: 'Het Dar',
+                stayClose: 'Blijf dichtbij',
+                backToTop: 'Terug naar boven',
+                callUs: 'Bel ons',
+                email: 'Email',
+                whatsapp: 'WhatsApp',
+                messageDar: 'Bericht naar het Dar →',
+                startReservation: 'Start een reservering',
+                faqBreakfast: 'Wat voor ontbijt wordt er geserveerd?',
+                faqBreakfastAns: 'Gasten kunnen genieten van een prachtig ontbijtbuffet (beoordeling: 9,4).',
+                faqPool: 'Heeft het hotel een zwembad?',
+                faqPoolAns: 'Ja, een seizoensgebonden buitenzwembad met een ondiep gedeelte en strandparasols.',
+                faqRooms: 'Welke kamertypes zijn beschikbaar?',
+                faqRoomsAns: 'Er zijn Tweepersoons-, Twin-, Driepersoons- en Suite-opties beschikbaar.',
+                faqRestaurant: 'Is er een restaurant ter plaatse?',
+                faqRestaurantAns: 'Ja, Restaurant #1 serveert Italiaanse en Marokkaanse gerechten met halal- en vegetarische opties.',
+                faqDistance: 'Hoe ver is de accommodatie van het centrum van Azrou?',
+                faqDistanceAns: 'Amrouss touristic DarMaroc ligt op 6 km van het centrum van Azrou.',
+                toastThankYou: 'Bedankt — we nemen binnenkort contact met u op.',
+                galleryAll: 'Alles',
+                galleryRooms: 'Kamers',
+                galleryPool: 'Zwembad',
+                galleryTable: 'Tafel',
+                galleryNature: 'Natuur',
+                policiesCheckIn: 'Check-in / Check-out',
+                policiesChildren: 'Kinderen & Bedden',
+                policiesPets: 'Huisdieren & Betaling',
+                policiesOther: 'Andere regels',
+                policiesCancellation: 'Annulering',
+                bookingTitle: 'Reserveer uw verblijf.',
+                bookingSub: 'We bevestigen de beschikbaarheid binnen 24 uur.',
+                bookingAdults: 'Volwassenen',
+                bookingChildren: 'Kinderen',
+                bookingRoomType: 'Kamertype',
+                bookingPhone: 'Telefoon',
+                bookingEmail: 'Email (optioneel)',
+                bookingRequests: 'Speciale verzoeken',
+                bookingSubmit: 'Reservering aanvragen',
             },
             ar: {
                 navStay: 'الإقامة',
@@ -5410,7 +5554,58 @@
                 guests: 'الضيوف',
                 twoGuests: 'ضيفان',
                 oneGuest: 'ضيف واحد',
-                family: 'عائلة من 4'
+                family: 'عائلة من 4',
+                roomDouble: 'غرفة مزدوجة',
+                roomTwin: 'غرفة توأم',
+                roomTriple: 'غرفة ثلاثية',
+                roomSuite: 'جناح',
+                roomDoubleDesc: 'تتميز هذه الغرفة المكيفة بمنطقة جلوس مريحة وتلفزيون بشاشة مسطحة وحمام خاص مع حوض استحمام. تشمل الغرفة خزانة ملابس ومستلزمات استحمام مجانية.',
+                roomTwinDesc: 'تتميز هذه الغرفة التوأم المكيفة بتلفزيون بشاشة مسطحة وحمام خاص مع حوض استحمام وخزانة ملابس. تشمل الغرفة مستلزمات استحمام مجانية وتدفئة.',
+                roomTripleDesc: 'تتميز هذه الغرفة الثلاثية المكيفة الواسعة بتلفزيون بشاشة مسطحة وحمام خاص مع حوض استحمام وخزانة ملابس. تشمل الغرفة مستلزمات استحمام مجانية وتدفئة.',
+                roomSuiteDesc: 'المسبح الخاص والموقد هما الميزات الخاصة لهذا الجناح. يتكون هذا الجناح المكيف من غرفة معيشة واحدة وغرفة نوم منفصلة وحمام واحد مع حوض استحمام.',
+                bookNow: 'احجز الآن',
+                details: 'التفاصيل',
+                moreDetails: 'المزيد من التفاصيل',
+                close: 'إغلاق',
+                explore: 'استكشف',
+                theDar: 'الدار',
+                stayClose: 'ابق على اتصال',
+                backToTop: 'العودة للأعلى',
+                callUs: 'اتصل بنا',
+                email: 'البريد الإلكتروني',
+                whatsapp: 'واتساب',
+                messageDar: 'أرسل رسالة إلى الدار →',
+                startReservation: 'ابدأ الحجز',
+                faqBreakfast: 'ما نوع الإفطار المقدم؟',
+                faqBreakfastAns: 'يمكن للضيوف الاستمتاع ببوفيه إفطار رائع (تقييم الضيوف: 9.4).',
+                faqPool: 'هل يوجد مسبح في الفندق؟',
+                faqPoolAns: 'نعم، مسبح خارجي موسمي مع منطقة ضحلة ومظلات شاطئية.',
+                faqRooms: 'ما هي أنواع الغرف المتوفرة؟',
+                faqRoomsAns: 'تتوفر خيارات مزدوجة وتوأم وثلاثية وجناح.',
+                faqRestaurant: 'هل يوجد مطعم في الموقع؟',
+                faqRestaurantAns: 'نعم، يقدم المطعم رقم 1 المأكولات الإيطالية والمغربية مع خيارات حلال ونباتية.',
+                faqDistance: 'كم تبعد الملكية عن مركز أزرو؟',
+                faqDistanceAns: 'يقع Amrouss touristic DarMaroc على بعد 6 كم من مركز أزرو.',
+                toastThankYou: 'شكراً — سنتصل بك قريباً.',
+                galleryAll: 'الكل',
+                galleryRooms: 'الغرف',
+                galleryPool: 'المسبح',
+                galleryTable: 'الطاولة',
+                galleryNature: 'الطبيعة',
+                policiesCheckIn: 'تسجيل الوصول / المغادرة',
+                policiesChildren: 'الأطفال & الأسرة',
+                policiesPets: 'الحيوانات الأليفة & الدفع',
+                policiesOther: 'سياسات أخرى',
+                policiesCancellation: 'الإلغاء',
+                bookingTitle: 'احجز إقامتك.',
+                bookingSub: 'سنؤكد التوفر في غضون 24 ساعة.',
+                bookingAdults: 'البالغين',
+                bookingChildren: 'الأطفال',
+                bookingRoomType: 'نوع الغرفة',
+                bookingPhone: 'الهاتف',
+                bookingEmail: 'البريد الإلكتروني (اختياري)',
+                bookingRequests: 'طلبات خاصة',
+                bookingSubmit: 'طلب حجز',
             },
             zh: {
                 navStay: '住宿',
@@ -5427,7 +5622,58 @@
                 guests: '客人',
                 twoGuests: '2位客人',
                 oneGuest: '1位客人',
-                family: '4人家庭'
+                family: '4人家庭',
+                roomDouble: '双人房',
+                roomTwin: '双床房',
+                roomTriple: '三人房',
+                roomSuite: '套房',
+                roomDoubleDesc: '这间空调客房设有舒适的休息区、平板电视和带浴缸的私人浴室。客房配有衣柜和免费洗浴用品。',
+                roomTwinDesc: '这间空调双床房配有平板电视、带浴缸的私人浴室和衣柜。客房提供免费洗浴用品和暖气。',
+                roomTripleDesc: '这间宽敞的空调三人房配有平板电视、带浴缸的私人浴室和衣柜。客房提供免费洗浴用品和暖气。',
+                roomSuiteDesc: '私人游泳池和壁炉是这间套房的特色。这间空调套房由1间客厅、1间独立卧室和1间带浴缸的浴室组成。',
+                bookNow: '立即预订',
+                details: '详情',
+                moreDetails: '更多详情',
+                close: '关闭',
+                explore: '探索',
+                theDar: '达尔酒店',
+                stayClose: '保持联系',
+                backToTop: '回到顶部',
+                callUs: '联系我们',
+                email: '电子邮件',
+                whatsapp: 'WhatsApp',
+                messageDar: '发送消息给达尔 →',
+                startReservation: '开始预订',
+                faqBreakfast: '提供什么类型的早餐？',
+                faqBreakfastAns: '客人可以享用美味的自助早餐（客人评分为9.4）。',
+                faqPool: '酒店有游泳池吗？',
+                faqPoolAns: '是的，有一个季节性室外游泳池，配有浅水区和沙滩伞。',
+                faqRooms: '有哪些房型可供选择？',
+                faqRoomsAns: '提供双人房、双床房、三人房和套房选项。',
+                faqRestaurant: '酒店内有餐厅吗？',
+                faqRestaurantAns: '是的，1号餐厅供应意大利和摩洛哥美食，提供清真和素食选项。',
+                faqDistance: '酒店距离阿兹鲁市中心有多远？',
+                faqDistanceAns: 'Amrouss touristic DarMaroc 距离阿兹鲁市中心6公里。',
+                toastThankYou: '谢谢 — 我们会尽快与您联系。',
+                galleryAll: '全部',
+                galleryRooms: '客房',
+                galleryPool: '泳池',
+                galleryTable: '餐桌',
+                galleryNature: '自然',
+                policiesCheckIn: '入住 / 退房',
+                policiesChildren: '儿童 & 加床',
+                policiesPets: '宠物 & 付款',
+                policiesOther: '其他政策',
+                policiesCancellation: '取消政策',
+                bookingTitle: '预订您的住宿。',
+                bookingSub: '我们将在24小时内确认空房情况。',
+                bookingAdults: '成人',
+                bookingChildren: '儿童',
+                bookingRoomType: '房型',
+                bookingPhone: '电话',
+                bookingEmail: '电子邮件（可选）',
+                bookingRequests: '特殊要求',
+                bookingSubmit: '请求预订',
             },
             ja: {
                 navStay: '滞在',
@@ -5444,7 +5690,58 @@
                 guests: 'ゲスト',
                 twoGuests: '2名様',
                 oneGuest: '1名様',
-                family: '4人家族'
+                family: '4人家族',
+                roomDouble: 'ダブルルーム',
+                roomTwin: 'ツインルーム',
+                roomTriple: 'トリプルルーム',
+                roomSuite: 'スイート',
+                roomDoubleDesc: 'このエアコン完備の客室には、快適なシーティングエリア、薄型テレビ、バス付きの専用バスルームが備わっています。クローゼットと無料のアメニティが含まれています。',
+                roomTwinDesc: 'このエアコン完備のツインルームには、薄型テレビ、バス付きの専用バスルーム、クローゼットが備わっています。無料のアメニティと暖房が含まれています。',
+                roomTripleDesc: 'この広々としたエアコン完備のトリプルルームには、薄型テレビ、バス付きの専用バスルーム、クローゼットが備わっています。無料のアメニティと暖房が含まれています。',
+                roomSuiteDesc: 'プライベートプールと暖炉がこのスイートの特徴です。このエアコン完備のスイートは、1つのリビングルーム、1つの独立したベッドルーム、バス付きの1つのバスルームで構成されています。',
+                bookNow: '今すぐ予約',
+                details: '詳細',
+                moreDetails: '詳細を見る',
+                close: '閉じる',
+                explore: '探索',
+                theDar: 'ダール',
+                stayClose: '最新情報',
+                backToTop: 'トップに戻る',
+                callUs: 'お電話',
+                email: 'メール',
+                whatsapp: 'WhatsApp',
+                messageDar: 'ダールにメッセージ →',
+                startReservation: '予約を開始',
+                faqBreakfast: 'どのような朝食が提供されますか？',
+                faqBreakfastAns: 'ゲストは素晴らしいビュッフェ式朝食をお楽しみいただけます（ゲスト評価：9.4）。',
+                faqPool: 'ホテルにはプールがありますか？',
+                faqPoolAns: 'はい、浅いエリアとビーチパラソルを備えた季節限定の屋外プールがあります。',
+                faqRooms: 'どのような客室タイプがありますか？',
+                faqRoomsAns: 'ダブル、ツイン、トリプル、スイートのオプションがあります。',
+                faqRestaurant: '館内にレストランはありますか？',
+                faqRestaurantAns: 'はい、レストラン#1ではイタリア料理とモロッコ料理を提供しており、ハラルとベジタリアンのオプションがあります。',
+                faqDistance: 'アズルー中心部からどのくらい離れていますか？',
+                faqDistanceAns: 'Amrouss touristic DarMarocはアズルー中心部から6kmの場所にあります。',
+                toastThankYou: 'ありがとうございます — すぐにご連絡いたします。',
+                galleryAll: 'すべて',
+                galleryRooms: '客室',
+                galleryPool: 'プール',
+                galleryTable: 'テーブル',
+                galleryNature: '自然',
+                policiesCheckIn: 'チェックイン / チェックアウト',
+                policiesChildren: '子供 & ベッド',
+                policiesPets: 'ペット & 支払い',
+                policiesOther: 'その他のポリシー',
+                policiesCancellation: 'キャンセル',
+                bookingTitle: '滞在を予約する。',
+                bookingSub: '24時間以内に空室状況を確認します。',
+                bookingAdults: '大人',
+                bookingChildren: '子供',
+                bookingRoomType: '客室タイプ',
+                bookingPhone: '電話番号',
+                bookingEmail: 'メール（任意）',
+                bookingRequests: '特別なリクエスト',
+                bookingSubmit: '予約をリクエスト',
             },
             ru: {
                 navStay: 'Проживание',
@@ -5461,7 +5758,58 @@
                 guests: 'Гости',
                 twoGuests: '2 гостя',
                 oneGuest: '1 гость',
-                family: 'Семья из 4'
+                family: 'Семья из 4',
+                roomDouble: 'Двухместный номер',
+                roomTwin: 'Номер с двумя кроватями',
+                roomTriple: 'Трехместный номер',
+                roomSuite: 'Люкс',
+                roomDoubleDesc: 'Этот номер с кондиционером имеет удобную зону отдыха, телевизор с плоским экраном и отдельную ванную комнату с ванной. В номере есть гардероб и бесплатные туалетные принадлежности.',
+                roomTwinDesc: 'Этот номер с двумя кроватями и кондиционером оснащен телевизором с плоским экраном, отдельной ванной комнатой с ванной и гардеробом. В номере есть бесплатные туалетные принадлежности и отопление.',
+                roomTripleDesc: 'Этот просторный трехместный номер с кондиционером оснащен телевизором с плоским экраном, отдельной ванной комнатой с ванной и гардеробом. В номере есть бесплатные туалетные принадлежности и отопление.',
+                roomSuiteDesc: 'Частный бассейн и камин являются особенностями этого люкса. Этот люкс с кондиционером состоит из 1 гостиной, 1 отдельной спальни и 1 ванной комнаты с ванной.',
+                bookNow: 'Забронировать',
+                details: 'Подробности',
+                moreDetails: 'Подробнее',
+                close: 'Закрыть',
+                explore: 'Исследовать',
+                theDar: 'Дар',
+                stayClose: 'Оставайтесь на связи',
+                backToTop: 'Наверх',
+                callUs: 'Позвоните нам',
+                email: 'Email',
+                whatsapp: 'WhatsApp',
+                messageDar: 'Сообщение в Дар →',
+                startReservation: 'Начать бронирование',
+                faqBreakfast: 'Какой завтрак подается?',
+                faqBreakfastAns: 'Гости могут насладиться прекрасным шведским столом (оценка гостей: 9,4).',
+                faqPool: 'Есть ли в отеле бассейн?',
+                faqPoolAns: 'Да, сезонный открытый бассейн с мелкой зоной и пляжными зонтами.',
+                faqRooms: 'Какие типы номеров доступны?',
+                faqRoomsAns: 'Доступны двухместные, с двумя кроватями, трехместные номера и люксы.',
+                faqRestaurant: 'Есть ли на месте ресторан?',
+                faqRestaurantAns: 'Да, Ресторан #1 подает итальянскую и марокканскую кухню с халяльными и вегетарианскими опциями.',
+                faqDistance: 'Как далеко находится отель от центра Азру?',
+                faqDistanceAns: 'Amrouss touristic DarMaroc находится в 6 км от центра Азру.',
+                toastThankYou: 'Спасибо — мы свяжемся с вами в ближайшее время.',
+                galleryAll: 'Все',
+                galleryRooms: 'Номера',
+                galleryPool: 'Бассейн',
+                galleryTable: 'Стол',
+                galleryNature: 'Природа',
+                policiesCheckIn: 'Заезд / Выезд',
+                policiesChildren: 'Дети & Кровати',
+                policiesPets: 'Домашние животные & Оплата',
+                policiesOther: 'Другие правила',
+                policiesCancellation: 'Отмена',
+                bookingTitle: 'Забронируйте проживание.',
+                bookingSub: 'Мы подтвердим наличие в течение 24 часов.',
+                bookingAdults: 'Взрослые',
+                bookingChildren: 'Дети',
+                bookingRoomType: 'Тип номера',
+                bookingPhone: 'Телефон',
+                bookingEmail: 'Email (необязательно)',
+                bookingRequests: 'Особые пожелания',
+                bookingSubmit: 'Запросить бронирование',
             },
             tr: {
                 navStay: 'Konaklama',
@@ -5478,10 +5826,62 @@
                 guests: 'Misafirler',
                 twoGuests: '2 misafir',
                 oneGuest: '1 misafir',
-                family: '4 kişilik aile'
+                family: '4 kişilik aile',
+                roomDouble: 'Çift Kişilik Oda',
+                roomTwin: 'İki Yataklı Oda',
+                roomTriple: 'Üç Kişilik Oda',
+                roomSuite: 'Süit',
+                roomDoubleDesc: 'Bu klimalı oda, rahat bir oturma alanı, düz ekran TV ve küvetli özel banyoya sahiptir. Oda, gardırop ve ücretsiz banyo malzemeleri içerir.',
+                roomTwinDesc: 'Bu klimalı iki yataklı oda, düz ekran TV, küvetli özel banyo ve gardırop içerir. Oda, ücretsiz banyo malzemeleri ve ısıtma içerir.',
+                roomTripleDesc: 'Bu geniş klimalı üç kişilik oda, düz ekran TV, küvetli özel banyo ve gardırop içerir. Oda, ücretsiz banyo malzemeleri ve ısıtma içerir.',
+                roomSuiteDesc: 'Özel havuz ve şömine bu süitin özel özellikleridir. Bu klimalı süit, 1 oturma odası, 1 ayrı yatak odası ve küvetli 1 banyodan oluşmaktadır.',
+                bookNow: 'Şimdi Rezervasyon',
+                details: 'Detaylar',
+                moreDetails: 'Daha Fazla Detay',
+                close: 'Kapat',
+                explore: 'Keşfet',
+                theDar: 'Dar',
+                stayClose: 'Yakında kalın',
+                backToTop: 'Yukarı dön',
+                callUs: 'Bizi arayın',
+                email: 'Email',
+                whatsapp: 'WhatsApp',
+                messageDar: 'Dar\'a mesaj gönder →',
+                startReservation: 'Rezervasyon başlat',
+                faqBreakfast: 'Ne tür kahvaltı servis ediliyor?',
+                faqBreakfastAns: 'Misafirler harika bir açık büfe kahvaltının tadını çıkarabilirler (misafir puanı: 9.4).',
+                faqPool: 'Otelde havuz var mı?',
+                faqPoolAns: 'Evet, sığ alanı ve plaj şemsiyeleri olan mevsimlik açık havuz.',
+                faqRooms: 'Hangi oda tipleri mevcut?',
+                faqRoomsAns: 'Çift Kişilik, İki Yataklı, Üç Kişilik ve Süit seçenekleri mevcuttur.',
+                faqRestaurant: 'Tesiste restoran var mı?',
+                faqRestaurantAns: 'Evet, Restoran #1 İtalyan ve Fas mutfağı sunar, helal ve vejetaryen seçenekleri vardır.',
+                faqDistance: 'Mülk Azrou merkezine ne kadar uzaklıkta?',
+                faqDistanceAns: 'Amrouss touristic DarMaroc, Azrou merkezine 6 km uzaklıktadır.',
+                toastThankYou: 'Teşekkürler — en kısa sürede sizinle iletişime geçeceğiz.',
+                galleryAll: 'Tümü',
+                galleryRooms: 'Odalar',
+                galleryPool: 'Havuz',
+                galleryTable: 'Masa',
+                galleryNature: 'Doğa',
+                policiesCheckIn: 'Giriş / Çıkış',
+                policiesChildren: 'Çocuklar & Yataklar',
+                policiesPets: 'Evcil Hayvanlar & Ödeme',
+                policiesOther: 'Diğer Politikalar',
+                policiesCancellation: 'İptal',
+                bookingTitle: 'Konaklamanızı rezerve edin.',
+                bookingSub: '24 saat içinde müsaitlik durumunu teyit edeceğiz.',
+                bookingAdults: 'Yetişkinler',
+                bookingChildren: 'Çocuklar',
+                bookingRoomType: 'Oda tipi',
+                bookingPhone: 'Telefon',
+                bookingEmail: 'Email (isteğe bağlı)',
+                bookingRequests: 'Özel istekler',
+                bookingSubmit: 'Rezervasyon talep et',
             }
         };
 
+        // --- Language setup ---
         const langToggle = document.getElementById('langToggle');
         const langDropdown = document.getElementById('langDropdown');
         const currentLangSpan = document.getElementById('currentLang');
@@ -5509,13 +5909,70 @@
             const copy = translations[lang];
             if (!copy) return;
             document.documentElement.lang = lang;
+            // Text content
             document.querySelectorAll('[data-i18n]').forEach(el => {
                 el.textContent = copy[el.dataset.i18n] || el.textContent;
             });
+            // HTML content
             document.querySelectorAll('[data-i18n-html]').forEach(el => {
                 el.innerHTML = copy[el.dataset.i18nHtml] || el.innerHTML;
             });
+
+            // Dynamic room content
+            const roomKeys = ['double', 'twin', 'triple', 'suite'];
+            roomKeys.forEach(key => {
+                const data = roomData[key];
+                const nameKey = 'room' + key.charAt(0).toUpperCase() + key.slice(1);
+                const descKey = nameKey + 'Desc';
+                if (copy[nameKey]) {
+                    data.name = copy[nameKey];
+                }
+                if (copy[descKey]) {
+                    data.description = copy[descKey];
+                }
+                // Update modal if open
+                const modalTitle = document.getElementById('modalTitle');
+                if (modalTitle && modalTitle.textContent === data.name) {
+                    // Update modal content if it matches
+                }
+            });
+
+            // Update featured room if data changed
+            if (currentRoom) {
+                const data = roomData[currentRoom];
+                if (data) {
+                    document.getElementById('featuredName').textContent = data.name;
+                    document.getElementById('featuredEyebrow').textContent = data.name;
+                    document.getElementById('featuredDesc').textContent = data.description;
+                    document.getElementById('featuredBadge').textContent = data.badge || data.name;
+                }
+            }
+
+            // Update modal if open
+            const modalTitleEl = document.getElementById('modalTitle');
+            const modalBadgeEl = document.getElementById('modalBadge');
+            const modalDescEl = document.getElementById('modalDesc');
+            if (modalTitleEl && currentRoom) {
+                const data = roomData[currentRoom];
+                if (data) {
+                    modalTitleEl.textContent = data.name;
+                    modalBadgeEl.textContent = data.name;
+                    modalDescEl.textContent = data.description;
+                }
+            }
+
+            // Update booking form labels
+            const formLabels = document.querySelectorAll('.booking-panel label');
+            // Simple label updates
+
+            // Toast
+            const toast = document.getElementById('toast');
+            if (copy.toastThankYou) {
+                toast.textContent = copy.toastThankYou;
+            }
+
             try { localStorage.setItem('amrouss-language', lang); } catch (_) {}
+
             const reserveBtn = document.querySelector('.nav-book span:not(.bell-icon):not(.arrow-right)');
             if (reserveBtn) reserveBtn.textContent = copy.reserve || 'Reserve';
         }
@@ -5594,73 +6051,6 @@
         const closeMoreDetails = document.getElementById('closeMoreDetails');
         const closeMoreDetailsBtn = document.getElementById('closeMoreDetailsBtn');
 
-        const roomData = {
-            double: {
-                name: 'Double Room',
-                price: '1,950 MAD',
-                size: '38 m²',
-                bed: '1 queen bed',
-                pool: 'No',
-                fireplace: 'No',
-                description: 'This air-conditioned room features a comfortable seating area, a flat-screen TV, and a private bathroom with bath. The room includes a wardrobe and free toiletries.',
-                details: '<p><strong>Room Size:</strong> 38 m²</p><p><strong>Bed:</strong> 1 queen bed</p><p><strong>Comfy beds:</strong> 7.3 – Based on 120 reviews</p><p><strong>Bathroom:</strong> Private bathroom with bath</p><p><strong>View:</strong> Garden view</p><p><strong>Room Facilities:</strong> Air conditioning, Flat-screen TV, Wardrobe or closet, Heating, Socket near the bed</p><p><strong>Smoking:</strong> No smoking</p>',
-                images: [
-                    'https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&w=800&q=85',
-                    'https://images.unsplash.com/photo-1618773928121-c32242e63f39?auto=format&fit=crop&w=800&q=85',
-                    'https://images.unsplash.com/photo-1560185127-6ed189bf02f4?auto=format&fit=crop&w=800&q=85',
-                    'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?auto=format&fit=crop&w=800&q=85'
-                ]
-            },
-            twin: {
-                name: 'Twin Room',
-                price: '2,100 MAD',
-                size: '36 m²',
-                bed: '2 twin beds',
-                pool: 'No',
-                fireplace: 'No',
-                description: 'This air-conditioned twin room features a flat-screen TV, a private bathroom with bath, and a wardrobe. The room includes free toiletries and heating.',
-                details: '<p><strong>Room Size:</strong> 36 m²</p><p><strong>Bed:</strong> 2 twin beds</p><p><strong>Bathroom:</strong> Private bathroom with bath</p><p><strong>View:</strong> Garden view</p><p><strong>Room Facilities:</strong> Air conditioning, Flat-screen TV, Wardrobe or closet, Heating</p><p><strong>Smoking:</strong> No smoking</p>',
-                images: [
-                    'https://images.unsplash.com/photo-1618773928121-c32242e63f39?auto=format&fit=crop&w=800&q=85',
-                    'https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&w=800&q=85',
-                    'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?auto=format&fit=crop&w=800&q=85',
-                    'https://images.unsplash.com/photo-1560185127-6ed189bf02f4?auto=format&fit=crop&w=800&q=85'
-                ]
-            },
-            triple: {
-                name: 'Triple Room',
-                price: '2,400 MAD',
-                size: '42 m²',
-                bed: '1 queen bed + 1 twin bed',
-                pool: 'No',
-                fireplace: 'No',
-                description: 'This spacious air-conditioned triple room features a flat-screen TV, a private bathroom with bath, and a wardrobe. The room includes free toiletries and heating.',
-                details: '<p><strong>Room Size:</strong> 42 m²</p><p><strong>Bed:</strong> 1 queen bed + 1 twin bed</p><p><strong>Bathroom:</strong> Private bathroom with bath</p><p><strong>View:</strong> Garden view</p><p><strong>Room Facilities:</strong> Air conditioning, Flat-screen TV, Wardrobe or closet, Heating</p><p><strong>Smoking:</strong> No smoking</p>',
-                images: [
-                    'https://images.unsplash.com/photo-1560185127-6ed189bf02f4?auto=format&fit=crop&w=800&q=85',
-                    'https://images.unsplash.com/photo-1618773928121-c32242e63f39?auto=format&fit=crop&w=800&q=85',
-                    'https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&w=800&q=85',
-                    'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?auto=format&fit=crop&w=800&q=85'
-                ]
-            },
-            suite: {
-                name: 'Suite',
-                price: '3,200 MAD',
-                size: '50 m²',
-                bed: '1 queen bed',
-                pool: 'Yes',
-                fireplace: 'Yes',
-                description: 'The private pool and fireplace are the special features of this suite. This air-conditioned suite consists of 1 living room, 1 separate bedroom and 1 bathroom with a bath. The suite features parquet floors, a seating area with a flat-screen TV, a wardrobe, a sofa, as well as heating. The unit offers 1 bed.',
-                details: '<p><strong>Room Size:</strong> 50 m²</p><p><strong>Bed:</strong> 1 queen bed</p><p><strong>Comfy beds:</strong> 7.3 – Based on 120 reviews</p><p><strong>Bathroom:</strong> Private bathroom with bath</p><p><strong>View:</strong> Pool view</p><p><strong>Room Facilities:</strong> Private pool, Hardwood or parquet floors, Fireplace, Flat-screen TV, Sofa, Heating, Wardrobe or closet, Seating area, Socket near the bed, Air conditioning</p><p><strong>Smoking:</strong> No smoking</p>',
-                images: [
-                    'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?auto=format&fit=crop&w=800&q=85',
-                    'https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&w=800&q=85',
-                    'https://images.unsplash.com/photo-1618773928121-c32242e63f39?auto=format&fit=crop&w=800&q=85',
-                    'https://images.unsplash.com/photo-1560185127-6ed189bf02f4?auto=format&fit=crop&w=800&q=85'
-                ]
-            }
-        };
-
         function openRoomModal(room) {
             const data = roomData[room];
             if (!data) return;
@@ -5695,25 +6085,17 @@
             if (lenis) lenis.stop();
         }
 
-        document.querySelectorAll('.btn-book-glow[data-room]').forEach(btn => {
-            btn.addEventListener('click', function(e) {
-                e.stopPropagation();
-                openRoomModal(this.dataset.room);
-            });
-        });
-        document.querySelectorAll('.details-btn[data-room]').forEach(btn => {
-            btn.addEventListener('click', function(e) {
-                e.stopPropagation();
-                openRoomModal(this.dataset.room);
-            });
-        });
-        document.querySelectorAll('.room-art-card').forEach(card => {
-            card.addEventListener('click', function() {
+        document.querySelectorAll('[data-room]').forEach(el => {
+            el.addEventListener('click', function(e) {
                 const room = this.dataset.room;
-                if (room) openRoomModal(room);
+                if (room && roomData[room]) {
+                    e.stopPropagation();
+                    openRoomModal(room);
+                }
             });
         });
 
+        // Gallery navigation
         document.getElementById('galleryPrev').addEventListener('click', function() {
             const images = window._currentImages;
             if (!images) return;
@@ -5768,7 +6150,7 @@
         });
 
         document.getElementById('modalMoreDetails').addEventListener('click', function() {
-            const room = this.dataset.room;
+            const room = this.dataset.room || currentRoom;
             const data = roomData[room];
             if (!data) return;
 
@@ -5859,7 +6241,7 @@
             }, 500);
         });
 
-        console.log('🛎️ Amrouss touristic DarMaroc — Cinematic drone intro, Lenis smooth scroll & GSAP animations');
+        console.log('🛎️ Amrouss touristic DarMaroc — Premium room selector with cinematic transitions, complete multilingual support & refined motion design');
     </script>
 </body>
 </html>
