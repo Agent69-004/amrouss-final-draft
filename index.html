@@ -1216,7 +1216,7 @@
         }
 
         /* ============================================================ */
-        /*  ROOMS — PREMIUM STAGE + RAIL EXPERIENCE                     */
+        /*  ROOMS — PREMIUM CAROUSEL / BROCHURE EXPERIENCE             */
         /* ============================================================ */
         .rooms-section {
             padding: 100px 5vw 80px;
@@ -1257,23 +1257,16 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
+            transition: transform 1.2s var(--ease-out-expo);
             will-change: transform;
-            animation: roomKenBurns 11s ease-in-out infinite alternate;
         }
-        @keyframes roomKenBurns {
-            0%   { transform: scale(1.02) translate3d(0, 0, 0); }
-            100% { transform: scale(1.11) translate3d(-1.4%, -1%, 0); }
+        .room-featured:hover .featured-image img {
+            transform: scale(1.04);
         }
         .room-featured .featured-image .image-overlay {
             position: absolute;
             inset: 0;
-            background:
-                linear-gradient(0deg, rgba(0, 0, 0, 0.35) 0%, transparent 35%, transparent 60%, rgba(0, 0, 0, 0.15) 100%),
-                radial-gradient(ellipse at 30% 100%, rgba(184, 148, 75, 0.10) 0%, transparent 55%);
-            transition: opacity 0.6s ease;
-        }
-        .room-featured:hover .image-overlay {
-            opacity: 0.85;
+            background: linear-gradient(0deg, rgba(0, 0, 0, 0.15) 0%, transparent 50%);
         }
         .room-featured .featured-image .room-badge-featured {
             position: absolute;
@@ -1290,63 +1283,11 @@
             z-index: 2;
             font-weight: 500;
         }
-        .room-featured .featured-image .room-index {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            z-index: 2;
-            font-family: var(--font-mono);
-            font-size: 10px;
-            letter-spacing: 0.1em;
-            color: rgba(255, 255, 255, 0.75);
-            background: rgba(0, 0, 0, 0.3);
-            backdrop-filter: blur(4px);
-            -webkit-backdrop-filter: blur(4px);
-            padding: 5px 13px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        .room-featured .featured-image .room-index i {
-            width: 10px;
-            height: 1px;
-            background: rgba(255, 255, 255, 0.4);
-            display: inline-block;
-            font-style: normal;
-        }
-        .room-featured .featured-image .room-nav {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            z-index: 3;
-            width: 44px;
-            height: 44px;
-            border-radius: 50%;
-            border: 0;
-            background: rgba(255, 255, 255, 0.12);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-            color: #fff;
-            font-size: 19px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.5s var(--ease-out-expo);
-        }
-        .room-featured .featured-image .room-nav:hover {
-            background: rgba(255, 255, 255, 0.26);
-            transform: translateY(-50%) scale(1.08);
-        }
-        .room-featured .featured-image .room-nav.prev { left: 16px; }
-        .room-featured .featured-image .room-nav.next { right: 16px; }
-
         .room-featured .featured-details {
             padding: 40px 44px 40px 40px;
             display: flex;
             flex-direction: column;
             justify-content: center;
-            overflow: hidden;
         }
         .room-featured .featured-details .room-eyebrow {
             font-size: 8px;
@@ -1362,24 +1303,15 @@
             font-weight: 500;
             line-height: 1.05;
             margin-bottom: 2px;
-            overflow: hidden;
         }
         .room-featured .featured-details .room-price {
-            font-size: 10px;
-            letter-spacing: 0.03em;
-            text-transform: uppercase;
+            font-size: 14px;
             color: var(--grey);
-            margin-bottom: 16px;
+            margin-bottom: 14px;
         }
         .room-featured .featured-details .room-price strong {
-            display: block;
             color: var(--ink);
-            font-weight: 600;
-            font-family: var(--font-serif);
-            font-size: 22px;
-            text-transform: none;
-            letter-spacing: -0.01em;
-            margin: 2px 0;
+            font-weight: 500;
         }
         .room-featured .featured-details .room-desc {
             font-size: 14px;
@@ -1391,30 +1323,19 @@
         .room-featured .featured-details .room-amenities-preview {
             display: flex;
             flex-wrap: wrap;
-            gap: 10px 22px;
-            margin-bottom: 22px;
+            gap: 8px 16px;
+            margin-bottom: 20px;
         }
         .room-featured .featured-details .room-amenities-preview .amenity-tag {
-            font-size: 12px;
+            font-size: 11px;
             color: var(--grey);
             display: flex;
             align-items: center;
-            gap: 8px;
-        }
-        .room-featured .featured-details .room-amenities-preview .amenity-tag svg {
-            width: 16px;
-            height: 16px;
-            stroke: var(--gold);
-            fill: none;
-            stroke-width: 1.6;
-            flex-shrink: 0;
+            gap: 4px;
         }
         .room-featured .featured-details .room-amenities-preview .amenity-tag strong {
             color: var(--ink);
-            font-weight: 600;
-        }
-        .room-featured .featured-details .room-amenities-preview .amenity-tag.is-hidden {
-            display: none;
+            font-weight: 500;
         }
         .room-featured .featured-details .room-actions {
             display: flex;
@@ -1432,106 +1353,428 @@
             min-height: 44px;
         }
 
-        /* ---- Rail: thumbnails redesigned as navigation cards ---- */
         .room-thumbnails {
             display: flex;
-            gap: 14px;
-            margin-top: 22px;
+            gap: 12px;
+            margin-top: 20px;
             overflow-x: auto;
-            padding: 6px 2px 10px;
+            padding: 4px 2px 8px;
             scroll-behavior: smooth;
             -webkit-overflow-scrolling: touch;
         }
-        .room-thumbnails::-webkit-scrollbar { height: 2px; }
-        .room-thumbnails::-webkit-scrollbar-track { background: var(--light-grey); }
-        .room-thumbnails::-webkit-scrollbar-thumb { background: var(--gold); }
-
+        .room-thumbnails::-webkit-scrollbar {
+            height: 2px;
+        }
+        .room-thumbnails::-webkit-scrollbar-track {
+            background: var(--light-grey);
+        }
+        .room-thumbnails::-webkit-scrollbar-thumb {
+            background: var(--gold);
+        }
         .room-thumb {
             flex: 0 0 auto;
-            width: 210px;
-            height: 140px;
+            width: 120px;
+            height: 80px;
             overflow: hidden;
             cursor: pointer;
             position: relative;
-            border: 0;
-            transition: opacity 0.55s var(--ease-out-expo), transform 0.55s var(--ease-out-expo), box-shadow 0.55s var(--ease-out-expo), filter 0.55s var(--ease-out-expo);
-            opacity: 0.6;
-            transform: scale(0.95);
-            filter: saturate(0.65);
-            box-shadow: 0 4px 18px rgba(0, 0, 0, 0.05);
+            border: 2px solid transparent;
+            transition: all 0.5s var(--ease-out-expo);
+            opacity: 0.5;
+            transform: scale(0.92);
+            filter: grayscale(0.4);
         }
         .room-thumb:hover {
-            opacity: 0.85;
-            transform: scale(0.98);
+            opacity: 0.8;
+            transform: scale(0.96);
         }
         .room-thumb.active {
+            border-color: var(--gold);
             opacity: 1;
             transform: scale(1);
-            filter: saturate(1);
-            box-shadow: 0 18px 50px rgba(184, 148, 75, 0.18);
+            filter: grayscale(0);
+            box-shadow: 0 0 30px rgba(184, 148, 75, 0.15);
         }
         .room-thumb img {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transition: transform 0.7s var(--ease-out-expo);
+            transition: transform 0.6s var(--ease-out-expo);
         }
         .room-thumb:hover img {
             transform: scale(1.06);
         }
-        .room-thumb::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(0deg, rgba(0, 0, 0, 0.72) 0%, rgba(0, 0, 0, 0.08) 55%, transparent 75%);
-            z-index: 1;
-        }
-        .room-thumb .thumb-active-bar {
-            position: absolute;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            height: 2px;
-            background: var(--gold);
-            transform: scaleX(0);
-            transform-origin: left;
-            transition: transform 0.6s var(--ease-out-expo);
-            z-index: 2;
-        }
-        .room-thumb.active .thumb-active-bar {
-            transform: scaleX(1);
-        }
         .room-thumb .thumb-label {
             position: absolute;
-            bottom: 10px;
-            left: 14px;
-            right: 14px;
-            z-index: 2;
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-end;
-            gap: 8px;
-            color: #fff;
-            background: none;
-            padding: 0;
-            backdrop-filter: none;
-            -webkit-backdrop-filter: none;
-            text-shadow: none;
+            bottom: 6px;
+            left: 8px;
+            font-size: 7px;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.8);
+            font-weight: 500;
+            text-shadow: 0 1px 8px rgba(0, 0, 0, 0.4);
+            background: rgba(0, 0, 0, 0.2);
+            padding: 2px 10px;
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
         }
-        .room-thumb .thumb-label .thumb-name {
-            font-size: 13px;
+
+        @media (max-width: 1024px) {
+            .room-featured {
+                grid-template-columns: 1fr;
+                min-height: auto;
+            }
+            .room-featured .featured-image {
+                min-height: 280px;
+            }
+            .room-featured .featured-details {
+                padding: 30px 32px 36px;
+            }
+            .room-featured .featured-details .room-name {
+                font-size: 28px;
+            }
+            .room-thumb {
+                width: 100px;
+                height: 68px;
+            }
+        }
+        @media (max-width: 768px) {
+            .room-featured .featured-details {
+                padding: 24px 20px 28px;
+            }
+            .room-featured .featured-details .room-name {
+                font-size: 24px;
+            }
+            .room-featured .featured-details .room-desc {
+                font-size: 13px;
+            }
+            .room-featured .featured-details .room-actions {
+                flex-direction: column;
+            }
+            .room-featured .featured-details .room-actions .btn-book-glow,
+            .room-featured .featured-details .room-actions .btn-outline-dark {
+                width: 100%;
+                justify-content: center;
+            }
+            .room-thumb {
+                width: 80px;
+                height: 56px;
+            }
+            .room-thumb .thumb-label {
+                font-size: 6px;
+                padding: 1px 8px;
+            }
+        }
+
+        /* ============================================================ */
+        /*  ROOM MODAL — ADVANCED TRANSITIONS                           */
+        /* ============================================================ */
+        .room-modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 200;
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            align-items: center;
+            justify-content: center;
+            padding: 40px 5vw;
+            opacity: 0;
+            transition: opacity 0.8s var(--ease-out-expo);
+        }
+        .room-modal.open {
+            display: flex;
+            opacity: 1;
+        }
+        .room-modal-content {
+            background: #fff;
+            max-width: 1100px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            transform: scale(0.92) translateY(40px);
+            transition: transform 0.8s var(--ease-out-expo), opacity 0.6s ease;
+            opacity: 0;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0;
+            box-shadow: 0 40px 120px rgba(0, 0, 0, 0.2);
+        }
+        .room-modal.open .room-modal-content {
+            transform: scale(1) translateY(0);
+            opacity: 1;
+        }
+        .room-modal-content .close-modal {
+            position: absolute;
+            top: 20px;
+            right: 24px;
+            border: 0;
+            background: rgba(255, 255, 255, 0.95);
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            font-size: 22px;
+            cursor: pointer;
+            color: var(--ink);
+            transition: all 0.6s var(--ease-out-expo);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+        }
+        .room-modal-content .close-modal:hover {
+            transform: rotate(90deg) scale(1.08);
+            background: #fff;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+        }
+
+        .modal-gallery-wrap {
+            position: relative;
+            overflow: hidden;
+            min-height: 500px;
+            background: var(--light-grey);
+        }
+        .modal-gallery-wrap .gallery-main {
+            width: 100%;
+            height: 100%;
+            min-height: 500px;
+            object-fit: cover;
+            transition: opacity 0.6s ease;
+            will-change: transform;
+        }
+        .modal-gallery-wrap .gallery-thumbs {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+            z-index: 5;
+        }
+        .modal-gallery-wrap .gallery-thumbs .thumb {
+            width: 56px;
+            height: 56px;
+            object-fit: cover;
+            cursor: pointer;
+            border: 2px solid rgba(255, 255, 255, 0.15);
+            transition: all 0.5s var(--ease-out-expo);
+            opacity: 0.4;
+        }
+        .modal-gallery-wrap .gallery-thumbs .thumb:hover,
+        .modal-gallery-wrap .gallery-thumbs .thumb.active {
+            border-color: #fff;
+            opacity: 1;
+            transform: scale(1.06);
+        }
+        .modal-gallery-wrap .gallery-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 5;
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 0;
+            color: #fff;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 22px;
+            transition: all 0.4s var(--ease-out-expo);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-gallery-wrap .gallery-nav:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-50%) scale(1.05);
+        }
+        .modal-gallery-wrap .gallery-nav.prev {
+            left: 16px;
+        }
+        .modal-gallery-wrap .gallery-nav.next {
+            right: 16px;
+        }
+        .modal-gallery-wrap .gallery-counter {
+            position: absolute;
+            top: 20px;
+            left: 24px;
+            z-index: 5;
+            font-size: 11px;
+            letter-spacing: 0.08em;
+            color: rgba(255, 255, 255, 0.7);
+            font-family: var(--font-mono);
+            background: rgba(0, 0, 0, 0.3);
+            padding: 4px 14px;
+            border-radius: 20px;
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+        }
+
+        .modal-content-right {
+            padding: 44px 44px 40px;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+        .modal-content-right .room-badge {
+            font-size: 9px;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--gold);
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        .modal-content-right .room-title {
+            font-size: 34px;
             font-family: var(--font-serif);
             font-weight: 500;
-            letter-spacing: 0;
-            text-transform: none;
+            line-height: 1.05;
+            margin-bottom: 4px;
         }
-        .room-thumb .thumb-label .thumb-price {
-            font-size: 9px;
-            letter-spacing: 0.04em;
-            color: rgba(255, 255, 255, 0.75);
-            font-family: var(--font-mono);
-            font-weight: 400;
-            white-space: nowrap;
+        .modal-content-right .room-subtitle {
+            font-size: 13px;
+            color: var(--grey);
+            margin-bottom: 16px;
+        }
+        .modal-content-right .room-description {
+            font-size: 14px;
+            color: var(--grey);
+            line-height: 1.8;
+            margin-bottom: 20px;
+            max-width: 460px;
+        }
+        .modal-content-right .room-amenities {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4px 20px;
+            margin-bottom: 24px;
+            padding: 16px 0;
+            border-top: 1px solid var(--light-grey);
+            border-bottom: 1px solid var(--light-grey);
+        }
+        .modal-content-right .room-amenities .amenity {
+            font-size: 13px;
+            color: var(--grey);
+            padding: 3px 0;
+        }
+        .modal-content-right .room-amenities .amenity strong {
+            color: var(--ink);
+            font-weight: 500;
+        }
+        .modal-content-right .room-actions {
+            display: flex;
+            gap: 14px;
+            flex-wrap: wrap;
+            margin-top: auto;
+            padding-top: 16px;
+        }
+
+        /* ============================================================ */
+        /*  MORE DETAILS OVERLAY                                        */
+        /* ============================================================ */
+        .more-details-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 210;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            align-items: center;
+            justify-content: center;
+            padding: 40px 5vw;
+            opacity: 0;
+            transition: opacity 0.6s var(--ease-out-expo);
+        }
+        .more-details-overlay.open {
+            display: flex;
+            opacity: 1;
+        }
+        .more-details-content {
+            background: #fff;
+            max-width: 720px;
+            width: 100%;
+            max-height: 85vh;
+            overflow-y: auto;
+            padding: 44px 48px;
+            position: relative;
+            transform: scale(0.95) translateY(30px);
+            transition: transform 0.7s var(--ease-out-expo), opacity 0.5s ease;
+            opacity: 0;
+            box-shadow: 0 40px 120px rgba(0, 0, 0, 0.15);
+        }
+        .more-details-overlay.open .more-details-content {
+            transform: scale(1) translateY(0);
+            opacity: 1;
+        }
+        .more-details-content .close-details {
+            position: absolute;
+            top: 16px;
+            right: 20px;
+            border: 0;
+            background: none;
+            font-size: 28px;
+            cursor: pointer;
+            color: var(--grey);
+            transition: all 0.4s var(--ease-out-expo);
+            padding: 4px 8px;
+            line-height: 1;
+        }
+        .more-details-content .close-details:hover {
+            color: var(--ink);
+            transform: rotate(90deg);
+        }
+        .more-details-content h3 {
+            font-size: 28px;
+            font-family: var(--font-serif);
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+        .more-details-content .details-sub {
+            font-size: 12px;
+            color: var(--grey);
+            letter-spacing: 0.06em;
+            margin-bottom: 20px;
+        }
+        .more-details-content .details-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6px 24px;
+            margin-bottom: 20px;
+            padding: 16px 0;
+            border-top: 1px solid var(--light-grey);
+            border-bottom: 1px solid var(--light-grey);
+        }
+        .more-details-content .details-grid .item {
+            font-size: 13px;
+            color: var(--grey);
+            padding: 2px 0;
+        }
+        .more-details-content .details-grid .item strong {
+            color: var(--ink);
+            font-weight: 500;
+        }
+        .more-details-content .details-text {
+            font-size: 14px;
+            color: var(--grey);
+            line-height: 1.9;
+            margin-bottom: 24px;
+        }
+        .more-details-content .details-actions {
+            display: flex;
+            gap: 14px;
+            flex-wrap: wrap;
+        }
+        .more-details-content .details-actions .btn-book-glow {
+            padding: 14px 32px;
+            font-size: 10px;
+            min-height: 48px;
         }
 
         /* ============================================================ */
@@ -3127,8 +3370,8 @@
                 font-size: 28px;
             }
             .room-thumb {
-                width: 170px;
-                height: 118px;
+                width: 100px;
+                height: 68px;
             }
             .room-modal-content {
                 grid-template-columns: 1fr;
@@ -3347,10 +3590,13 @@
             }
 
             .room-thumb {
-                width: 140px;
-                height: 96px;
+                width: 80px;
+                height: 56px;
             }
-
+            .room-thumb .thumb-label {
+                font-size: 6px;
+                padding: 1px 8px;
+            }
             .room-featured .featured-details {
                 padding: 24px 20px 28px;
             }
@@ -3612,8 +3858,8 @@
                 font-size: 13px;
             }
             .room-thumb {
-                width: 110px;
-                height: 76px;
+                width: 64px;
+                height: 44px;
             }
             .room-featured .featured-image {
                 min-height: 200px;
@@ -3881,12 +4127,9 @@
             <!-- Featured Room Display -->
             <div class="room-featured" id="featuredRoom">
                 <div class="featured-image">
-                    <img id="featuredImage" src="https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&w=1000&q=85" alt="Double Room" />
+                    <img id="featuredImage" src="https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&w=800&q=85" alt="Double Room" />
                     <div class="image-overlay"></div>
                     <span class="room-badge-featured" id="featuredBadge">Double Room</span>
-                    <span class="room-index" id="roomIndexLabel"><span id="roomIndexCurrent">01</span><i></i><span id="roomIndexTotal">04</span></span>
-                    <button class="room-nav prev" id="roomPrevBtn" aria-label="Previous room">‹</button>
-                    <button class="room-nav next" id="roomNextBtn" aria-label="Next room">›</button>
                 </div>
                 <div class="featured-details">
                     <span class="room-eyebrow" id="featuredEyebrow">Double Room</span>
@@ -3894,22 +4137,10 @@
                     <p class="room-price" id="featuredPrice">From <strong>1,950 MAD</strong> per night</p>
                     <p class="room-desc" id="featuredDesc">This air-conditioned room features a comfortable seating area, a flat-screen TV, and a private bathroom with bath. The room includes a wardrobe and free toiletries.</p>
                     <div class="room-amenities-preview" id="featuredAmenities">
-                        <span class="amenity-tag">
-                            <svg viewBox="0 0 24 24"><path d="M4 14h16M4 14v6M4 14V8a2 2 0 012-2h12a2 2 0 012 2v6M20 14v6M8 8V6a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
-                            <strong id="fSize">38 m²</strong>
-                        </span>
-                        <span class="amenity-tag">
-                            <svg viewBox="0 0 24 24"><path d="M3 18v-6a2 2 0 012-2h14a2 2 0 012 2v6M3 18h18M3 18v2M21 18v2M6 10V7a2 2 0 012-2h8a2 2 0 012 2v3"/></svg>
-                            <span id="fBed">1 queen bed</span>
-                        </span>
-                        <span class="amenity-tag is-hidden" id="fPoolTag">
-                            <svg viewBox="0 0 24 24"><path d="M2 17c1.5 1.3 3 1.3 4.5 0s3-1.3 4.5 0 3 1.3 4.5 0 3-1.3 4.5 0M4 12l7-8 9 8"/></svg>
-                            <span>Private pool</span>
-                        </span>
-                        <span class="amenity-tag is-hidden" id="fFireplaceTag">
-                            <svg viewBox="0 0 24 24"><path d="M12 2c1 3-2 4-2 7a4 4 0 008 0c0-1-1-2-1-2 1 4-1 5-1 5a5 5 0 01-9-3c0-4 4-4 5-7z"/></svg>
-                            <span>Fireplace</span>
-                        </span>
+                        <span class="amenity-tag"><strong>Size:</strong> <span id="fSize">38 m²</span></span>
+                        <span class="amenity-tag"><strong>Bed:</strong> <span id="fBed">1 queen bed</span></span>
+                        <span class="amenity-tag"><strong>Pool:</strong> <span id="fPool">No</span></span>
+                        <span class="amenity-tag"><strong>Fireplace:</strong> <span id="fFireplace">No</span></span>
                     </div>
                     <div class="room-actions">
                         <button class="btn-book-glow" id="featuredBookBtn">
@@ -3922,27 +4153,23 @@
                 </div>
             </div>
 
-            <!-- Thumbnails / Rail -->
+            <!-- Thumbnails -->
             <div class="room-thumbnails" id="roomThumbnails">
                 <div class="room-thumb active" data-room="double">
-                    <img src="https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&w=300&q=80" alt="Double Room" />
-                    <span class="thumb-active-bar"></span>
-                    <span class="thumb-label"><span class="thumb-name">Double</span><span class="thumb-price">1,950 MAD</span></span>
+                    <img src="https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&w=200&q=80" alt="Double Room" />
+                    <span class="thumb-label">Double</span>
                 </div>
                 <div class="room-thumb" data-room="twin">
-                    <img src="https://images.unsplash.com/photo-1618773928121-c32242e63f39?auto=format&fit=crop&w=300&q=80" alt="Twin Room" />
-                    <span class="thumb-active-bar"></span>
-                    <span class="thumb-label"><span class="thumb-name">Twin</span><span class="thumb-price">2,100 MAD</span></span>
+                    <img src="https://images.unsplash.com/photo-1618773928121-c32242e63f39?auto=format&fit=crop&w=200&q=80" alt="Twin Room" />
+                    <span class="thumb-label">Twin</span>
                 </div>
                 <div class="room-thumb" data-room="triple">
-                    <img src="https://images.unsplash.com/photo-1560185127-6ed189bf02f4?auto=format&fit=crop&w=300&q=80" alt="Triple Room" />
-                    <span class="thumb-active-bar"></span>
-                    <span class="thumb-label"><span class="thumb-name">Triple</span><span class="thumb-price">2,400 MAD</span></span>
+                    <img src="https://images.unsplash.com/photo-1560185127-6ed189bf02f4?auto=format&fit=crop&w=200&q=80" alt="Triple Room" />
+                    <span class="thumb-label">Triple</span>
                 </div>
                 <div class="room-thumb" data-room="suite">
-                    <img src="https://images.unsplash.com/photo-1631049307264-da0ec9d70304?auto=format&fit=crop&w=300&q=80" alt="Suite" />
-                    <span class="thumb-active-bar"></span>
-                    <span class="thumb-label"><span class="thumb-name">Suite</span><span class="thumb-price">3,200 MAD</span></span>
+                    <img src="https://images.unsplash.com/photo-1631049307264-da0ec9d70304?auto=format&fit=crop&w=200&q=80" alt="Suite" />
+                    <span class="thumb-label">Suite</span>
                 </div>
             </div>
         </div>
@@ -4435,7 +4662,7 @@
     <script>
         // ============================================================ //
         //  1. LENIS SMOOTH SCROLL + GSAP                              //
-        // ============================================================ //
+        // ================================================= =========== //
 
         let lenis = null;
         let gsapInitialized = false;
@@ -4668,8 +4895,6 @@
         //  2. ROOM CAROUSEL — FIXED ROOM SELECTION                    //
         // ============================================================ //
 
-        const roomOrder = ['double', 'twin', 'triple', 'suite'];
-
         const roomData = {
             double: {
                 name: 'Double Room',
@@ -4681,11 +4906,12 @@
                 description: 'This air-conditioned room features a comfortable seating area, a flat-screen TV, and a private bathroom with bath. The room includes a wardrobe and free toiletries.',
                 details: '<p><strong>Room Size:</strong> 38 m²</p><p><strong>Bed:</strong> 1 queen bed</p><p><strong>Comfy beds:</strong> 7.3 – Based on 120 reviews</p><p><strong>Bathroom:</strong> Private bathroom with bath</p><p><strong>View:</strong> Garden view</p><p><strong>Room Facilities:</strong> Air conditioning, Flat-screen TV, Wardrobe or closet, Heating, Socket near the bed</p><p><strong>Smoking:</strong> No smoking</p>',
                 images: [
-                    'https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&w=1000&q=85',
-                    'https://images.unsplash.com/photo-1618773928121-c32242e63f39?auto=format&fit=crop&w=1000&q=85',
-                    'https://images.unsplash.com/photo-1560185127-6ed189bf02f4?auto=format&fit=crop&w=1000&q=85',
-                    'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?auto=format&fit=crop&w=1000&q=85'
+                    'https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&w=800&q=85',
+                    'https://images.unsplash.com/photo-1618773928121-c32242e63f39?auto=format&fit=crop&w=800&q=85',
+                    'https://images.unsplash.com/photo-1560185127-6ed189bf02f4?auto=format&fit=crop&w=800&q=85',
+                    'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?auto=format&fit=crop&w=800&q=85'
                 ],
+                thumb: 'https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&w=200&q=80',
                 badge: 'Double'
             },
             twin: {
@@ -4698,11 +4924,12 @@
                 description: 'This air-conditioned twin room features a flat-screen TV, a private bathroom with bath, and a wardrobe. The room includes free toiletries and heating.',
                 details: '<p><strong>Room Size:</strong> 36 m²</p><p><strong>Bed:</strong> 2 twin beds</p><p><strong>Bathroom:</strong> Private bathroom with bath</p><p><strong>View:</strong> Garden view</p><p><strong>Room Facilities:</strong> Air conditioning, Flat-screen TV, Wardrobe or closet, Heating</p><p><strong>Smoking:</strong> No smoking</p>',
                 images: [
-                    'https://images.unsplash.com/photo-1618773928121-c32242e63f39?auto=format&fit=crop&w=1000&q=85',
-                    'https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&w=1000&q=85',
-                    'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?auto=format&fit=crop&w=1000&q=85',
-                    'https://images.unsplash.com/photo-1560185127-6ed189bf02f4?auto=format&fit=crop&w=1000&q=85'
+                    'https://images.unsplash.com/photo-1618773928121-c32242e63f39?auto=format&fit=crop&w=800&q=85',
+                    'https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&w=800&q=85',
+                    'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?auto=format&fit=crop&w=800&q=85',
+                    'https://images.unsplash.com/photo-1560185127-6ed189bf02f4?auto=format&fit=crop&w=800&q=85'
                 ],
+                thumb: 'https://images.unsplash.com/photo-1618773928121-c32242e63f39?auto=format&fit=crop&w=200&q=80',
                 badge: 'Twin'
             },
             triple: {
@@ -4715,11 +4942,12 @@
                 description: 'This spacious air-conditioned triple room features a flat-screen TV, a private bathroom with bath, and a wardrobe. The room includes free toiletries and heating.',
                 details: '<p><strong>Room Size:</strong> 42 m²</p><p><strong>Bed:</strong> 1 queen bed + 1 twin bed</p><p><strong>Bathroom:</strong> Private bathroom with bath</p><p><strong>View:</strong> Garden view</p><p><strong>Room Facilities:</strong> Air conditioning, Flat-screen TV, Wardrobe or closet, Heating</p><p><strong>Smoking:</strong> No smoking</p>',
                 images: [
-                    'https://images.unsplash.com/photo-1560185127-6ed189bf02f4?auto=format&fit=crop&w=1000&q=85',
-                    'https://images.unsplash.com/photo-1618773928121-c32242e63f39?auto=format&fit=crop&w=1000&q=85',
-                    'https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&w=1000&q=85',
-                    'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?auto=format&fit=crop&w=1000&q=85'
+                    'https://images.unsplash.com/photo-1560185127-6ed189bf02f4?auto=format&fit=crop&w=800&q=85',
+                    'https://images.unsplash.com/photo-1618773928121-c32242e63f39?auto=format&fit=crop&w=800&q=85',
+                    'https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&w=800&q=85',
+                    'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?auto=format&fit=crop&w=800&q=85'
                 ],
+                thumb: 'https://images.unsplash.com/photo-1560185127-6ed189bf02f4?auto=format&fit=crop&w=200&q=80',
                 badge: 'Triple'
             },
             suite: {
@@ -4732,88 +4960,72 @@
                 description: 'The private pool and fireplace are the special features of this suite. This air-conditioned suite consists of 1 living room, 1 separate bedroom and 1 bathroom with a bath. The suite features parquet floors, a seating area with a flat-screen TV, a wardrobe, a sofa, as well as heating. The unit offers 1 bed.',
                 details: '<p><strong>Room Size:</strong> 50 m²</p><p><strong>Bed:</strong> 1 queen bed</p><p><strong>Comfy beds:</strong> 7.3 – Based on 120 reviews</p><p><strong>Bathroom:</strong> Private bathroom with bath</p><p><strong>View:</strong> Pool view</p><p><strong>Room Facilities:</strong> Private pool, Hardwood or parquet floors, Fireplace, Flat-screen TV, Sofa, Heating, Wardrobe or closet, Seating area, Socket near the bed, Air conditioning</p><p><strong>Smoking:</strong> No smoking</p>',
                 images: [
-                    'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?auto=format&fit=crop&w=1000&q=85',
-                    'https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&w=1000&q=85',
-                    'https://images.unsplash.com/photo-1618773928121-c32242e63f39?auto=format&fit=crop&w=1000&q=85',
-                    'https://images.unsplash.com/photo-1560185127-6ed189bf02f4?auto=format&fit=crop&w=1000&q=85'
+                    'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?auto=format&fit=crop&w=800&q=85',
+                    'https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&w=800&q=85',
+                    'https://images.unsplash.com/photo-1618773928121-c32242e63f39?auto=format&fit=crop&w=800&q=85',
+                    'https://images.unsplash.com/photo-1560185127-6ed189bf02f4?auto=format&fit=crop&w=800&q=85'
                 ],
+                thumb: 'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?auto=format&fit=crop&w=200&q=80',
                 badge: 'Suite'
             }
         };
-        // NOTE: roomData keeps the exact same shape (name / description / badge / pool / fireplace
-        // as 'Yes'/'No') the translations.js setLanguage() function already reads from — that
-        // function needs zero changes and keeps working exactly as before.
 
         let currentRoom = 'double';
         let isTransitioning = false;
         let roomCarouselReady = false;
 
-        function preloadImage(src) {
-            return new Promise(function (resolve) {
-                const img = new Image();
-                img.onload = resolve;
-                img.onerror = resolve;
-                img.src = src;
-            });
-        }
-
-        function updateRoomIndex(roomKey) {
-            const currentEl = document.getElementById('roomIndexCurrent');
-            const totalEl = document.getElementById('roomIndexTotal');
-            if (currentEl) currentEl.textContent = String(roomOrder.indexOf(roomKey) + 1).padStart(2, '0');
-            if (totalEl) totalEl.textContent = String(roomOrder.length).padStart(2, '0');
-        }
-
         /**
-         * Core function: paint a room with no animation.
-         * Used for the initial render only.
+         * Core function: update the room display immediately (no animation).
+         * Used for initial render and after animations complete.
          */
         function updateRoomDisplay(roomKey) {
             const data = roomData[roomKey];
             if (!data) return;
 
+            // Main image
             const img = document.getElementById('featuredImage');
             if (img) {
                 img.src = data.images[0];
                 img.alt = data.name;
             }
 
+            // Text content
             document.getElementById('featuredName').textContent = data.name;
             document.getElementById('featuredEyebrow').textContent = data.name;
             document.getElementById('featuredPrice').innerHTML = 'From <strong>' + data.price + '</strong> per night';
             document.getElementById('featuredDesc').textContent = data.description;
             document.getElementById('featuredBadge').textContent = data.badge || data.name;
 
+            // Amenities
             document.getElementById('fSize').textContent = data.size;
             document.getElementById('fBed').textContent = data.bed;
-            document.getElementById('fPoolTag').classList.toggle('is-hidden', data.pool !== 'Yes');
-            document.getElementById('fFireplaceTag').classList.toggle('is-hidden', data.fireplace !== 'Yes');
+            document.getElementById('fPool').textContent = data.pool;
+            document.getElementById('fFireplace').textContent = data.fireplace;
 
-            updateRoomIndex(roomKey);
-
-            document.querySelectorAll('.room-thumb').forEach(function (th) {
+            // Active thumbnail
+            document.querySelectorAll('.room-thumb').forEach(function(th) {
                 th.classList.toggle('active', th.dataset.room === roomKey);
             });
 
+            // Update data attributes on buttons
             const bookBtn = document.getElementById('featuredBookBtn');
             const detailsBtn = document.getElementById('featuredDetailsBtn');
             if (bookBtn) bookBtn.dataset.room = roomKey;
             if (detailsBtn) detailsBtn.dataset.room = roomKey;
 
+            // Update modal refs
             const modalMoreDetails = document.getElementById('modalMoreDetails');
             if (modalMoreDetails) modalMoreDetails.dataset.room = roomKey;
 
+            // Update current room state
             currentRoom = roomKey;
         }
 
         /**
-         * Cinematic, direction-aware room switch.
-         * The image is preloaded BEFORE the crossfade starts (fixes the old
-         * img.onload / img.complete race that could double-fire or flash a
-         * blank frame), and the text column slides out/in with a stagger,
-         * sliding from the side that matches the direction of travel.
+         * Animated room switch with GSAP.
          */
-        function switchRoom(roomKey, direction) {
+        function switchRoom(roomKey) {
+            // Guard against invalid transitions
             if (isTransitioning) return;
             if (roomKey === currentRoom) return;
 
@@ -4823,12 +5035,9 @@
                 return;
             }
 
-            if (typeof direction !== 'number') {
-                direction = roomOrder.indexOf(roomKey) > roomOrder.indexOf(currentRoom) ? 1 : -1;
-            }
-
             isTransitioning = true;
 
+            // Get DOM refs
             const img = document.getElementById('featuredImage');
             const name = document.getElementById('featuredName');
             const eyebrow = document.getElementById('featuredEyebrow');
@@ -4837,85 +5046,137 @@
             const badge = document.getElementById('featuredBadge');
             const size = document.getElementById('fSize');
             const bed = document.getElementById('fBed');
-            const poolTag = document.getElementById('fPoolTag');
-            const fireplaceTag = document.getElementById('fFireplaceTag');
-            const amenitiesPreview = document.getElementById('featuredAmenities');
-            const actions = document.querySelector('.room-actions');
+            const pool = document.getElementById('fPool');
+            const fireplace = document.getElementById('fFireplace');
 
-            const textElements = [eyebrow, name, price, desc, amenitiesPreview, actions];
-            const distance = 22 * direction;
+            // Elements to animate out
+            const textElements = [name, eyebrow, price, desc];
+            const amenityEls = [size, bed, pool, fireplace];
 
-            // Instant feedback: active thumbnail + index update immediately
-            document.querySelectorAll('.room-thumb').forEach(function (th) {
-                th.classList.toggle('active', th.dataset.room === roomKey);
-            });
-            updateRoomIndex(roomKey);
+            // --- 1. Fade image out with GSAP ---
+            gsap.to(img, {
+                opacity: 0,
+                scale: 1.02,
+                duration: 0.35,
+                ease: 'power2.inOut',
+                onComplete: function() {
+                    // Set new image source
+                    img.src = data.images[0];
+                    img.alt = data.name;
 
-            // --- Image: preload, then cross-fade with a slight scale ---
-            preloadImage(data.images[0]).then(function () {
-                gsap.to(img, {
-                    opacity: 0,
-                    scale: 1.03,
-                    duration: 0.4,
-                    ease: 'power2.inOut',
-                    onComplete: function () {
-                        img.src = data.images[0];
-                        img.alt = data.name;
-                        gsap.fromTo(img,
-                            { opacity: 0, scale: 1.05 },
-                            { opacity: 1, scale: 1, duration: 0.7, ease: 'power2.out' }
-                        );
+                    // Wait for image to load, then fade in
+                    const onLoad = function() {
+                        img.removeEventListener('load', onLoad);
+                        gsap.to(img, {
+                            opacity: 1,
+                            scale: 1,
+                            duration: 0.5,
+                            ease: 'power2.out'
+                        });
+                    };
+                    img.addEventListener('load', onLoad);
+                    if (img.complete) {
+                        img.removeEventListener('load', onLoad);
+                        gsap.to(img, {
+                            opacity: 1,
+                            scale: 1,
+                            duration: 0.5,
+                            ease: 'power2.out'
+                        });
                     }
-                });
-            });
-
-            // --- Text: slide out, swap content, slide back in with stagger ---
-            const tl = gsap.timeline({
-                onComplete: function () {
-                    isTransitioning = false;
                 }
             });
 
-            tl.to(textElements, {
-                x: -distance,
+            // --- 2. Fade text out ---
+            gsap.to(textElements, {
+                y: -15,
                 opacity: 0,
                 duration: 0.3,
-                stagger: 0.03,
-                ease: 'power2.in'
-            })
-            .call(function () {
-                name.textContent = data.name;
-                eyebrow.textContent = data.name;
-                price.innerHTML = 'From <strong>' + data.price + '</strong> per night';
-                desc.textContent = data.description;
-                badge.textContent = data.badge || data.name;
-                size.textContent = data.size;
-                bed.textContent = data.bed;
-                poolTag.classList.toggle('is-hidden', data.pool !== 'Yes');
-                fireplaceTag.classList.toggle('is-hidden', data.fireplace !== 'Yes');
+                stagger: 0.04,
+                ease: 'power2.in',
+                onComplete: function() {
+                    // Update all text content
+                    name.textContent = data.name;
+                    eyebrow.textContent = data.name;
+                    price.innerHTML = 'From <strong>' + data.price + '</strong> per night';
+                    desc.textContent = data.description;
+                    badge.textContent = data.badge || data.name;
 
-                const bookBtn = document.getElementById('featuredBookBtn');
-                const detailsBtn = document.getElementById('featuredDetailsBtn');
-                if (bookBtn) bookBtn.dataset.room = roomKey;
-                if (detailsBtn) detailsBtn.dataset.room = roomKey;
-                const modalMoreDetails = document.getElementById('modalMoreDetails');
-                if (modalMoreDetails) modalMoreDetails.dataset.room = roomKey;
-
-                gsap.set(textElements, { x: distance });
-            })
-            .to(textElements, {
-                x: 0,
-                opacity: 1,
-                duration: 0.55,
-                stagger: 0.06,
-                ease: 'power3.out',
-                delay: 0.02
+                    // Fade text back in with stagger
+                    gsap.to(textElements, {
+                        y: 0,
+                        opacity: 1,
+                        duration: 0.5,
+                        stagger: 0.06,
+                        ease: 'power2.out',
+                        delay: 0.08
+                    });
+                }
             });
 
-            gsap.to('#featuredBookBtn', { scale: 0.96, duration: 0.12, ease: 'power2.inOut', yoyo: true, repeat: 1 }, 0.15);
-            gsap.to('#featuredDetailsBtn', { scale: 0.96, duration: 0.12, ease: 'power2.inOut', yoyo: true, repeat: 1 }, 0.2);
+            // --- 3. Fade amenities out ---
+            gsap.to(amenityEls, {
+                opacity: 0,
+                duration: 0.2,
+                stagger: 0.02,
+                ease: 'power2.in',
+                onComplete: function() {
+                    // Update amenities
+                    size.textContent = data.size;
+                    bed.textContent = data.bed;
+                    pool.textContent = data.pool;
+                    fireplace.textContent = data.fireplace;
 
+                    // Fade amenities back in
+                    gsap.to(amenityEls, {
+                        opacity: 1,
+                        duration: 0.35,
+                        stagger: 0.03,
+                        ease: 'power2.out',
+                        delay: 0.15
+                    });
+                }
+            });
+
+            // --- 4. Update active thumbnail ---
+            document.querySelectorAll('.room-thumb').forEach(function(th) {
+                th.classList.toggle('active', th.dataset.room === roomKey);
+            });
+
+            // --- 5. Button pulse feedback ---
+            gsap.to('#featuredBookBtn', {
+                scale: 0.96,
+                duration: 0.12,
+                ease: 'power2.inOut',
+                yoyo: true,
+                repeat: 1
+            }, 0.2);
+            gsap.to('#featuredDetailsBtn', {
+                scale: 0.96,
+                duration: 0.12,
+                ease: 'power2.inOut',
+                yoyo: true,
+                repeat: 1
+            }, 0.25);
+
+            // --- 6. Update state ---
             currentRoom = roomKey;
+
+            // Update modal refs
+            const modalMoreDetails = document.getElementById('modalMoreDetails');
+            if (modalMoreDetails) modalMoreDetails.dataset.room = roomKey;
+
+            // Update button data attributes
+            document.getElementById('featuredBookBtn').dataset.room = roomKey;
+            document.getElementById('featuredDetailsBtn').dataset.room = roomKey;
+
+            // --- 7. Unlock after animations complete ---
+            // Use GSAP's onComplete for the last animation to reset the flag.
+            // We'll set a safe timeout as a fallback.
+            const totalDuration = 350 + 500 + 300 + 500 + 350 + 150; // approx 2150ms
+            setTimeout(function() {
+                isTransitioning = false;
+            }, Math.min(totalDuration, 1200));
         }
 
         /**
@@ -4925,70 +5186,35 @@
             if (roomCarouselReady) return;
             roomCarouselReady = true;
 
-            // Thumbnails only ever switch the featured room — they no longer
-            // also open the modal (see the deleted generic `[data-room]`
-            // listener below in the old code; that was the bug causing a
-            // thumbnail click to switch AND pop the modal at the same time).
-            document.querySelectorAll('.room-thumb').forEach(function (thumb) {
-                thumb.addEventListener('click', function (e) {
+            const thumbnails = document.querySelectorAll('.room-thumb');
+
+            // Attach click events to each thumbnail
+            thumbnails.forEach(function(thumb) {
+                thumb.addEventListener('click', function(e) {
                     e.stopPropagation();
                     const roomKey = this.dataset.room;
                     if (!roomKey) return;
-                    const direction = roomOrder.indexOf(roomKey) > roomOrder.indexOf(currentRoom) ? 1 : -1;
-                    switchRoom(roomKey, direction);
+                    switchRoom(roomKey);
                 });
             });
 
-            const prevBtn = document.getElementById('roomPrevBtn');
-            const nextBtn = document.getElementById('roomNextBtn');
-            if (prevBtn) {
-                prevBtn.addEventListener('click', function (e) {
-                    e.stopPropagation();
-                    const i = roomOrder.indexOf(currentRoom);
-                    switchRoom(roomOrder[(i - 1 + roomOrder.length) % roomOrder.length], -1);
-                });
-            }
-            if (nextBtn) {
-                nextBtn.addEventListener('click', function (e) {
-                    e.stopPropagation();
-                    const i = roomOrder.indexOf(currentRoom);
-                    switchRoom(roomOrder[(i + 1) % roomOrder.length], 1);
-                });
-            }
-
-            // Swipe support on the featured image
-            const featuredImageWrap = document.querySelector('.room-featured .featured-image');
-            if (featuredImageWrap) {
-                let touchStartX = 0;
-                featuredImageWrap.addEventListener('touchstart', function (e) {
-                    touchStartX = e.changedTouches[0].screenX;
-                }, { passive: true });
-                featuredImageWrap.addEventListener('touchend', function (e) {
-                    const diff = touchStartX - e.changedTouches[0].screenX;
-                    if (Math.abs(diff) > 40) {
-                        const btn = diff > 0 ? nextBtn : prevBtn;
-                        if (btn) btn.click();
-                    }
-                }, { passive: true });
-            }
-
-            // Book & Details buttons on the featured card both open the room
-            // modal — same behavior as the original (the real booking dialog
-            // is triggered from the "Book Now" button inside that modal, via
-            // the existing sitewide `[data-open-booking]` listener).
+            // Book & Details buttons in the featured room
             const bookBtn = document.getElementById('featuredBookBtn');
             const detailsBtn = document.getElementById('featuredDetailsBtn');
 
-            bookBtn.addEventListener('click', function (e) {
+            bookBtn.addEventListener('click', function(e) {
                 e.stopPropagation();
-                openRoomModal(this.dataset.room || currentRoom);
+                const room = this.dataset.room || currentRoom;
+                openRoomModal(room);
             });
 
-            detailsBtn.addEventListener('click', function (e) {
+            detailsBtn.addEventListener('click', function(e) {
                 e.stopPropagation();
-                openRoomModal(this.dataset.room || currentRoom);
+                const room = this.dataset.room || currentRoom;
+                openRoomModal(room);
             });
 
+            // Initial render: show the default room (double)
             updateRoomDisplay('double');
         }
 
@@ -6144,8 +6370,8 @@
             mainImg.src = data.images[0];
             counter.textContent = '1 / ' + data.images.length;
 
-            thumbsContainer.innerHTML = data.images.map((imgSrc, i) =>
-                `<img class="thumb ${i === 0 ? 'active' : ''}" src="${imgSrc}" alt="Thumb ${i + 1}" data-index="${i}" />`
+            thumbsContainer.innerHTML = data.images.map((img, i) =>
+                `<img class="thumb ${i === 0 ? 'active' : ''}" src="${img}" alt="Thumb ${i+1}" data-index="${i}" />`
             ).join('');
 
             document.getElementById('modalMoreDetails').dataset.room = room;
@@ -6154,14 +6380,24 @@
             if (lenis) lenis.stop();
         }
 
-        document.getElementById('galleryPrev').addEventListener('click', function () {
+        document.querySelectorAll('[data-room]').forEach(el => {
+            el.addEventListener('click', function(e) {
+                const room = this.dataset.room;
+                if (room && roomData[room]) {
+                    e.stopPropagation();
+                    openRoomModal(room);
+                }
+            });
+        });
+
+        document.getElementById('galleryPrev').addEventListener('click', function() {
             const images = window._currentImages;
             if (!images) return;
             let idx = window._currentIndex - 1;
             if (idx < 0) idx = images.length - 1;
             updateGallery(idx);
         });
-        document.getElementById('galleryNext').addEventListener('click', function () {
+        document.getElementById('galleryNext').addEventListener('click', function() {
             const images = window._currentImages;
             if (!images) return;
             let idx = window._currentIndex + 1;
@@ -6180,19 +6416,19 @@
             });
         }
 
-        document.getElementById('galleryThumbs').addEventListener('click', function (e) {
+        document.getElementById('galleryThumbs').addEventListener('click', function(e) {
             const thumb = e.target.closest('.thumb');
             if (!thumb) return;
             const idx = parseInt(thumb.dataset.index);
             if (!isNaN(idx)) updateGallery(idx);
         });
 
-        closeRoomModal.addEventListener('click', function () {
+        closeRoomModal.addEventListener('click', function() {
             roomModal.classList.remove('open');
             document.body.style.overflow = '';
             if (lenis) lenis.start();
         });
-        roomModal.addEventListener('click', function (e) {
+        roomModal.addEventListener('click', function(e) {
             if (e.target === this) {
                 this.classList.remove('open');
                 document.body.style.overflow = '';
@@ -6200,14 +6436,14 @@
             }
         });
 
-        document.addEventListener('keydown', function (e) {
+        document.addEventListener('keydown', function(e) {
             if (!roomModal.classList.contains('open')) return;
             if (e.key === 'ArrowLeft') document.getElementById('galleryPrev').click();
             else if (e.key === 'ArrowRight') document.getElementById('galleryNext').click();
             else if (e.key === 'Escape') closeRoomModal.click();
         });
 
-        document.getElementById('modalMoreDetails').addEventListener('click', function () {
+        document.getElementById('modalMoreDetails').addEventListener('click', function() {
             const room = this.dataset.room || currentRoom;
             const data = roomData[room];
             if (!data) return;
@@ -6228,17 +6464,17 @@
             }, 300);
         });
 
-        closeMoreDetails.addEventListener('click', function () {
+        closeMoreDetails.addEventListener('click', function() {
             moreDetailsModal.classList.remove('open');
             document.body.style.overflow = '';
             if (lenis) lenis.start();
         });
-        closeMoreDetailsBtn.addEventListener('click', function () {
+        closeMoreDetailsBtn.addEventListener('click', function() {
             moreDetailsModal.classList.remove('open');
             document.body.style.overflow = '';
             if (lenis) lenis.start();
         });
-        moreDetailsModal.addEventListener('click', function (e) {
+        moreDetailsModal.addEventListener('click', function(e) {
             if (e.target === this) {
                 this.classList.remove('open');
                 document.body.style.overflow = '';
