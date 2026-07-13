@@ -4892,7 +4892,7 @@
 
 
         // ============================================================ //
-        //  2. ROOM CAROUSEL — FIXED ROOM SELECTION                   //
+        //  2. ROOM CAROUSEL — FIXED ROOM SELECTION                    //
         // ============================================================ //
 
         const roomData = {
@@ -4974,53 +4974,61 @@
         let isTransitioning = false;
         let roomCarouselReady = false;
 
-        function initRoomCarousel() {
-            if (roomCarouselReady) return;
-            roomCarouselReady = true;
+        /**
+         * Core function: update the room display immediately (no animation).
+         * Used for initial render and after animations complete.
+         */
+        function updateRoomDisplay(roomKey) {
+            const data = roomData[roomKey];
+            if (!data) return;
 
-            // Get DOM elements
-            const thumbnails = document.querySelectorAll('.room-thumb');
-            const featuredImage = document.getElementById('featuredImage');
-            const featuredName = document.getElementById('featuredName');
-            const featuredEyebrow = document.getElementById('featuredEyebrow');
-            const featuredPrice = document.getElementById('featuredPrice');
-            const featuredDesc = document.getElementById('featuredDesc');
-            const featuredBadge = document.getElementById('featuredBadge');
-            const fSize = document.getElementById('fSize');
-            const fBed = document.getElementById('fBed');
-            const fPool = document.getElementById('fPool');
-            const fFireplace = document.getElementById('fFireplace');
-            const featuredBookBtn = document.getElementById('featuredBookBtn');
-            const featuredDetailsBtn = document.getElementById('featuredDetailsBtn');
+            // Main image
+            const img = document.getElementById('featuredImage');
+            if (img) {
+                img.src = data.images[0];
+                img.alt = data.name;
+            }
 
-            // --- Thumbnail click handler ---
-            thumbnails.forEach(function(thumb) {
-                thumb.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    const roomKey = this.dataset.room;
-                    if (!roomKey || roomKey === currentRoom || isTransitioning) return;
-                    switchRoom(roomKey);
-                });
+            // Text content
+            document.getElementById('featuredName').textContent = data.name;
+            document.getElementById('featuredEyebrow').textContent = data.name;
+            document.getElementById('featuredPrice').innerHTML = 'From <strong>' + data.price + '</strong> per night';
+            document.getElementById('featuredDesc').textContent = data.description;
+            document.getElementById('featuredBadge').textContent = data.badge || data.name;
+
+            // Amenities
+            document.getElementById('fSize').textContent = data.size;
+            document.getElementById('fBed').textContent = data.bed;
+            document.getElementById('fPool').textContent = data.pool;
+            document.getElementById('fFireplace').textContent = data.fireplace;
+
+            // Active thumbnail
+            document.querySelectorAll('.room-thumb').forEach(function(th) {
+                th.classList.toggle('active', th.dataset.room === roomKey);
             });
 
-            // --- Book & Details buttons ---
-            featuredBookBtn.addEventListener('click', function(e) {
-                e.stopPropagation();
-                openRoomModal(currentRoom);
-            });
-            featuredDetailsBtn.addEventListener('click', function(e) {
-                e.stopPropagation();
-                openRoomModal(currentRoom);
-            });
+            // Update data attributes on buttons
+            const bookBtn = document.getElementById('featuredBookBtn');
+            const detailsBtn = document.getElementById('featuredDetailsBtn');
+            if (bookBtn) bookBtn.dataset.room = roomKey;
+            if (detailsBtn) detailsBtn.dataset.room = roomKey;
 
-            // --- Set initial room ---
-            updateRoomDisplay('double');
+            // Update modal refs
+            const modalMoreDetails = document.getElementById('modalMoreDetails');
+            if (modalMoreDetails) modalMoreDetails.dataset.room = roomKey;
+
+            // Update current room state
+            currentRoom = roomKey;
         }
 
+        /**
+         * Animated room switch with GSAP.
+         */
         function switchRoom(roomKey) {
-            if (isTransitioning || roomKey === currentRoom) return;
+            // Guard against invalid transitions
+            if (isTransitioning) return;
+            if (roomKey === currentRoom) return;
 
-            // Validate room exists
             const data = roomData[roomKey];
             if (!data) {
                 console.warn('Room data not found for:', roomKey);
@@ -5029,12 +5037,7 @@
 
             isTransitioning = true;
 
-            // Update thumbnails
-            document.querySelectorAll('.room-thumb').forEach(function(th) {
-                th.classList.toggle('active', th.dataset.room === roomKey);
-            });
-
-            // Get DOM elements
+            // Get DOM refs
             const img = document.getElementById('featuredImage');
             const name = document.getElementById('featuredName');
             const eyebrow = document.getElementById('featuredEyebrow');
@@ -5046,16 +5049,22 @@
             const pool = document.getElementById('fPool');
             const fireplace = document.getElementById('fFireplace');
 
-            // --- 1. Fade image out ---
+            // Elements to animate out
+            const textElements = [name, eyebrow, price, desc];
+            const amenityEls = [size, bed, pool, fireplace];
+
+            // --- 1. Fade image out with GSAP ---
             gsap.to(img, {
                 opacity: 0,
                 scale: 1.02,
                 duration: 0.35,
                 ease: 'power2.inOut',
                 onComplete: function() {
-                    // Set new image
+                    // Set new image source
                     img.src = data.images[0];
-                    // Fade image back in when loaded
+                    img.alt = data.name;
+
+                    // Wait for image to load, then fade in
                     const onLoad = function() {
                         img.removeEventListener('load', onLoad);
                         gsap.to(img, {
@@ -5079,9 +5088,6 @@
             });
 
             // --- 2. Fade text out ---
-            const textElements = [name, eyebrow, price, desc];
-            const amenityEls = [size, bed, pool, fireplace];
-
             gsap.to(textElements, {
                 y: -15,
                 opacity: 0,
@@ -5089,18 +5095,14 @@
                 stagger: 0.04,
                 ease: 'power2.in',
                 onComplete: function() {
-                    // --- Update all content ---
+                    // Update all text content
                     name.textContent = data.name;
                     eyebrow.textContent = data.name;
                     price.innerHTML = 'From <strong>' + data.price + '</strong> per night';
                     desc.textContent = data.description;
                     badge.textContent = data.badge || data.name;
-                    size.textContent = data.size;
-                    bed.textContent = data.bed;
-                    pool.textContent = data.pool;
-                    fireplace.textContent = data.fireplace;
 
-                    // --- Fade text back in with stagger ---
+                    // Fade text back in with stagger
                     gsap.to(textElements, {
                         y: 0,
                         opacity: 1,
@@ -5109,6 +5111,23 @@
                         ease: 'power2.out',
                         delay: 0.08
                     });
+                }
+            });
+
+            // --- 3. Fade amenities out ---
+            gsap.to(amenityEls, {
+                opacity: 0,
+                duration: 0.2,
+                stagger: 0.02,
+                ease: 'power2.in',
+                onComplete: function() {
+                    // Update amenities
+                    size.textContent = data.size;
+                    bed.textContent = data.bed;
+                    pool.textContent = data.pool;
+                    fireplace.textContent = data.fireplace;
+
+                    // Fade amenities back in
                     gsap.to(amenityEls, {
                         opacity: 1,
                         duration: 0.35,
@@ -5119,15 +5138,12 @@
                 }
             });
 
-            // --- 3. Fade amenities out ---
-            gsap.to(amenityEls, {
-                opacity: 0,
-                duration: 0.2,
-                stagger: 0.02,
-                ease: 'power2.in'
-            }, 0);
+            // --- 4. Update active thumbnail ---
+            document.querySelectorAll('.room-thumb').forEach(function(th) {
+                th.classList.toggle('active', th.dataset.room === roomKey);
+            });
 
-            // --- 4. Button pulse ---
+            // --- 5. Button pulse feedback ---
             gsap.to('#featuredBookBtn', {
                 scale: 0.96,
                 duration: 0.12,
@@ -5143,46 +5159,63 @@
                 repeat: 1
             }, 0.25);
 
-            // --- Update current room ---
+            // --- 6. Update state ---
             currentRoom = roomKey;
 
-            // --- Update modal data reference ---
+            // Update modal refs
             const modalMoreDetails = document.getElementById('modalMoreDetails');
-            if (modalMoreDetails) {
-                modalMoreDetails.dataset.room = roomKey;
-            }
+            if (modalMoreDetails) modalMoreDetails.dataset.room = roomKey;
 
-            // --- Unlock after animation ---
-            setTimeout(function() {
-                isTransitioning = false;
-            }, 800);
-        }
-
-        function updateRoomDisplay(roomKey) {
-            const data = roomData[roomKey];
-            if (!data) return;
-
-            const img = document.getElementById('featuredImage');
-            img.src = data.images[0];
-            document.getElementById('featuredName').textContent = data.name;
-            document.getElementById('featuredEyebrow').textContent = data.name;
-            document.getElementById('featuredPrice').innerHTML = 'From <strong>' + data.price + '</strong> per night';
-            document.getElementById('featuredDesc').textContent = data.description;
-            document.getElementById('featuredBadge').textContent = data.badge || data.name;
-            document.getElementById('fSize').textContent = data.size;
-            document.getElementById('fBed').textContent = data.bed;
-            document.getElementById('fPool').textContent = data.pool;
-            document.getElementById('fFireplace').textContent = data.fireplace;
-
-            // Set active thumbnail
-            document.querySelectorAll('.room-thumb').forEach(function(th) {
-                th.classList.toggle('active', th.dataset.room === roomKey);
-            });
-
+            // Update button data attributes
             document.getElementById('featuredBookBtn').dataset.room = roomKey;
             document.getElementById('featuredDetailsBtn').dataset.room = roomKey;
 
-            currentRoom = roomKey;
+            // --- 7. Unlock after animations complete ---
+            // Use GSAP's onComplete for the last animation to reset the flag.
+            // We'll set a safe timeout as a fallback.
+            const totalDuration = 350 + 500 + 300 + 500 + 350 + 150; // approx 2150ms
+            setTimeout(function() {
+                isTransitioning = false;
+            }, Math.min(totalDuration, 1200));
+        }
+
+        /**
+         * Initialize room carousel: attach event listeners and set initial room.
+         */
+        function initRoomCarousel() {
+            if (roomCarouselReady) return;
+            roomCarouselReady = true;
+
+            const thumbnails = document.querySelectorAll('.room-thumb');
+
+            // Attach click events to each thumbnail
+            thumbnails.forEach(function(thumb) {
+                thumb.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const roomKey = this.dataset.room;
+                    if (!roomKey) return;
+                    switchRoom(roomKey);
+                });
+            });
+
+            // Book & Details buttons in the featured room
+            const bookBtn = document.getElementById('featuredBookBtn');
+            const detailsBtn = document.getElementById('featuredDetailsBtn');
+
+            bookBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const room = this.dataset.room || currentRoom;
+                openRoomModal(room);
+            });
+
+            detailsBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const room = this.dataset.room || currentRoom;
+                openRoomModal(room);
+            });
+
+            // Initial render: show the default room (double)
+            updateRoomDisplay('double');
         }
 
 
